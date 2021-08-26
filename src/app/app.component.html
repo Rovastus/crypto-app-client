@@ -1,26 +1,52 @@
-<mat-tab-group>
+<app-portpholio></app-portpholio>
+
+<mat-tab-group mat-stretch-tabs>
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-      First
+      <mat-icon class="example-tab-icon">info</mat-icon>
+      Info
     </ng-template>
-    Content 1
+    <app-info></app-info>
   </mat-tab>
 
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-      Second
+      <mat-icon class="example-tab-icon">note_add</mat-icon>
+      Exports
     </ng-template>
-    Content 2
+    <app-exports></app-exports>
   </mat-tab>
 
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-      Third
+      <mat-icon class="example-tab-icon">swap_horiz</mat-icon>
+      Deposits
+    </ng-template>
+    BBB
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">swap_horiz</mat-icon>
+      Withdraws
+    </ng-template>
+    BBB
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">swap_horiz</mat-icon>
+      Transactions
+    </ng-template>
+    BBB
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="example-tab-icon">savings</mat-icon>
+      Staking
     </ng-template>
 
-    Content 3
+    CCC
   </mat-tab>
 </mat-tab-group>

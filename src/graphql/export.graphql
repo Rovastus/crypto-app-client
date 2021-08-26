@@ -1,0 +1,10 @@
+mutation importExport(
+  $portpholioId: BigInt!
+  $name: String!
+  $jsonData: [ProcessExportInput!]!
+) {
+  importExport(portpholioId: $portpholioId, name: $name, jsonData: $jsonData) {
+    id
+    name
+  }
+}

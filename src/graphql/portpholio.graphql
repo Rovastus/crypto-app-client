@@ -1,0 +1,26 @@
+mutation createPortpholio(
+  $name: String!
+  $taxMethod: TaxMethod!
+  $fiat: Fiat!
+) {
+  createPortpholio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
+    id
+    name
+  }
+}
+
+query allPortpholios {
+  portpholios {
+    id
+    name
+  }
+}
+
+query getPortpholioById($id: BigInt!) {
+  portpholio(where: { id: $id }) {
+    id
+    name
+    taxMethod
+    fiat
+  }
+}

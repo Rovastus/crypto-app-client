@@ -1,0 +1,14 @@
+<mat-list *ngIf="portpholio$ | async">
+  <mat-list-item>
+    <h2>Name:</h2>
+    <p>{{ (portpholio$ | async)?.name }}</p>
+  </mat-list-item>
+  <mat-list-item>
+    <h2>Tax Method:</h2>
+    <p>{{ (portpholio$ | async)?.taxMethod }}</p>
+  </mat-list-item>
+  <mat-list-item>
+    <h2>Fiat:</h2>
+    <p>{{ (portpholio$ | async)?.fiat }}</p>
+  </mat-list-item>
+</mat-list>
