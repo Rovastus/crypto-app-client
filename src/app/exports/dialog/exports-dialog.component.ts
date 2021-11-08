@@ -2,8 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { ImportExportGQL } from 'src/generated/graphql';
-import * as XLSX from 'xlsx';
+
+interface CsvData {
+  UTC_Time: string;
+  Account: string;
+  Operation: string;
+  Coin: string;
+  Change: string;
+}
 
 @Component({
   selector: 'app-exports-dialog',
@@ -13,17 +23,20 @@ import * as XLSX from 'xlsx';
 export class ExportsDialogComponent implements OnInit {
   loading = false;
   exportForm: FormGroup;
+  portpholioId$: Observable<number>;
 
   constructor(
     public dialogRef: MatDialogRef<ExportsDialogComponent>,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private importExportGQL: ImportExportGQL
+    private importExportGQL: ImportExportGQL,
+    private store: Store<{ portpholioId: number }>
   ) {
     this.exportForm = this.formBuilder.group({
       nameField: [null, Validators.required],
       fileField: [null, Validators.required],
     });
+    this.portpholioId$ = this.store.select('portpholioId');
   }
 
   ngOnInit(): void {}
@@ -31,30 +44,19 @@ export class ExportsDialogComponent implements OnInit {
   createExport(): void {
     if (this.exportForm.valid) {
       this.loading = true;
-      this.processExcelData(
+      this.processCsvData(
         this.exportForm.value.nameField,
         this.exportForm.value.fileField
       );
     }
   }
 
-  processExcelData(exportName: string, file: any) {
+  processCsvData(exportName: string, file: any) {
     const reader = new FileReader();
     reader.onload = () => {
       const data = reader.result;
-      const workBook = XLSX.read(data, {
-        type: 'binary',
-        cellDates: true,
-        dateNF: 'yyyy-mm-dd hh:mm:ss',
-        cellNF: true,
-      });
-      const csvData = workBook.SheetNames.reduce((initial: any, name: any) => {
-        const sheet = workBook.Sheets[name];
-        initial[name] = XLSX.utils.sheet_to_json(sheet);
-        return initial['Sheet1'];
-      }, {});
       const json = new Array();
-      csvData.forEach(
+      this.getCsvData(data as string).forEach(
         (element: {
           UTC_Time: string;
           Account: string;
@@ -71,22 +73,65 @@ export class ExportsDialogComponent implements OnInit {
         }
       );
       json.sort((a, b) => (a.utcTime < b.utcTime ? -1 : 1));
-      console.log(json);
-      this.importExportGQL
-        .mutate({
-          portpholioId: 8,
-          name: exportName,
-          jsonData: json,
-        })
-        .subscribe((res) => {
-          this.loading = true;
-          this.snackBar.open('Export imported.', 'Close', {
-            duration: 5000,
+      this.portpholioId$.pipe(take(1)).subscribe((portpholioId: number) => {
+        this.importExportGQL
+          .mutate({
+            portpholioId: portpholioId,
+            name: exportName,
+            jsonData: json,
+          })
+          .subscribe((res) => {
+            this.loading = true;
+            this.snackBar.open('Export imported.', 'Close', {
+              duration: 5000,
+            });
+            this.dialogRef.close(true);
           });
-          this.dialogRef.close(true);
-        });
+      });
     };
     reader.readAsBinaryString(file);
+  }
+
+  private getCsvData(data: string): Array<CsvData> {
+    const lines = data.split('\n');
+    const result: Array<CsvData> = [];
+    const headers = lines[0].split(',');
+    for (let i = 1; i < lines.length; i++) {
+      let obj: CsvData = {
+        UTC_Time: '',
+        Account: '',
+        Operation: '',
+        Coin: '',
+        Change: '',
+      };
+      let currentline = lines[i].split(',');
+      if (currentline.length == 1) continue;
+      console.log(currentline);
+      for (let j = 0; j < headers.length; j++) {
+        switch (headers[j]) {
+          case 'UTC_Time':
+            obj.UTC_Time = currentline[j];
+            break;
+          case 'Account':
+            obj.Account = currentline[j];
+            break;
+          case 'Operation':
+            obj.Operation = currentline[j];
+            break;
+          case 'Coin':
+            obj.Coin = currentline[j];
+            break;
+          case 'Change':
+            obj.Change = currentline[j];
+            break;
+          default:
+            break;
+        }
+      }
+      result.push(obj);
+    }
+    console.log(result);
+    return result;
   }
 
   onClose(): void {
