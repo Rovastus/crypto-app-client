@@ -8,3 +8,10 @@ mutation importExport(
     name
   }
 }
+
+query exportsByPortpholioId($portpholioId: BigInt!) {
+  exportsByPortpholioId(portpholioId: $portpholioId) {
+    id
+    name
+  }
+}

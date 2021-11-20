@@ -1,0 +1,18 @@
+query transactionsByPortpholioId($portpholioId: BigInt!) {
+  transactionsByPortpholioId(portpholioId: $portpholioId) {
+    id
+    time
+    buy
+    buyCoin
+    price
+    priceCoin
+    fee
+    feeCoin
+    transactionTaxEvent {
+      id
+      type
+      gainInFiat
+      expensesInFiat
+    }
+  }
+}

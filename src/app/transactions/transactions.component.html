@@ -1,0 +1,44 @@
+<table mat-table [dataSource]="transactions$ | async" class="mat-elevation-z8">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>Id</th>
+    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="time">
+    <th mat-header-cell *matHeaderCellDef>Time</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.time | date: "MM.dd.yyyy HH:mm:ss zzz":"UTC" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="buy">
+    <th mat-header-cell *matHeaderCellDef>Buy</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.buy }} {{ element.buyCoin }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef>Price</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.price }} {{ element.priceCoin }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="fee">
+    <th mat-header-cell *matHeaderCellDef>Fee</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.fee }} {{ element.feeCoin }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="transactionTaxEvents">
+    <th mat-header-cell *matHeaderCellDef>Tax events</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.transactionTaxEvent.length }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

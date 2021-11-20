@@ -25,6 +25,11 @@ import { ExportsComponent } from './exports/exports.component';
 import { ExportsDialogComponent } from './exports/dialog/exports-dialog.component';
 import { FileInputComponent } from './common/file-input/file-input.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { DepositsComponent } from './deposits/deposits/deposits.component';
+import { MatTableModule } from '@angular/material/table';
+import { EarnsComponent } from './earns/earns.component';
+import { TransactionsComponent } from './transactions/transactions.component';
+import { WithdrawsComponent } from './withdraws/withdraws.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +40,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     ExportsComponent,
     ExportsDialogComponent,
     FileInputComponent,
+    DepositsComponent,
+    EarnsComponent,
+    TransactionsComponent,
+    WithdrawsComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,6 +62,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatTableModule,
     StoreModule.forRoot({ portpholioId: portpholioReducer }),
   ],
   providers: [],

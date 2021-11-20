@@ -1,0 +1,9 @@
+table {
+  width: 100%;
+}
+
+.fab-position {
+  position: fixed;
+  bottom: 21px;
+  right: 25px;
+}

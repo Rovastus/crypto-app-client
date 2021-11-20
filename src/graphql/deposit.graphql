@@ -1,0 +1,8 @@
+query depositsByPortpholioId($portpholioId: BigInt!) {
+  depositsByPortpholioId(portpholioId: $portpholioId) {
+    id
+    time
+    amount
+    coin
+  }
+}
