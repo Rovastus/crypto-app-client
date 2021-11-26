@@ -23,10 +23,10 @@ export class DepositsComponent implements OnInit {
 
   ngOnInit(): void {
     this.portpholioId$.subscribe((portpholioId) => {
-      if (portpholioId != -1) {
+      if (portpholioId !== -1) {
         this.deposits$ = this.getDepositsByPortpholioIdGQL
           .watch({
-            portpholioId: portpholioId,
+            portpholioId,
           })
           .valueChanges.pipe(
             map((result) => result.data.depositsByPortpholioId)

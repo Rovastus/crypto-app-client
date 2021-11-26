@@ -27,10 +27,10 @@ export class ExportsComponent implements OnInit {
 
   ngOnInit(): void {
     this.portpholioId$.subscribe((portpholioId) => {
-      if (portpholioId != -1) {
+      if (portpholioId !== -1) {
         this.exports$ = this.getExportsByPortpholioIdGQL
           .watch({
-            portpholioId: portpholioId,
+            portpholioId,
           })
           .valueChanges.pipe(
             map((result) => result.data.exportsByPortpholioId)

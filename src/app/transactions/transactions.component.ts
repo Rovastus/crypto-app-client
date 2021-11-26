@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TransactionsByPortpholioIdGQL } from 'src/generated/graphql';
+import {
+  Fiat,
+  TransactionsByPortpholioIdGQL,
+  TransactionTaxEventType,
+} from 'src/generated/graphql';
 
 @Component({
   selector: 'app-transactions',
@@ -18,8 +22,12 @@ export class TransactionsComponent implements OnInit {
     'buy',
     'price',
     'fee',
-    'transactionTaxEvents',
+    'feeGain',
+    'feeExpenses',
+    'tradeGain',
+    'tradeExpenses',
   ];
+  TaxEventType = TransactionTaxEventType;
 
   constructor(
     private getTransactionsByPortpholioIdGQL: TransactionsByPortpholioIdGQL,
@@ -30,15 +38,42 @@ export class TransactionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.portpholioId$.subscribe((portpholioId) => {
-      if (portpholioId != -1) {
+      if (portpholioId !== -1) {
         this.transactions$ = this.getTransactionsByPortpholioIdGQL
           .watch({
-            portpholioId: portpholioId,
+            portpholioId,
           })
           .valueChanges.pipe(
             map((result) => result.data.transactionsByPortpholioId)
           );
       }
     });
+  }
+
+  getGain(
+    transactionTaxEvents: { type: TransactionTaxEventType; gainInFiat: any }[],
+    type: TransactionTaxEventType
+  ): string {
+    const transactionTaxEvent = transactionTaxEvents.find(
+      (element) => element.type === type
+    );
+    return transactionTaxEvent
+      ? transactionTaxEvent.gainInFiat + ' ' + Fiat.Eur
+      : '-';
+  }
+
+  getExpenses(
+    transactionTaxEvents: {
+      type: TransactionTaxEventType;
+      expensesInFiat: any;
+    }[],
+    type: TransactionTaxEventType
+  ): string {
+    const transactionTaxEvent = transactionTaxEvents.find(
+      (element) => element.type === type
+    );
+    return transactionTaxEvent
+      ? transactionTaxEvent.expensesInFiat + ' ' + Fiat.Eur
+      : '-';
   }
 }

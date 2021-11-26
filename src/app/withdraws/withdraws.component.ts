@@ -23,10 +23,10 @@ export class WithdrawsComponent implements OnInit {
 
   ngOnInit(): void {
     this.portpholioId$.subscribe((portpholioId) => {
-      if (portpholioId != -1) {
+      if (portpholioId !== -1) {
         this.withdraws$ = this.getWithdrawsByPortpholioIdGQL
           .watch({
-            portpholioId: portpholioId,
+            portpholioId,
           })
           .valueChanges.pipe(
             map((result) => result.data.withdrawsByPortpholioId)

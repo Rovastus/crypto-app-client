@@ -29,7 +29,7 @@ export class InfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.portpholioId$.subscribe((portpholioId) => {
-      if (portpholioId != -1) {
+      if (portpholioId !== -1) {
         this.portpholio$ = this.getPortpholioByIdGQL
           .watch({
             id: portpholioId,
