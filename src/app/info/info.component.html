@@ -33,7 +33,7 @@
   <ng-container matColumnDef="total">
     <th mat-header-cell *matHeaderCellDef>Price in fiat</th>
     <td mat-cell *matCellDef="let element">
-      {{ element.amount * element.avcoFiatPerUnit }}
+      {{ element.amount * element.avcoFiatPerUnit | number: "1.0-8" }}
       {{ (portpholio$ | async)?.fiat }}
     </td>
   </ng-container>
