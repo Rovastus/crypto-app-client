@@ -19,6 +19,7 @@ interface Portpholio {
 export class InfoComponent implements OnInit {
   portpholioId$: Observable<number>;
   portpholio$!: Observable<any>;
+  displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit'];
 
   constructor(
     private getPortpholioByIdGQL: GetPortpholioByIdGQL,

@@ -22,5 +22,11 @@ query getPortpholioById($id: BigInt!) {
     name
     taxMethod
     fiat
+    wallet {
+      id
+      amount
+      coin
+      avcoFiatPerUnit
+    }
   }
 }

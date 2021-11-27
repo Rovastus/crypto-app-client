@@ -542,7 +542,7 @@ export type GetPortpholioByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetPortpholioByIdQuery = { __typename?: 'Query', portpholio?: Maybe<{ __typename?: 'Portpholio', id: any, name: string, taxMethod: TaxMethod, fiat: Fiat }> };
+export type GetPortpholioByIdQuery = { __typename?: 'Query', portpholio?: Maybe<{ __typename?: 'Portpholio', id: any, name: string, taxMethod: TaxMethod, fiat: Fiat, wallet: Array<{ __typename?: 'Wallet', id: any, amount: any, coin: string, avcoFiatPerUnit: any }> }> };
 
 export type TransactionsByPortpholioIdQueryVariables = Exact<{
   portpholioId: Scalars['BigInt'];
@@ -683,6 +683,12 @@ export const GetPortpholioByIdDocument = gql`
     name
     taxMethod
     fiat
+    wallet {
+      id
+      amount
+      coin
+      avcoFiatPerUnit
+    }
   }
 }
     `;
