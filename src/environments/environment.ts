@@ -3,7 +3,12 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  generateLivecoinwatcTestData: true,
+  livecoinwatchApi: 'https://api.livecoinwatch.com/',
+  livecoinwatchApiKey: '<API-KEY>',
+  coinImageUrl:
+    'https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/',
 };
 
 /*
