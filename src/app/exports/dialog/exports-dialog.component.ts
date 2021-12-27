@@ -76,7 +76,7 @@ export class ExportsDialogComponent implements OnInit {
       this.portpholioId$.pipe(take(1)).subscribe((portpholioId: number) => {
         this.importExportGQL
           .mutate({
-            portpholioId: portpholioId,
+            portpholioId,
             name: exportName,
             jsonData: json,
           })
@@ -97,15 +97,17 @@ export class ExportsDialogComponent implements OnInit {
     const result: Array<CsvData> = [];
     const headers = lines[0].split(',');
     for (let i = 1; i < lines.length; i++) {
-      let obj: CsvData = {
+      const obj: CsvData = {
         UTC_Time: '',
         Account: '',
         Operation: '',
         Coin: '',
         Change: '',
       };
-      let currentline = lines[i].split(',');
-      if (currentline.length == 1) continue;
+      const currentline = lines[i].split(',');
+      if (currentline.length === 1) {
+        continue;
+      }
       console.log(currentline);
       for (let j = 0; j < headers.length; j++) {
         switch (headers[j]) {

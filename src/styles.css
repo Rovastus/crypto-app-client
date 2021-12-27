@@ -6,3 +6,17 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+img.table-coin-icon {
+  width: 20px;
+  height: 20px;
+  margin-bottom: -4px;
+}
+
+th.mat-header-cell {
+  font-weight: bold;
+}
+
+td.mat-footer-cell {
+  font-weight: bold;
+}

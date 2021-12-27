@@ -20,12 +20,13 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { StoreModule } from '@ngrx/store';
 import { portpholioReducer } from './store/portpholio/portpholior.reducer';
+import { coinsReducer } from './store/coins/coins.reducer';
 import { InfoComponent } from './info/info.component';
 import { ExportsComponent } from './exports/exports.component';
 import { ExportsDialogComponent } from './exports/dialog/exports-dialog.component';
 import { FileInputComponent } from './common/file-input/file-input.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { DepositsComponent } from './deposits/deposits/deposits.component';
+import { DepositsComponent } from './deposits/deposits.component';
 import { MatTableModule } from '@angular/material/table';
 import { EarnsComponent } from './earns/earns.component';
 import { TransactionsComponent } from './transactions/transactions.component';
@@ -63,7 +64,10 @@ import { WithdrawsComponent } from './withdraws/withdraws.component';
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTableModule,
-    StoreModule.forRoot({ portpholioId: portpholioReducer }),
+    StoreModule.forRoot({
+      portpholioId: portpholioReducer,
+      coins: coinsReducer,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent],

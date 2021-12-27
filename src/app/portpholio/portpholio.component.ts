@@ -37,15 +37,15 @@ export class PortpholioComponent implements OnInit {
       width: '400px',
     });
 
-    dialogRef.afterClosed().subscribe((update: boolean) => {
-      if (update) {
+    dialogRef.afterClosed().subscribe((shouldUpdate: boolean) => {
+      if (shouldUpdate) {
         this.allPortpholiosGQL.watch().refetch();
       }
       console.log('The dialog was closed');
     });
   }
 
-  portpholioSelected(portpholioId: number): void {
-    this.store.dispatch(update({ portpholioId }));
+  portpholioSelected(newPortpholioId: number): void {
+    this.store.dispatch(update({ newPortpholioId }));
   }
 }

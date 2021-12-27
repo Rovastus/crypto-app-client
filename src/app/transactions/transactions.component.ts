@@ -7,6 +7,7 @@ import {
   TransactionsByPortpholioIdGQL,
   TransactionTaxEventType,
 } from 'src/generated/graphql';
+import { CoinInfo } from '../store/coins/coins.actions';
 
 @Component({
   selector: 'app-transactions',
@@ -15,6 +16,7 @@ import {
 })
 export class TransactionsComponent implements OnInit {
   portpholioId$: Observable<number>;
+  coins$: Observable<Map<string, CoinInfo>>;
   transactions$!: Observable<any>;
   displayedColumns: string[] = [
     'id',
@@ -26,14 +28,19 @@ export class TransactionsComponent implements OnInit {
     'feeExpenses',
     'tradeGain',
     'tradeExpenses',
+    'earnLose',
   ];
   TaxEventType = TransactionTaxEventType;
 
   constructor(
     private getTransactionsByPortpholioIdGQL: TransactionsByPortpholioIdGQL,
-    private store: Store<{ portpholioId: number }>
+    private store: Store<{
+      portpholioId: number;
+      coins: Map<string, CoinInfo>;
+    }>
   ) {
     this.portpholioId$ = this.store.select('portpholioId');
+    this.coins$ = this.store.select('coins');
   }
 
   ngOnInit(): void {
@@ -57,9 +64,7 @@ export class TransactionsComponent implements OnInit {
     const transactionTaxEvent = transactionTaxEvents.find(
       (element) => element.type === type
     );
-    return transactionTaxEvent
-      ? transactionTaxEvent.gainInFiat + ' ' + Fiat.Eur
-      : '-';
+    return transactionTaxEvent ? transactionTaxEvent.gainInFiat : '-';
   }
 
   getExpenses(
@@ -72,8 +77,52 @@ export class TransactionsComponent implements OnInit {
     const transactionTaxEvent = transactionTaxEvents.find(
       (element) => element.type === type
     );
-    return transactionTaxEvent
-      ? transactionTaxEvent.expensesInFiat + ' ' + Fiat.Eur
-      : '-';
+    return transactionTaxEvent ? transactionTaxEvent.expensesInFiat : '-';
+  }
+
+  getEarnLose(
+    transactionTaxEvents: {
+      gainInFiat: string;
+      expensesInFiat: string;
+    }[]
+  ): string {
+    if (transactionTaxEvents.length === 0) {
+      return '-';
+    }
+
+    let gainInFiatTotal = 0;
+    let expensesInFiatTotal = 0;
+    transactionTaxEvents.forEach((transactionTaxEvent) => {
+      gainInFiatTotal += parseFloat(transactionTaxEvent.gainInFiat);
+      expensesInFiatTotal += parseFloat(transactionTaxEvent.expensesInFiat);
+    });
+
+    const earnLose = gainInFiatTotal - expensesInFiatTotal;
+    return earnLose.toFixed(8);
+  }
+
+  getTotalEarnLose(
+    transactions: {
+      transactionTaxEvent: {
+        gainInFiat: string;
+        expensesInFiat: string;
+      }[];
+    }[]
+  ): number {
+    if (transactions !== null) {
+      return transactions.reduce((acc, value) => {
+        let gainInFiatTotal = 0;
+        let expensesInFiatTotal = 0;
+        value.transactionTaxEvent.forEach((transactionTaxEvent) => {
+          gainInFiatTotal += parseFloat(transactionTaxEvent.gainInFiat);
+          expensesInFiatTotal += parseFloat(transactionTaxEvent.expensesInFiat);
+        });
+
+        const earnLose = gainInFiatTotal - expensesInFiatTotal;
+        return acc + earnLose;
+      }, 0);
+    }
+
+    return 0;
   }
 }
