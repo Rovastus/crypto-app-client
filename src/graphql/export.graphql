@@ -1,16 +1,16 @@
-mutation importExport(
+mutation importFile(
   $portpholioId: BigInt!
   $name: String!
-  $jsonData: [ProcessExportInput!]!
+  $jsonData: [ProcessFileInput!]!
 ) {
-  importExport(portpholioId: $portpholioId, name: $name, jsonData: $jsonData) {
+  importFile(portpholioId: $portpholioId, name: $name, jsonData: $jsonData) {
     id
     name
   }
 }
 
-query exportsByPortpholioId($portpholioId: BigInt!) {
-  exportsByPortpholioId(portpholioId: $portpholioId) {
+query filesByPortpholioId($portpholioId: BigInt!) {
+  filesByPortpholioId(portpholioId: $portpholioId) {
     id
     name
   }

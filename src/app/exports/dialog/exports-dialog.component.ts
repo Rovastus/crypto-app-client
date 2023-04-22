@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ImportExportGQL } from 'src/generated/graphql';
+import { ImportFileGQL } from 'src/generated/graphql';
 
 interface CsvData {
   UTC_Time: string;
@@ -29,7 +29,7 @@ export class ExportsDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ExportsDialogComponent>,
     private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
-    private importExportGQL: ImportExportGQL,
+    private importFileGQL: ImportFileGQL,
     private store: Store<{ portpholioId: number }>
   ) {
     this.exportForm = this.formBuilder.group({
@@ -74,13 +74,13 @@ export class ExportsDialogComponent implements OnInit {
       );
       json.sort((a, b) => (a.utcTime < b.utcTime ? -1 : 1));
       this.portpholioId$.pipe(take(1)).subscribe((portpholioId: number) => {
-        this.importExportGQL
+        this.importFileGQL
           .mutate({
             portpholioId,
             name: exportName,
             jsonData: json,
           })
-          .subscribe((res) => {
+          .subscribe(() => {
             this.loading = true;
             this.snackBar.open('Export imported.', 'Close', {
               duration: 5000,
@@ -108,7 +108,6 @@ export class ExportsDialogComponent implements OnInit {
       if (currentline.length === 1) {
         continue;
       }
-      console.log(currentline);
       for (let j = 0; j < headers.length; j++) {
         switch (headers[j]) {
           case 'UTC_Time':

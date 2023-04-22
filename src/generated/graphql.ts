@@ -2,6 +2,7 @@ import { gql } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
@@ -19,9 +20,6 @@ export type Scalars = {
   Decimal: any;
 };
 
-
-
-
 export type CoinPair = {
   __typename?: 'CoinPair';
   id: Scalars['BigInt'];
@@ -31,215 +29,197 @@ export type CoinPair = {
 
 
 export type CoinPairPairPriceHistoryArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<CoinPairPriceHistoryWhereUniqueInput>;
-  after?: Maybe<CoinPairPriceHistoryWhereUniqueInput>;
+  after?: InputMaybe<CoinPairPriceHistoryWhereUniqueInput>;
+  before?: InputMaybe<CoinPairPriceHistoryWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 export type CoinPairPriceHistory = {
   __typename?: 'CoinPairPriceHistory';
-  id: Scalars['BigInt'];
-  time: Scalars['DateTime'];
-  price: Scalars['Decimal'];
-  url: Scalars['String'];
-  coinPairId: Scalars['BigInt'];
   coinPair: CoinPair;
+  coinPairId: Scalars['BigInt'];
+  id: Scalars['BigInt'];
+  price: Scalars['Decimal'];
+  time: Scalars['DateTime'];
+  url: Scalars['String'];
+};
+
+export type CoinPairPriceHistoryKraken = {
+  __typename?: 'CoinPairPriceHistoryKraken';
+  closePrice: Scalars['Decimal'];
+  coinPair: Scalars['String'];
+  id: Scalars['BigInt'];
+  openPrice: Scalars['Decimal'];
+  time: Scalars['DateTime'];
+};
+
+export type CoinPairPriceHistoryKrakenFileInput = {
+  closePrice: Scalars['String'];
+  openPrice: Scalars['String'];
+  utcTime: Scalars['String'];
+};
+
+export type CoinPairPriceHistoryKrakenWhereUniqueInput = {
+  id?: InputMaybe<Scalars['BigInt']>;
 };
 
 export type CoinPairPriceHistoryTime_CoinPairId_UniqueCompoundUniqueInput = {
-  time: Scalars['DateTime'];
   coinPairId: Scalars['BigInt'];
+  time: Scalars['DateTime'];
 };
 
 export type CoinPairPriceHistoryWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
-  time_coinPairId_unique?: Maybe<CoinPairPriceHistoryTime_CoinPairId_UniqueCompoundUniqueInput>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  time_coinPairId_unique?: InputMaybe<CoinPairPriceHistoryTime_CoinPairId_UniqueCompoundUniqueInput>;
 };
 
 export type CoinPairWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
-  pair?: Maybe<Scalars['String']>;
-};
-
-
-
-export type Deposit = {
-  __typename?: 'Deposit';
-  id: Scalars['BigInt'];
-  time: Scalars['DateTime'];
-  amount: Scalars['Decimal'];
-  coin: Scalars['String'];
-  exportId: Scalars['BigInt'];
-  export: Export;
-};
-
-export type DepositWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  pair?: InputMaybe<Scalars['String']>;
 };
 
 export type Earn = {
   __typename?: 'Earn';
-  id: Scalars['BigInt'];
-  time: Scalars['DateTime'];
   amount: Scalars['Decimal'];
   amountCoin: Scalars['String'];
-  exportId: Scalars['BigInt'];
-  export: Export;
+  file: File;
+  fileId: Scalars['BigInt'];
+  id: Scalars['BigInt'];
+  time: Scalars['DateTime'];
 };
 
 export type EarnWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
-};
-
-export type Export = {
-  __typename?: 'Export';
-  id: Scalars['BigInt'];
-  name: Scalars['String'];
-  jsonData: Scalars['String'];
-  portpholioId: Scalars['BigInt'];
-  portpholio: Portpholio;
-  deposit: Array<Deposit>;
-  earn: Array<Earn>;
-  transaction: Array<Transaction>;
-  withdraw: Array<Withdraw>;
-};
-
-
-export type ExportDepositArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<DepositWhereUniqueInput>;
-  after?: Maybe<DepositWhereUniqueInput>;
-};
-
-
-export type ExportEarnArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<EarnWhereUniqueInput>;
-  after?: Maybe<EarnWhereUniqueInput>;
-};
-
-
-export type ExportTransactionArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<TransactionWhereUniqueInput>;
-  after?: Maybe<TransactionWhereUniqueInput>;
-};
-
-
-export type ExportWithdrawArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<WithdrawWhereUniqueInput>;
-  after?: Maybe<WithdrawWhereUniqueInput>;
-};
-
-export type ExportWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
-  name?: Maybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['BigInt']>;
 };
 
 export enum Fiat {
   Eur = 'EUR'
 }
 
-export type Mutation = {
-  __typename?: 'Mutation';
-  initCoinPairs?: Maybe<Array<Maybe<CoinPair>>>;
-  importExport?: Maybe<Export>;
-  createPortpholio?: Maybe<Portpholio>;
+export type File = {
+  __typename?: 'File';
+  earn: Array<Earn>;
+  id: Scalars['BigInt'];
+  jsonData: Scalars['String'];
+  name: Scalars['String'];
+  portpholio: Portpholio;
+  portpholioId: Scalars['BigInt'];
+  transaction: Array<Transaction>;
 };
 
 
-export type MutationImportExportArgs = {
-  portpholioId: Scalars['BigInt'];
-  name: Scalars['String'];
-  jsonData: Array<ProcessExportInput>;
+export type FileEarnArgs = {
+  after?: InputMaybe<EarnWhereUniqueInput>;
+  before?: InputMaybe<EarnWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type FileTransactionArgs = {
+  after?: InputMaybe<TransactionWhereUniqueInput>;
+  before?: InputMaybe<TransactionWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+export type FileWhereUniqueInput = {
+  id?: InputMaybe<Scalars['BigInt']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createPortpholio?: Maybe<Portpholio>;
+  importCoinPairPriceHistoryKrakenData?: Maybe<Scalars['String']>;
+  importFile?: Maybe<File>;
+  initCoinPairs?: Maybe<Array<Maybe<CoinPair>>>;
 };
 
 
 export type MutationCreatePortpholioArgs = {
+  fiat: Fiat;
   name: Scalars['String'];
   taxMethod: TaxMethod;
-  fiat: Fiat;
+};
+
+
+export type MutationImportCoinPairPriceHistoryKrakenDataArgs = {
+  coinPair: Scalars['String'];
+  jsonData: Array<CoinPairPriceHistoryKrakenFileInput>;
+};
+
+
+export type MutationImportFileArgs = {
+  jsonData: Array<ProcessFileInput>;
+  name: Scalars['String'];
+  portpholioId: Scalars['BigInt'];
 };
 
 export type Portpholio = {
   __typename?: 'Portpholio';
+  fiat: Fiat;
+  files: Array<File>;
   id: Scalars['BigInt'];
   name: Scalars['String'];
   taxMethod: TaxMethod;
-  fiat: Fiat;
-  exports: Array<Export>;
   wallet: Array<Wallet>;
 };
 
 
-export type PortpholioExportsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<ExportWhereUniqueInput>;
-  after?: Maybe<ExportWhereUniqueInput>;
+export type PortpholioFilesArgs = {
+  after?: InputMaybe<FileWhereUniqueInput>;
+  before?: InputMaybe<FileWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
 export type PortpholioWalletArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<WalletWhereUniqueInput>;
-  after?: Maybe<WalletWhereUniqueInput>;
+  after?: InputMaybe<WalletWhereUniqueInput>;
+  before?: InputMaybe<WalletWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 export type PortpholioWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
-  name?: Maybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
-export type ProcessExportInput = {
-  utcTime: Scalars['String'];
-  operation: Scalars['String'];
-  coin: Scalars['String'];
+export type ProcessFileInput = {
   change: Scalars['Float'];
+  coin: Scalars['String'];
+  operation: Scalars['String'];
+  utcTime: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  coinPairs: Array<CoinPair>;
   coinPair?: Maybe<CoinPair>;
-  deposits: Array<Deposit>;
-  deposit?: Maybe<Deposit>;
-  depositsByPortpholioId: Array<Maybe<Deposit>>;
-  earns: Array<Earn>;
+  coinPairPriceHistories: Array<CoinPairPriceHistory>;
+  coinPairPriceHistory?: Maybe<CoinPairPriceHistory>;
+  coinPairPriceHistoryKraken?: Maybe<CoinPairPriceHistoryKraken>;
+  coinPairPriceHistoryKrakens: Array<CoinPairPriceHistoryKraken>;
+  coinPairs: Array<CoinPair>;
   earn?: Maybe<Earn>;
+  earns: Array<Earn>;
   earnsByPortpholioId: Array<Maybe<Earn>>;
-  exports: Array<Export>;
-  export?: Maybe<Export>;
-  exportsByPortpholioId: Array<Maybe<Export>>;
-  portpholios: Array<Portpholio>;
+  file?: Maybe<File>;
+  files: Array<File>;
+  filesByPortpholioId: Array<Maybe<File>>;
   portpholio?: Maybe<Portpholio>;
-  transactions: Array<Transaction>;
+  portpholios: Array<Portpholio>;
   transaction?: Maybe<Transaction>;
-  transactionsByPortpholioId: Array<Maybe<Transaction>>;
-  transactionTaxEvents: Array<TransactionTaxEvent>;
   transactionTaxEvent?: Maybe<TransactionTaxEvent>;
-  wallets: Array<Wallet>;
+  transactionTaxEvents: Array<TransactionTaxEvent>;
+  transactions: Array<Transaction>;
+  transactionsByPortpholioId: Array<Maybe<Transaction>>;
   wallet?: Maybe<Wallet>;
   walletHistories: Array<WalletHistory>;
   walletHistory?: Maybe<WalletHistory>;
-  withdraws: Array<Withdraw>;
-  withdraw?: Maybe<Withdraw>;
-  withdrawsByPortpholioId: Array<Maybe<Withdraw>>;
-};
-
-
-export type QueryCoinPairsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<CoinPairWhereUniqueInput>;
-  after?: Maybe<CoinPairWhereUniqueInput>;
+  wallets: Array<Wallet>;
 };
 
 
@@ -248,29 +228,37 @@ export type QueryCoinPairArgs = {
 };
 
 
-export type QueryDepositsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<DepositWhereUniqueInput>;
-  after?: Maybe<DepositWhereUniqueInput>;
+export type QueryCoinPairPriceHistoriesArgs = {
+  after?: InputMaybe<CoinPairPriceHistoryWhereUniqueInput>;
+  before?: InputMaybe<CoinPairPriceHistoryWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
-export type QueryDepositArgs = {
-  where: DepositWhereUniqueInput;
+export type QueryCoinPairPriceHistoryArgs = {
+  where: CoinPairPriceHistoryWhereUniqueInput;
 };
 
 
-export type QueryDepositsByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt'];
+export type QueryCoinPairPriceHistoryKrakenArgs = {
+  where: CoinPairPriceHistoryKrakenWhereUniqueInput;
 };
 
 
-export type QueryEarnsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<EarnWhereUniqueInput>;
-  after?: Maybe<EarnWhereUniqueInput>;
+export type QueryCoinPairPriceHistoryKrakensArgs = {
+  after?: InputMaybe<CoinPairPriceHistoryKrakenWhereUniqueInput>;
+  before?: InputMaybe<CoinPairPriceHistoryKrakenWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCoinPairsArgs = {
+  after?: InputMaybe<CoinPairWhereUniqueInput>;
+  before?: InputMaybe<CoinPairWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -279,34 +267,34 @@ export type QueryEarnArgs = {
 };
 
 
+export type QueryEarnsArgs = {
+  after?: InputMaybe<EarnWhereUniqueInput>;
+  before?: InputMaybe<EarnWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryEarnsByPortpholioIdArgs = {
   portpholioId: Scalars['BigInt'];
 };
 
 
-export type QueryExportsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<ExportWhereUniqueInput>;
-  after?: Maybe<ExportWhereUniqueInput>;
+export type QueryFileArgs = {
+  where: FileWhereUniqueInput;
 };
 
 
-export type QueryExportArgs = {
-  where: ExportWhereUniqueInput;
+export type QueryFilesArgs = {
+  after?: InputMaybe<FileWhereUniqueInput>;
+  before?: InputMaybe<FileWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
-export type QueryExportsByPortpholioIdArgs = {
+export type QueryFilesByPortpholioIdArgs = {
   portpholioId: Scalars['BigInt'];
-};
-
-
-export type QueryPortpholiosArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<PortpholioWhereUniqueInput>;
-  after?: Maybe<PortpholioWhereUniqueInput>;
 };
 
 
@@ -315,11 +303,11 @@ export type QueryPortpholioArgs = {
 };
 
 
-export type QueryTransactionsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<TransactionWhereUniqueInput>;
-  after?: Maybe<TransactionWhereUniqueInput>;
+export type QueryPortpholiosArgs = {
+  after?: InputMaybe<PortpholioWhereUniqueInput>;
+  before?: InputMaybe<PortpholioWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -328,29 +316,29 @@ export type QueryTransactionArgs = {
 };
 
 
-export type QueryTransactionsByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt'];
-};
-
-
-export type QueryTransactionTaxEventsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<TransactionTaxEventWhereUniqueInput>;
-  after?: Maybe<TransactionTaxEventWhereUniqueInput>;
-};
-
-
 export type QueryTransactionTaxEventArgs = {
   where: TransactionTaxEventWhereUniqueInput;
 };
 
 
-export type QueryWalletsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<WalletWhereUniqueInput>;
-  after?: Maybe<WalletWhereUniqueInput>;
+export type QueryTransactionTaxEventsArgs = {
+  after?: InputMaybe<TransactionTaxEventWhereUniqueInput>;
+  before?: InputMaybe<TransactionTaxEventWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryTransactionsArgs = {
+  after?: InputMaybe<TransactionWhereUniqueInput>;
+  before?: InputMaybe<TransactionWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryTransactionsByPortpholioIdArgs = {
+  portpholioId: Scalars['BigInt'];
 };
 
 
@@ -360,10 +348,10 @@ export type QueryWalletArgs = {
 
 
 export type QueryWalletHistoriesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<WalletHistoryWhereUniqueInput>;
-  after?: Maybe<WalletHistoryWhereUniqueInput>;
+  after?: InputMaybe<WalletHistoryWhereUniqueInput>;
+  before?: InputMaybe<WalletHistoryWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -372,21 +360,11 @@ export type QueryWalletHistoryArgs = {
 };
 
 
-export type QueryWithdrawsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<WithdrawWhereUniqueInput>;
-  after?: Maybe<WithdrawWhereUniqueInput>;
-};
-
-
-export type QueryWithdrawArgs = {
-  where: WithdrawWhereUniqueInput;
-};
-
-
-export type QueryWithdrawsByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt'];
+export type QueryWalletsArgs = {
+  after?: InputMaybe<WalletWhereUniqueInput>;
+  before?: InputMaybe<WalletWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 export enum TaxMethod {
@@ -395,133 +373,112 @@ export enum TaxMethod {
 
 export type Transaction = {
   __typename?: 'Transaction';
-  id: Scalars['BigInt'];
-  time: Scalars['DateTime'];
   buy: Scalars['Decimal'];
   buyCoin: Scalars['String'];
-  price: Scalars['Decimal'];
-  priceCoin: Scalars['String'];
   fee: Scalars['Decimal'];
   feeCoin: Scalars['String'];
-  exportId: Scalars['BigInt'];
-  export: Export;
+  file: File;
+  fileId: Scalars['BigInt'];
+  id: Scalars['BigInt'];
+  price: Scalars['Decimal'];
+  priceCoin: Scalars['String'];
+  time: Scalars['DateTime'];
   transactionTaxEvent: Array<TransactionTaxEvent>;
 };
 
 
 export type TransactionTransactionTaxEventArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  before?: Maybe<TransactionTaxEventWhereUniqueInput>;
-  after?: Maybe<TransactionTaxEventWhereUniqueInput>;
+  after?: InputMaybe<TransactionTaxEventWhereUniqueInput>;
+  before?: InputMaybe<TransactionTaxEventWhereUniqueInput>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
 };
 
 export type TransactionTaxEvent = {
   __typename?: 'TransactionTaxEvent';
-  id: Scalars['BigInt'];
-  type: TransactionTaxEventType;
-  gainInFiat: Scalars['Decimal'];
   expensesInFiat: Scalars['Decimal'];
-  transactionId: Scalars['BigInt'];
+  gainInFiat: Scalars['Decimal'];
+  id: Scalars['BigInt'];
   transaction: Transaction;
+  transactionId: Scalars['BigInt'];
+  type: TransactionTaxEventType;
 };
 
 export enum TransactionTaxEventType {
-  Fee = 'FEE',
-  Buy = 'BUY'
+  Buy = 'BUY',
+  Fee = 'FEE'
 }
 
 export type TransactionTaxEventWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']>;
 };
 
 export type TransactionWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']>;
 };
 
 export type Wallet = {
   __typename?: 'Wallet';
-  id: Scalars['BigInt'];
-  coin: Scalars['String'];
   amount: Scalars['Decimal'];
   avcoFiatPerUnit: Scalars['Decimal'];
-  totalFiat: Scalars['Decimal'];
-  portpholioId: Scalars['BigInt'];
+  coin: Scalars['String'];
+  id: Scalars['BigInt'];
   portpholio: Portpholio;
+  portpholioId: Scalars['BigInt'];
+  totalFiat: Scalars['Decimal'];
 };
 
 export type WalletHistory = {
   __typename?: 'WalletHistory';
-  id: Scalars['BigInt'];
   coin: Scalars['String'];
-  oldAmount: Scalars['Decimal'];
-  oldAvcoFiatPerUnit: Scalars['Decimal'];
-  oldTotalFiat: Scalars['Decimal'];
+  id: Scalars['BigInt'];
   newAmount: Scalars['Decimal'];
   newAvcoFiatPerUnit: Scalars['Decimal'];
   newTotalFiat: Scalars['Decimal'];
-  time: Scalars['DateTime'];
-  portpholioId: Scalars['BigInt'];
+  oldAmount: Scalars['Decimal'];
+  oldAvcoFiatPerUnit: Scalars['Decimal'];
+  oldTotalFiat: Scalars['Decimal'];
   portpholio: Portpholio;
+  portpholioId: Scalars['BigInt'];
+  time: Scalars['DateTime'];
 };
 
 export type WalletHistoryWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
+  id?: InputMaybe<Scalars['BigInt']>;
 };
 
 export type WalletPortpholioId_Coin_UniqueCompoundUniqueInput = {
-  portpholioId: Scalars['BigInt'];
   coin: Scalars['String'];
+  portpholioId: Scalars['BigInt'];
 };
 
 export type WalletWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
-  portpholioId_coin_unique?: Maybe<WalletPortpholioId_Coin_UniqueCompoundUniqueInput>;
+  id?: InputMaybe<Scalars['BigInt']>;
+  portpholioId_coin_unique?: InputMaybe<WalletPortpholioId_Coin_UniqueCompoundUniqueInput>;
 };
-
-export type Withdraw = {
-  __typename?: 'Withdraw';
-  id: Scalars['BigInt'];
-  time: Scalars['DateTime'];
-  amount: Scalars['Decimal'];
-  coin: Scalars['String'];
-  exportId: Scalars['BigInt'];
-  export: Export;
-};
-
-export type WithdrawWhereUniqueInput = {
-  id?: Maybe<Scalars['BigInt']>;
-};
-
-export type DepositsByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt'];
-}>;
-
-
-export type DepositsByPortpholioIdQuery = { __typename?: 'Query', depositsByPortpholioId: Array<Maybe<{ __typename?: 'Deposit', id: any, time: any, amount: any, coin: string }>> };
 
 export type EarnsByPortpholioIdQueryVariables = Exact<{
   portpholioId: Scalars['BigInt'];
 }>;
 
 
-export type EarnsByPortpholioIdQuery = { __typename?: 'Query', earnsByPortpholioId: Array<Maybe<{ __typename?: 'Earn', id: any, time: any, amount: any, amountCoin: string }>> };
+export type EarnsByPortpholioIdQuery = { __typename?: 'Query', earnsByPortpholioId: Array<{ __typename?: 'Earn', id: any, time: any, amount: any, amountCoin: string } | null> };
 
-export type ImportExportMutationVariables = Exact<{
+export type ImportFileMutationVariables = Exact<{
   portpholioId: Scalars['BigInt'];
   name: Scalars['String'];
-  jsonData: Array<ProcessExportInput> | ProcessExportInput;
+  jsonData: Array<ProcessFileInput> | ProcessFileInput;
 }>;
 
 
-export type ImportExportMutation = { __typename?: 'Mutation', importExport?: Maybe<{ __typename?: 'Export', id: any, name: string }> };
+export type ImportFileMutation = { __typename?: 'Mutation', importFile?: { __typename?: 'File', id: any, name: string } | null };
 
-export type ExportsByPortpholioIdQueryVariables = Exact<{
+export type FilesByPortpholioIdQueryVariables = Exact<{
   portpholioId: Scalars['BigInt'];
 }>;
 
 
-export type ExportsByPortpholioIdQuery = { __typename?: 'Query', exportsByPortpholioId: Array<Maybe<{ __typename?: 'Export', id: any, name: string }>> };
+export type FilesByPortpholioIdQuery = { __typename?: 'Query', filesByPortpholioId: Array<{ __typename?: 'File', id: any, name: string } | null> };
 
 export type CreatePortpholioMutationVariables = Exact<{
   name: Scalars['String'];
@@ -530,7 +487,7 @@ export type CreatePortpholioMutationVariables = Exact<{
 }>;
 
 
-export type CreatePortpholioMutation = { __typename?: 'Mutation', createPortpholio?: Maybe<{ __typename?: 'Portpholio', id: any, name: string }> };
+export type CreatePortpholioMutation = { __typename?: 'Mutation', createPortpholio?: { __typename?: 'Portpholio', id: any, name: string } | null };
 
 export type AllPortpholiosQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -542,43 +499,15 @@ export type GetPortpholioByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetPortpholioByIdQuery = { __typename?: 'Query', portpholio?: Maybe<{ __typename?: 'Portpholio', id: any, name: string, taxMethod: TaxMethod, fiat: Fiat, wallet: Array<{ __typename?: 'Wallet', id: any, amount: any, coin: string, avcoFiatPerUnit: any }> }> };
+export type GetPortpholioByIdQuery = { __typename?: 'Query', portpholio?: { __typename?: 'Portpholio', id: any, name: string, taxMethod: TaxMethod, fiat: Fiat, wallet: Array<{ __typename?: 'Wallet', id: any, amount: any, coin: string, avcoFiatPerUnit: any }> } | null };
 
 export type TransactionsByPortpholioIdQueryVariables = Exact<{
   portpholioId: Scalars['BigInt'];
 }>;
 
 
-export type TransactionsByPortpholioIdQuery = { __typename?: 'Query', transactionsByPortpholioId: Array<Maybe<{ __typename?: 'Transaction', id: any, time: any, buy: any, buyCoin: string, price: any, priceCoin: string, fee: any, feeCoin: string, transactionTaxEvent: Array<{ __typename?: 'TransactionTaxEvent', id: any, type: TransactionTaxEventType, gainInFiat: any, expensesInFiat: any }> }>> };
+export type TransactionsByPortpholioIdQuery = { __typename?: 'Query', transactionsByPortpholioId: Array<{ __typename?: 'Transaction', id: any, time: any, buy: any, buyCoin: string, price: any, priceCoin: string, fee: any, feeCoin: string, transactionTaxEvent: Array<{ __typename?: 'TransactionTaxEvent', id: any, gainInFiat: any, expensesInFiat: any }> } | null> };
 
-export type WithdrawsByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt'];
-}>;
-
-
-export type WithdrawsByPortpholioIdQuery = { __typename?: 'Query', withdrawsByPortpholioId: Array<Maybe<{ __typename?: 'Withdraw', id: any, time: any, amount: any, coin: string }>> };
-
-export const DepositsByPortpholioIdDocument = gql`
-    query depositsByPortpholioId($portpholioId: BigInt!) {
-  depositsByPortpholioId(portpholioId: $portpholioId) {
-    id
-    time
-    amount
-    coin
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DepositsByPortpholioIdGQL extends Apollo.Query<DepositsByPortpholioIdQuery, DepositsByPortpholioIdQueryVariables> {
-    document = DepositsByPortpholioIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
 export const EarnsByPortpholioIdDocument = gql`
     query earnsByPortpholioId($portpholioId: BigInt!) {
   earnsByPortpholioId(portpholioId: $portpholioId) {
@@ -600,9 +529,9 @@ export const EarnsByPortpholioIdDocument = gql`
       super(apollo);
     }
   }
-export const ImportExportDocument = gql`
-    mutation importExport($portpholioId: BigInt!, $name: String!, $jsonData: [ProcessExportInput!]!) {
-  importExport(portpholioId: $portpholioId, name: $name, jsonData: $jsonData) {
+export const ImportFileDocument = gql`
+    mutation importFile($portpholioId: BigInt!, $name: String!, $jsonData: [ProcessFileInput!]!) {
+  importFile(portpholioId: $portpholioId, name: $name, jsonData: $jsonData) {
     id
     name
   }
@@ -612,16 +541,16 @@ export const ImportExportDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class ImportExportGQL extends Apollo.Mutation<ImportExportMutation, ImportExportMutationVariables> {
-    document = ImportExportDocument;
+  export class ImportFileGQL extends Apollo.Mutation<ImportFileMutation, ImportFileMutationVariables> {
+    document = ImportFileDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
   }
-export const ExportsByPortpholioIdDocument = gql`
-    query exportsByPortpholioId($portpholioId: BigInt!) {
-  exportsByPortpholioId(portpholioId: $portpholioId) {
+export const FilesByPortpholioIdDocument = gql`
+    query filesByPortpholioId($portpholioId: BigInt!) {
+  filesByPortpholioId(portpholioId: $portpholioId) {
     id
     name
   }
@@ -631,8 +560,8 @@ export const ExportsByPortpholioIdDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class ExportsByPortpholioIdGQL extends Apollo.Query<ExportsByPortpholioIdQuery, ExportsByPortpholioIdQueryVariables> {
-    document = ExportsByPortpholioIdDocument;
+  export class FilesByPortpholioIdGQL extends Apollo.Query<FilesByPortpholioIdQuery, FilesByPortpholioIdQueryVariables> {
+    document = FilesByPortpholioIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -716,7 +645,6 @@ export const TransactionsByPortpholioIdDocument = gql`
     feeCoin
     transactionTaxEvent {
       id
-      type
       gainInFiat
       expensesInFiat
     }
@@ -729,27 +657,6 @@ export const TransactionsByPortpholioIdDocument = gql`
   })
   export class TransactionsByPortpholioIdGQL extends Apollo.Query<TransactionsByPortpholioIdQuery, TransactionsByPortpholioIdQueryVariables> {
     document = TransactionsByPortpholioIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const WithdrawsByPortpholioIdDocument = gql`
-    query withdrawsByPortpholioId($portpholioId: BigInt!) {
-  withdrawsByPortpholioId(portpholioId: $portpholioId) {
-    id
-    time
-    amount
-    coin
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class WithdrawsByPortpholioIdGQL extends Apollo.Query<WithdrawsByPortpholioIdQuery, WithdrawsByPortpholioIdQueryVariables> {
-    document = WithdrawsByPortpholioIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

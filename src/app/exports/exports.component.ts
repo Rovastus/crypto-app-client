@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ExportsByPortpholioIdGQL } from 'src/generated/graphql';
+import { FilesByPortpholioIdGQL } from 'src/generated/graphql';
 import { ExportsDialogComponent } from './dialog/exports-dialog.component';
 
 @Component({
@@ -19,7 +19,7 @@ export class ExportsComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private getExportsByPortpholioIdGQL: ExportsByPortpholioIdGQL,
+    private getFilesByPortpholioIdGQL: FilesByPortpholioIdGQL,
     private store: Store<{ portpholioId: number }>
   ) {
     this.portpholioId$ = this.store.select('portpholioId');
@@ -28,12 +28,12 @@ export class ExportsComponent implements OnInit {
   ngOnInit(): void {
     this.portpholioId$.subscribe((portpholioId) => {
       if (portpholioId !== -1) {
-        this.exports$ = this.getExportsByPortpholioIdGQL
+        this.exports$ = this.getFilesByPortpholioIdGQL
           .watch({
             portpholioId,
           })
           .valueChanges.pipe(
-            map((result) => result.data.exportsByPortpholioId)
+            map((result: any) => result.data.exportsByPortpholioId)
           );
       }
     });
