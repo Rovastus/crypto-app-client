@@ -47,3 +47,6 @@ Thumbs.db
 
 #enviroments
 /src/environments/*
+
+#angular
+.angular
