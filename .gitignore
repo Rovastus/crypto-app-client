@@ -45,10 +45,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-#enviroments
-/src/environments/*
-
 #angular
 .angular
-src/environments/environments.ts
-src/environments/environments.prod.ts
