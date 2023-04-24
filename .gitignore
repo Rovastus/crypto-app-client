@@ -50,3 +50,5 @@ Thumbs.db
 
 #angular
 .angular
+src/environments/environments.ts
+src/environments/environments.prod.ts
