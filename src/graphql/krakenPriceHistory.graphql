@@ -1,0 +1,3 @@
+mutation importCoinPairPriceHistoryKrakenData($coinPair: String!, $jsonData: [CoinPairPriceHistoryKrakenJsonData!]!) {
+	importCoinPairPriceHistoryKrakenData(coinPair: $coinPair, jsonData: $jsonData)
+}

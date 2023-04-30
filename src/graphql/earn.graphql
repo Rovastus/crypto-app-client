@@ -1,8 +1,8 @@
 query earnsByPortpholioId($portpholioId: BigInt!) {
-  earnsByPortpholioId(portpholioId: $portpholioId) {
-    id
-    time
-    amount
-    amountCoin
-  }
+	earnsByPortpholioId(portpholioId: $portpholioId) {
+		id
+		time
+		amount
+		amountCoin
+	}
 }

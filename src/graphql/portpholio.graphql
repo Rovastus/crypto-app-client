@@ -1,32 +1,28 @@
-mutation createPortpholio(
-  $name: String!
-  $taxMethod: TaxMethod!
-  $fiat: Fiat!
-) {
-  createPortpholio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
-    id
-    name
-  }
+mutation createPortpholio($name: String!, $taxMethod: TaxMethodEnum!, $fiat: FiatEnum!) {
+	createPortpholio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
+		id
+		name
+	}
 }
 
 query allPortpholios {
-  portpholios {
-    id
-    name
-  }
+	allPortpholios {
+		id
+		name
+	}
 }
 
-query getPortpholioById($id: BigInt!) {
-  portpholio(where: { id: $id }) {
-    id
-    name
-    taxMethod
-    fiat
-    wallet {
-      id
-      amount
-      coin
-      avcoFiatPerUnit
-    }
-  }
+query getPortpholioById($portpholioId: BigInt!) {
+	getPortpholioById(portpholioId: $portpholioId) {
+		id
+		name
+		taxMethod
+		fiat
+		wallets {
+			id
+			amount
+			coin
+			avcoFiatPerUnit
+		}
+	}
 }

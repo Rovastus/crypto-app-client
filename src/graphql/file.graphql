@@ -1,0 +1,13 @@
+mutation importFile($portpholioId: BigInt!, $name: String!, $jsonData: [FileJsonData!]!) {
+	importFile(portpholioId: $portpholioId, name: $name, jsonData: $jsonData) {
+		id
+		name
+	}
+}
+
+query filesByPortpholioId($portpholioId: BigInt!) {
+	filesByPortpholioId(portpholioId: $portpholioId) {
+		id
+		name
+	}
+}

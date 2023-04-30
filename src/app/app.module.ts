@@ -31,6 +31,7 @@ import { EarnsComponent } from './earns/earns.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { ApolloModule } from 'apollo-angular';
 import { SettingsComponent } from './settings/settings.component';
+import { KrakenDialogComponent } from './settings/dialog/kraken-dialog.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { SettingsComponent } from './settings/settings.component';
     EarnsComponent,
     TransactionsComponent,
     SettingsComponent,
+    KrakenDialogComponent,
   ],
   imports: [
     ApolloModule,
