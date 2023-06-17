@@ -3,12 +3,23 @@
 	"tasks": [
     {
       "type": "npm",
-      "script": "start",
+      "script": "generate",
       "problemMatcher": [],
       "label": "FE",
       "options": {
         "statusbar": {
-            "label": "FE start"
+            "label": "FE generate"
+        }
+      }
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "problemMatcher": [],
+      "label": "FE",
+      "options": {
+        "statusbar": {
+            "label": "FE dev"
         }
       }
     }

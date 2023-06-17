@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   generateLivecoinwatcTestData: false,
   livecoinwatchApi: 'https://api.livecoinwatch.com/',
-  livecoinwatchApiKey: '<API-KEY>',
+  livecoinwatchApiKey: '4b684707-54a6-4ab5-9117-0e5954483456',
   coinImageUrl:
     'https://lcw.nyc3.cdn.digitaloceanspaces.com/production/currencies/32/',
 };

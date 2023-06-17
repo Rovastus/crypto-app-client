@@ -35,7 +35,6 @@ export class PortpholioComponent implements OnInit {
 			if (shouldUpdate) {
 				this.allPortpholiosGQL.watch().refetch();
 			}
-			console.log('The dialog was closed');
 		});
 	}
 

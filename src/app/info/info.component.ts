@@ -75,7 +75,7 @@ export class InfoComponent implements OnInit {
 		}[],
 		coins: Map<string, CoinInfo> | null,
 	): number {
-		if (wallet !== null && coins !== null) {
+		if (wallet && coins) {
 			return wallet.reduce((acc, value) => acc + this.calculateCurrentTotal(value.amount, value.avcoFiatPerUnit, coins.get(value.coin)), 0);
 		}
 		return 0;

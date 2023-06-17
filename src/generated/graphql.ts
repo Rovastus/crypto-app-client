@@ -6,59 +6,61 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
+  ID: { input: string | number; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
   /** The `BigInt` scalar type represents non-fractional signed whole numeric values. */
-  BigInt: any;
+  BigInt: { input: any; output: any; }
   /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
-  Date: any;
+  Date: { input: any; output: any; }
   /** An arbitrary-precision Decimal type */
-  Decimal: any;
+  Decimal: { input: any; output: any; }
 };
 
 export type CoinPair = {
   __typename?: 'CoinPair';
-  id: Scalars['BigInt'];
-  pair: Scalars['String'];
+  id: Scalars['BigInt']['output'];
+  pair: Scalars['String']['output'];
   pairPriceHistories: Array<CoinPairPriceHistory>;
 };
 
 export type CoinPairPriceHistory = {
   __typename?: 'CoinPairPriceHistory';
   coinPair: CoinPair;
-  id: Scalars['BigInt'];
-  price: Scalars['Decimal'];
-  time: Scalars['Date'];
-  url: Scalars['String'];
+  id: Scalars['BigInt']['output'];
+  price: Scalars['Decimal']['output'];
+  time: Scalars['Date']['output'];
+  url: Scalars['String']['output'];
 };
 
 export type CoinPairPriceHistoryKraken = {
   __typename?: 'CoinPairPriceHistoryKraken';
-  closePrice: Scalars['Decimal'];
-  coinPair: Scalars['String'];
-  id: Scalars['BigInt'];
-  openPrice: Scalars['Decimal'];
-  time: Scalars['Date'];
+  closePrice: Scalars['Decimal']['output'];
+  coinPair: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  openPrice: Scalars['Decimal']['output'];
+  time: Scalars['Date']['output'];
 };
 
 export type CoinPairPriceHistoryKrakenJsonData = {
-  closePrice: Scalars['String'];
-  openPrice: Scalars['String'];
-  utcTimeUnix: Scalars['Int'];
+  closePrice: Scalars['String']['input'];
+  openPrice: Scalars['String']['input'];
+  utcTimeUnix: Scalars['Int']['input'];
 };
 
 export type Earn = {
   __typename?: 'Earn';
-  amount: Scalars['Decimal'];
-  amountCoin: Scalars['String'];
+  amount: Scalars['Decimal']['output'];
+  amountCoin: Scalars['String']['output'];
   file: File;
-  id: Scalars['BigInt'];
-  time: Scalars['Date'];
+  id: Scalars['BigInt']['output'];
+  time: Scalars['Date']['output'];
 };
 
 export enum FiatEnum {
@@ -68,55 +70,56 @@ export enum FiatEnum {
 export type File = {
   __typename?: 'File';
   earns: Array<Earn>;
-  id: Scalars['BigInt'];
-  jsonData: Scalars['String'];
-  name: Scalars['String'];
+  id: Scalars['BigInt']['output'];
+  jsonData: Scalars['String']['output'];
+  name: Scalars['String']['output'];
   portpholio: Portpholio;
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['output'];
   transactions: Array<Transaction>;
   transfers: Array<Transfer>;
 };
 
 export type FileJsonData = {
-  birthdate: Scalars['String'];
-  height: Scalars['Float'];
-  name: Scalars['String'];
+  data: Scalars['String']['input'];
+  description: Scalars['String']['input'];
+  operation: Scalars['String']['input'];
+  utcTime: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createPortpholio: Portpholio;
-  importCoinPairPriceHistoryKrakenData: Scalars['String'];
+  importCoinPairPriceHistoryKrakenData: Scalars['String']['output'];
   importFile: Array<File>;
-  initCoinPairs: Scalars['String'];
+  initCoinPairs: Scalars['String']['output'];
 };
 
 
 export type MutationCreatePortpholioArgs = {
   fiat: FiatEnum;
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   taxMethod: TaxMethodEnum;
 };
 
 
 export type MutationImportCoinPairPriceHistoryKrakenDataArgs = {
-  coinPair: Scalars['String'];
+  coinPair: Scalars['String']['input'];
   jsonData: Array<CoinPairPriceHistoryKrakenJsonData>;
 };
 
 
 export type MutationImportFileArgs = {
   jsonData: Array<FileJsonData>;
-  name: Scalars['String'];
-  portpholioId: Scalars['BigInt'];
+  name: Scalars['String']['input'];
+  portpholioId: Scalars['BigInt']['input'];
 };
 
 export type Portpholio = {
   __typename?: 'Portpholio';
   fiat: FiatEnum;
   files: Array<File>;
-  id: Scalars['BigInt'];
-  name: Scalars['String'];
+  id: Scalars['BigInt']['output'];
+  name: Scalars['String']['output'];
   taxMethod: TaxMethodEnum;
   walletHistories: Array<WalletHistory>;
   wallets: Array<Wallet>;
@@ -133,22 +136,22 @@ export type Query = {
 
 
 export type QueryEarnsByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 };
 
 
 export type QueryFilesByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 };
 
 
 export type QueryGetPortpholioByIdArgs = {
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 };
 
 
 export type QueryTransactionsByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 };
 
 export enum TaxMethodEnum {
@@ -157,23 +160,23 @@ export enum TaxMethodEnum {
 
 export type Transaction = {
   __typename?: 'Transaction';
-  buy: Scalars['Decimal'];
-  buyCoin: Scalars['String'];
-  fee: Scalars['Decimal'];
-  feeCoin: Scalars['String'];
+  buy: Scalars['Decimal']['output'];
+  buyCoin: Scalars['String']['output'];
+  fee: Scalars['Decimal']['output'];
+  feeCoin: Scalars['String']['output'];
   file: File;
-  id: Scalars['BigInt'];
-  price: Scalars['Decimal'];
-  priceCoin: Scalars['String'];
-  time: Scalars['Date'];
+  id: Scalars['BigInt']['output'];
+  price: Scalars['Decimal']['output'];
+  priceCoin: Scalars['String']['output'];
+  time: Scalars['Date']['output'];
   transactionTaxEvents: Array<TransactionTaxEvent>;
 };
 
 export type TransactionTaxEvent = {
   __typename?: 'TransactionTaxEvent';
-  expensesInFiat: Scalars['Decimal'];
-  gainInFiat: Scalars['Decimal'];
-  id: Scalars['BigInt'];
+  expensesInFiat: Scalars['Decimal']['output'];
+  gainInFiat: Scalars['Decimal']['output'];
+  id: Scalars['BigInt']['output'];
   transaction: Transaction;
   type: TransactionTaxEventTypeEnum;
 };
@@ -185,48 +188,48 @@ export enum TransactionTaxEventTypeEnum {
 
 export type Transfer = {
   __typename?: 'Transfer';
-  fee: Scalars['Decimal'];
-  feeCoin: Scalars['String'];
+  fee: Scalars['Decimal']['output'];
+  feeCoin: Scalars['String']['output'];
   file: File;
-  id: Scalars['BigInt'];
-  time: Scalars['Date'];
+  id: Scalars['BigInt']['output'];
+  time: Scalars['Date']['output'];
 };
 
 export type Wallet = {
   __typename?: 'Wallet';
-  amount: Scalars['Decimal'];
-  avcoFiatPerUnit: Scalars['Decimal'];
-  coin: Scalars['String'];
-  id: Scalars['BigInt'];
+  amount: Scalars['Decimal']['output'];
+  avcoFiatPerUnit: Scalars['Decimal']['output'];
+  coin: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
   portpholio: Portpholio;
-  portpholioId: Scalars['BigInt'];
-  totalFiat: Scalars['Decimal'];
+  portpholioId: Scalars['BigInt']['output'];
+  totalFiat: Scalars['Decimal']['output'];
 };
 
 export type WalletHistory = {
   __typename?: 'WalletHistory';
-  coin: Scalars['String'];
-  id: Scalars['BigInt'];
-  newAmount: Scalars['Decimal'];
-  newAvcoFiatPerUnit: Scalars['Decimal'];
-  newTotalFiat: Scalars['Decimal'];
-  oldAmount: Scalars['Decimal'];
-  oldAvcoFiatPerUnit: Scalars['Decimal'];
-  oldTotalFiat: Scalars['Decimal'];
+  coin: Scalars['String']['output'];
+  id: Scalars['BigInt']['output'];
+  newAmount: Scalars['Decimal']['output'];
+  newAvcoFiatPerUnit: Scalars['Decimal']['output'];
+  newTotalFiat: Scalars['Decimal']['output'];
+  oldAmount: Scalars['Decimal']['output'];
+  oldAvcoFiatPerUnit: Scalars['Decimal']['output'];
+  oldTotalFiat: Scalars['Decimal']['output'];
   portpholio: Portpholio;
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['output'];
 };
 
 export type EarnsByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 }>;
 
 
 export type EarnsByPortpholioIdQuery = { __typename?: 'Query', earnsByPortpholioId: Array<{ __typename?: 'Earn', id: any, time: any, amount: any, amountCoin: string }> };
 
 export type ImportFileMutationVariables = Exact<{
-  portpholioId: Scalars['BigInt'];
-  name: Scalars['String'];
+  portpholioId: Scalars['BigInt']['input'];
+  name: Scalars['String']['input'];
   jsonData: Array<FileJsonData> | FileJsonData;
 }>;
 
@@ -234,14 +237,14 @@ export type ImportFileMutationVariables = Exact<{
 export type ImportFileMutation = { __typename?: 'Mutation', importFile: Array<{ __typename?: 'File', id: any, name: string }> };
 
 export type FilesByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 }>;
 
 
 export type FilesByPortpholioIdQuery = { __typename?: 'Query', filesByPortpholioId: Array<{ __typename?: 'File', id: any, name: string }> };
 
 export type ImportCoinPairPriceHistoryKrakenDataMutationVariables = Exact<{
-  coinPair: Scalars['String'];
+  coinPair: Scalars['String']['input'];
   jsonData: Array<CoinPairPriceHistoryKrakenJsonData> | CoinPairPriceHistoryKrakenJsonData;
 }>;
 
@@ -249,7 +252,7 @@ export type ImportCoinPairPriceHistoryKrakenDataMutationVariables = Exact<{
 export type ImportCoinPairPriceHistoryKrakenDataMutation = { __typename?: 'Mutation', importCoinPairPriceHistoryKrakenData: string };
 
 export type CreatePortpholioMutationVariables = Exact<{
-  name: Scalars['String'];
+  name: Scalars['String']['input'];
   taxMethod: TaxMethodEnum;
   fiat: FiatEnum;
 }>;
@@ -263,14 +266,14 @@ export type AllPortpholiosQueryVariables = Exact<{ [key: string]: never; }>;
 export type AllPortpholiosQuery = { __typename?: 'Query', allPortpholios: Array<{ __typename?: 'Portpholio', id: any, name: string }> };
 
 export type GetPortpholioByIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 }>;
 
 
 export type GetPortpholioByIdQuery = { __typename?: 'Query', getPortpholioById: { __typename?: 'Portpholio', id: any, name: string, taxMethod: TaxMethodEnum, fiat: FiatEnum, wallets: Array<{ __typename?: 'Wallet', id: any, amount: any, coin: string, avcoFiatPerUnit: any }> } };
 
 export type TransactionsByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt'];
+  portpholioId: Scalars['BigInt']['input'];
 }>;
 
 

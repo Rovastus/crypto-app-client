@@ -1,104 +1,74 @@
 <mat-list *ngIf="portpholio$ | async">
-  <mat-list-item>
-    <h2>Name:</h2>
-    <p>{{ (portpholio$ | async)?.name }}</p>
-  </mat-list-item>
-  <mat-list-item>
-    <h2>Tax Method:</h2>
-    <p>{{ (portpholio$ | async)?.taxMethod }}</p>
-  </mat-list-item>
-  <mat-list-item>
-    <h2>Fiat:</h2>
-    <p>{{ (portpholio$ | async)?.fiat }}</p>
-  </mat-list-item>
+	<mat-list-item>
+		<span matListItemTitle>Name:</span>
+		<span matListItemLine>{{ (portpholio$ | async)?.name }}</span>
+	</mat-list-item>
+	<mat-list-item>
+		<span matListItemTitle>Tax Method:</span>
+		<span matListItemLine>{{ (portpholio$ | async)?.taxMethod }}</span>
+	</mat-list-item>
+	<mat-list-item>
+		<span matListItemTitle>Fiat:</span>
+		<span matListItemLine>{{ (portpholio$ | async)?.fiat }}</span>
+	</mat-list-item>
 </mat-list>
 
-<table
-  mat-table
-  [dataSource]="(portpholio$ | async)?.wallet"
-  class="mat-elevation-z8"
->
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>Id</th>
-    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-    <td mat-footer-cell *matFooterCellDef>Total Profit/Loss</td>
-  </ng-container>
+<table mat-table [dataSource]="(portpholio$ | async)?.wallet" class="mat-elevation-z8">
+	<ng-container matColumnDef="id">
+		<th mat-header-cell *matHeaderCellDef>Id</th>
+		<td mat-cell *matCellDef="let element">{{ element.id }}</td>
+		<td mat-footer-cell *matFooterCellDef>Total Profit/Loss</td>
+	</ng-container>
 
-  <ng-container matColumnDef="coin">
-    <th mat-header-cell *matHeaderCellDef>Coin</th>
-    <td mat-cell *matCellDef="let element">
-      <img
-        [src]="(coins$ | async)?.get(element.coin)?.imagePath"
-        [alt]="element.coin"
-        class="table-coin-icon"
-      />
+	<ng-container matColumnDef="coin">
+		<th mat-header-cell *matHeaderCellDef>Coin</th>
+		<td mat-cell *matCellDef="let element">
+			<img [src]="(coins$ | async)?.get(element.coin)?.imagePath" [alt]="element.coin" class="table-coin-icon" />
 
-      {{ element.amount }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
+			{{ element.amount }}
+		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
+	</ng-container>
 
-  <ng-container matColumnDef="avcoFiatPerUnit">
-    <th mat-header-cell *matHeaderCellDef>Avg. price per coin</th>
-    <td mat-cell *matCellDef="let element">
-      <img
-        [src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath"
-        [alt]="(portpholio$ | async)?.fiat"
-        class="table-coin-icon"
-      />
+	<ng-container matColumnDef="avcoFiatPerUnit">
+		<th mat-header-cell *matHeaderCellDef>Avg. price per coin</th>
+		<td mat-cell *matCellDef="let element">
+			<img [src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath" [alt]="(portpholio$ | async)?.fiat" class="table-coin-icon" />
 
-      {{ element.avcoFiatPerUnit }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
+			{{ element.avcoFiatPerUnit }}
+		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
+	</ng-container>
 
-  <ng-container matColumnDef="total">
-    <th mat-header-cell *matHeaderCellDef>Price in fiat</th>
-    <td mat-cell *matCellDef="let element">
-      <img
-        [src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath"
-        [alt]="(portpholio$ | async)?.fiat"
-        class="table-coin-icon"
-      />
+	<ng-container matColumnDef="total">
+		<th mat-header-cell *matHeaderCellDef>Price in fiat</th>
+		<td mat-cell *matCellDef="let element">
+			<img [src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath" [alt]="(portpholio$ | async)?.fiat" class="table-coin-icon" />
 
-      {{ element.amount * element.avcoFiatPerUnit | number: "1.0-8" }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
+			{{ element.amount * element.avcoFiatPerUnit | number : '1.0-8' }}
+		</td>
+		<td mat-footer-cell *matFooterCellDef></td>
+	</ng-container>
 
-  <ng-container matColumnDef="profit/loss">
-    <th mat-header-cell *matHeaderCellDef>Profit/Loss</th>
-    <td mat-cell *matCellDef="let element">
-      <img
-        [src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath"
-        [alt]="(portpholio$ | async)?.fiat"
-        class="table-coin-icon"
-      />
+	<ng-container matColumnDef="profit/loss">
+		<th mat-header-cell *matHeaderCellDef>Profit/Loss</th>
+		<td mat-cell *matCellDef="let element">
+			<img [src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath" [alt]="(portpholio$ | async)?.fiat" class="table-coin-icon" />
 
-      {{
-        calculateCurrentTotal(
-          element.amount,
-          element.avcoFiatPerUnit,
-          (coins$ | async)?.get(element.coin)
-        ) | number: "1.0-8"
-      }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef>
-      <img
-        *ngIf="portpholio$ | async"
-        [src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath"
-        [alt]="(portpholio$ | async)?.fiat"
-        class="table-coin-icon"
-      />
+			{{ calculateCurrentTotal(element.amount, element.avcoFiatPerUnit, (coins$ | async)?.get(element.coin)) | number : '1.0-8' }}
+		</td>
+		<td mat-footer-cell *matFooterCellDef>
+			<img
+				*ngIf="portpholio$ | async"
+				[src]="(coins$ | async)?.get((portpholio$ | async)?.fiat)?.imagePath"
+				[alt]="(portpholio$ | async)?.fiat"
+				class="table-coin-icon" />
 
-      {{
-        getTotalProfitLoss((portpholio$ | async)?.wallet, coins$ | async)
-          | number: "1.0-8"
-      }}
-    </td>
-  </ng-container>
+			{{ getTotalProfitLoss((portpholio$ | async)?.wallet, coins$ | async) | number : '1.0-8' }}
+		</td>
+	</ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+	<tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
 </table>

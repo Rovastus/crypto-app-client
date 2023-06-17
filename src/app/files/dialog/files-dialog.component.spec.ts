@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PortpholioComponent } from './portpholio.component';
+import { FilesDialogComponent } from './files-dialog.component';
 
-describe('PortpholioComponent', () => {
-	let component: PortpholioComponent;
-	let fixture: ComponentFixture<PortpholioComponent>;
+describe('FilesDialogComponent', () => {
+	let component: FilesDialogComponent;
+	let fixture: ComponentFixture<FilesDialogComponent>;
 
 	beforeEach(async () => {
 		await TestBed.configureTestingModule({
-			declarations: [PortpholioComponent],
+			declarations: [FilesDialogComponent],
 		}).compileComponents();
 	});
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(PortpholioComponent);
+		fixture = TestBed.createComponent(FilesDialogComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

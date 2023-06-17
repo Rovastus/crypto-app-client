@@ -1,43 +1,12 @@
 <app-portpholio></app-portpholio>
 
-<mat-tab-group mat-stretch-tabs animationDuration="0ms">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">info</mat-icon>
-      Info
-    </ng-template>
-    <app-info></app-info>
-  </mat-tab>
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+	<a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.link" (click)="activeLink = link" [active]="activeLink == link">
+		<mat-icon class="example-tab-icon">{{ link.icon }}</mat-icon>
+		{{ link.label }}
+	</a>
+</nav>
 
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">note_add</mat-icon>
-      Files
-    </ng-template>
-    <app-exports></app-exports>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">swap_horiz</mat-icon>
-      Transactions
-    </ng-template>
-    <app-transactions></app-transactions>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">savings</mat-icon>
-      Earns
-    </ng-template>
-    <app-earns></app-earns>
-  </mat-tab>
-
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">settings</mat-icon>
-      Settings
-    </ng-template>
-    <app-settings></app-settings>
-  </mat-tab>
-</mat-tab-group>
+<mat-tab-nav-panel #tabPanel>
+	<router-outlet></router-outlet>
+</mat-tab-nav-panel>

@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
 import { PortpholioComponent } from './portpholio/portpholio.component';
 import { PortpholioDialogComponent } from './portpholio/dialog/portpholio-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,59 +18,40 @@ import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { StoreModule } from '@ngrx/store';
-import { portpholioReducer } from './store/portpholio/portpholior.reducer';
+import { portpholioReducer } from './store/portpholio/portpholio.reducer';
 import { coinsReducer } from './store/coins/coins.reducer';
-import { InfoComponent } from './info/info.component';
-import { ExportsComponent } from './exports/exports.component';
-import { ExportsDialogComponent } from './exports/dialog/exports-dialog.component';
-import { FileInputComponent } from './common/file-input/file-input.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatTableModule } from '@angular/material/table';
-import { EarnsComponent } from './earns/earns.component';
-import { TransactionsComponent } from './transactions/transactions.component';
 import { ApolloModule } from 'apollo-angular';
-import { SettingsComponent } from './settings/settings.component';
-import { KrakenDialogComponent } from './settings/dialog/kraken-dialog.component';
+import { AppRoutingModule } from './app-router.module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PortpholioComponent,
-    PortpholioDialogComponent,
-    InfoComponent,
-    ExportsComponent,
-    ExportsDialogComponent,
-    FileInputComponent,
-    EarnsComponent,
-    TransactionsComponent,
-    SettingsComponent,
-    KrakenDialogComponent,
-  ],
-  imports: [
-    ApolloModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    GraphQLModule,
-    HttpClientModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatTabsModule,
-    MatSnackBarModule,
-    MatIconModule,
-    MatGridListModule,
-    MatListModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatTableModule,
-    StoreModule.forRoot({
-      portpholioId: portpholioReducer,
-      coins: coinsReducer,
-    }),
-  ],
-  providers: [],
-  bootstrap: [AppComponent],
+	declarations: [AppComponent, PortpholioComponent, PortpholioDialogComponent],
+	imports: [
+		ApolloModule,
+		BrowserModule,
+		BrowserAnimationsModule,
+		GraphQLModule,
+		HttpClientModule,
+		ReactiveFormsModule,
+		MatTabsModule,
+		MatSnackBarModule,
+		MatIconModule,
+		MatGridListModule,
+		MatListModule,
+		MatInputModule,
+		MatSelectModule,
+		MatButtonModule,
+		MatDialogModule,
+		MatProgressSpinnerModule,
+		MatProgressBarModule,
+		StoreModule.forRoot({
+			portpholioId: portpholioReducer,
+			coins: coinsReducer,
+		}),
+		AppRoutingModule,
+	],
+	providers: [],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}
