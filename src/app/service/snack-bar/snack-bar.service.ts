@@ -8,6 +8,6 @@ export class SnackBarService {
 	constructor(private snackBar: MatSnackBar) {}
 
 	displayError(message: string) {
-		this.snackBar.open(message, 'Close', { duration: 5000, horizontalPosition: 'center', verticalPosition: 'top', panelClass: 'error-message' });
+		this.snackBar.open(message, 'Close', { duration: 50000, horizontalPosition: 'center', verticalPosition: 'top', panelClass: 'error-message' });
 	}
 }

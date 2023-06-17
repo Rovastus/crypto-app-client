@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { EMPTY, Observable } from 'rxjs';
 import { FiatEnum, GetPortpholioByIdGQL, TaxMethodEnum } from 'src/generated/graphql';
-import { CoinInfoService } from '../service/coin-info/coin-info.service';
-import { CoinInfo } from '../store/coins/coin-info.actions';
+import { CoinInfo } from '../store/coins/coin-info.model';
 import { CoinInfoActions } from '../store/coins/coin-info.types';
+import { PortpholioDataStoreType } from '../store/portpholio/portpholio.reducer';
+import { PortpholioActions } from '../store/portpholio/portpholio.types';
 
 interface Portpholio {
 	id: number;
@@ -20,44 +21,34 @@ interface Portpholio {
 	styleUrls: ['./info.component.css'],
 })
 export class InfoComponent implements OnInit {
-	portpholioId$: Observable<number>;
-	portpholio$!: Observable<any>;
+	portpholio$!: Observable<any | undefined>;
 	coins$: Observable<Map<string, CoinInfo>>;
 	displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit', 'profit/loss'];
 
 	constructor(
-		private getPortpholioByIdGQL: GetPortpholioByIdGQL,
 		private store: Store<{
-			portpholioId: number;
+			portpholioData: PortpholioDataStoreType;
 			coins: Map<string, CoinInfo>;
 		}>,
 	) {
-		this.portpholioId$ = this.store.select('portpholioId');
 		this.coins$ = this.store.select('coins');
 	}
 
 	ngOnInit(): void {
-		this.portpholioId$.subscribe((portpholioId) => {
-			if (portpholioId !== -1) {
-				this.portpholio$ = this.getPortpholioByIdGQL
-					.watch({
-						portpholioId: portpholioId,
-					})
-					.valueChanges.pipe(
-						map((result) => {
-							if (result.data.getPortpholioById) {
-								const coins: Set<string> = new Set();
-								result.data.getPortpholioById.wallets.forEach((wallet) => {
-									coins.add(wallet.coin);
-								});
-								this.store.dispatch(CoinInfoActions.loadCoinInfos({ coins }));
-							}
+		this.portpholio$ = this.store.select('portpholioData').pipe(
+			switchMap((p) => {
+				const portpholioId = p.currentPortpholioName?.id;
 
-							return result.data.getPortpholioById;
-						}),
-					);
-			}
-		});
+				if (portpholioId && p.portpholio?.id === portpholioId) {
+					return this.store.select('portpholioData').pipe(map((p) => p.portpholio));
+				} else if (portpholioId) {
+					this.store.dispatch(PortpholioActions.LOAD_PORTPHOLIO({ portpholioId }));
+					return this.store.select('portpholioData').pipe(map((p) => p.portpholio));
+				}
+
+				return EMPTY;
+			}),
+		);
 	}
 
 	public calculateCurrentTotal(amount: number, avcoFiatPerUnit: number, coinInfo: CoinInfo | undefined): number {

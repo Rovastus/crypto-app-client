@@ -8,20 +8,22 @@ import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
 
 @Injectable()
 export class CoinInfosEffects {
-	loadCoinInfos$ = createEffect(() =>
-		this.actions$.pipe(
-			ofType(CoinInfoActions.loadCoinInfos),
-			exhaustMap((props) =>
-				this.coinInfoService.fetchCoinInfo(props.coins).pipe(
-					map((coinInfos) => CoinInfoActions.updateCoinInfos({ coinInfos })),
-					catchError(() => {
-						this.snackBar.displayError('Error while loading coin infos');
-						return EMPTY;
-					}),
+	loadCoinInfos$;
+
+	constructor(private actions$: Actions, private coinInfoService: CoinInfoService, private snackBar: SnackBarService) {
+		this.loadCoinInfos$ = createEffect(() =>
+			this.actions$.pipe(
+				ofType(CoinInfoActions.LOAD_COIN_INFOS),
+				exhaustMap((props) =>
+					this.coinInfoService.fetchCoinInfo(props.coins).pipe(
+						map((coinInfos) => CoinInfoActions.UPDATE_COIN_INFOS({ coinInfos })),
+						catchError(() => {
+							this.snackBar.displayError('Error while loading coin infos');
+							return EMPTY;
+						}),
+					),
 				),
 			),
-		),
-	);
-
-	constructor(private actions$: Actions, private coinInfoService: CoinInfoService, private snackBar: SnackBarService) {}
+		);
+	}
 }

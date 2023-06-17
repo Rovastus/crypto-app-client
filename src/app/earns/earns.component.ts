@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EarnsByPortpholioIdGQL } from 'src/generated/graphql';
-import { CoinInfo } from '../store/coins/coin-info.actions';
+import { CoinInfo } from '../store/coins/coin-info.model';
 
 @Component({
 	selector: 'app-earns',

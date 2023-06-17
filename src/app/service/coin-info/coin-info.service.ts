@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CoinInfo } from '../../store/coins/coin-info.actions';
+import { CoinInfo } from '../../store/coins/coin-info.model';
 import { environment } from 'src/environments/environment';
 import { FiatEnum } from 'src/generated/graphql';
 import { Observable, of, map } from 'rxjs';
@@ -11,6 +11,7 @@ import { CoinInfoResponse } from './coin-info.model';
 })
 export class CoinInfoService {
 	private readonly coinUrl = `${environment.livecoinwatchApi}coins/single`;
+	private readonly headers = { headers: { 'content-type': 'application/json', 'x-api-key': environment.livecoinwatchApiKey } };
 
 	constructor(private http: HttpClient) {}
 
@@ -31,9 +32,8 @@ export class CoinInfoService {
 	}
 
 	private fetchApiCoinInfo(coins: Set<string>): Observable<Set<CoinInfo>> {
-		const headers = { 'content-type': 'application/json', 'x-api-key': environment.livecoinwatchApiKey };
 		const body = { currency: FiatEnum.Eur, codes: coins, meta: false };
-		return this.http.post<CoinInfoResponse[]>(this.coinUrl, body, { headers }).pipe(
+		return this.http.post<CoinInfoResponse[]>(this.coinUrl, body, this.headers).pipe(
 			map((data) => {
 				const coinInfos = new Set<CoinInfo>();
 				data.forEach((coin) => {

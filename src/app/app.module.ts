@@ -18,12 +18,16 @@ import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { StoreModule } from '@ngrx/store';
-import { portpholioReducer } from './store/portpholio/portpholio.reducer';
 import { coinsReducer } from './store/coins/coin-info.reducer';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ApolloModule } from 'apollo-angular';
 import { AppRoutingModule } from './app-router.module';
 import { MatDialogModule } from '@angular/material/dialog';
+import { portpholioDataReducer } from './store/portpholio/portpholio.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { PortpholioEffects } from './store/portpholio/portpholio.effects';
+import { CoinInfosEffects } from './store/coins/coin-info.effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
 	declarations: [AppComponent, PortpholioComponent, PortpholioDialogComponent],
@@ -47,9 +51,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 		MatProgressBarModule,
 		MatSnackBarModule,
 		StoreModule.forRoot({
-			portpholioId: portpholioReducer,
+			portpholioData: portpholioDataReducer,
 			coins: coinsReducer,
 		}),
+		StoreDevtoolsModule.instrument(),
+		EffectsModule.forRoot(PortpholioEffects, CoinInfosEffects),
 		AppRoutingModule,
 	],
 	providers: [],

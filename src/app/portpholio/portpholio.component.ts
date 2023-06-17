@@ -1,16 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PortpholioDialogComponent } from './dialog/portpholio-dialog.component';
 import { AllPortpholiosGQL } from 'src/generated/graphql';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import { update } from '../store/portpholio/portpholio.actions';
-
-interface Portpholio {
-	id: number;
-	name: string;
-}
+import { PortpholioNameI } from '../store/portpholio/portpholio.model';
+import { PortpholioActions } from '../store/portpholio/portpholio.types';
+import { PortpholioDataStoreType } from '../store/portpholio/portpholio.reducer';
 
 @Component({
 	selector: 'app-portpholio',
@@ -18,12 +15,13 @@ interface Portpholio {
 	styleUrls: ['./portpholio.component.css'],
 })
 export class PortpholioComponent implements OnInit {
-	portpholios$!: Observable<Portpholio[]>;
+	portpholios$!: Observable<PortpholioNameI[]>;
 
-	constructor(private dialog: MatDialog, private allPortpholiosGQL: AllPortpholiosGQL, private store: Store<{ portpholioId: number }>) {}
+	constructor(private dialog: MatDialog, private readonly store: Store<{ portpholioData: PortpholioDataStoreType }>) {}
 
 	ngOnInit(): void {
-		this.portpholios$ = this.allPortpholiosGQL.watch().valueChanges.pipe(map((result) => result.data.allPortpholios));
+		this.portpholios$ = this.store.select('portpholioData').pipe(map((portpholioData) => portpholioData.portpholiosNames));
+		this.store.dispatch(PortpholioActions.LOAD_PORTPHOLIOS_NAMES());
 	}
 
 	openDialog(): void {
@@ -33,12 +31,12 @@ export class PortpholioComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe((shouldUpdate: boolean) => {
 			if (shouldUpdate) {
-				this.allPortpholiosGQL.watch().refetch();
+				this.store.dispatch(PortpholioActions.LOAD_PORTPHOLIOS_NAMES());
 			}
 		});
 	}
 
-	portpholioSelected(newPortpholioId: number): void {
-		this.store.dispatch(update({ newPortpholioId }));
+	portpholioSelected(portpholioName: PortpholioNameI): void {
+		this.store.dispatch(PortpholioActions.SET_CURRENT_PORTPHOLIO_NAME({ portpholioName }));
 	}
 }
