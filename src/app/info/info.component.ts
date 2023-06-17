@@ -3,8 +3,9 @@ import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FiatEnum, GetPortpholioByIdGQL, TaxMethodEnum } from 'src/generated/graphql';
-import { CoinService } from '../service/coin.service';
-import { CoinInfo } from '../store/coins/coins.actions';
+import { CoinInfoService } from '../service/coin-info/coin-info.service';
+import { CoinInfo } from '../store/coins/coin-info.actions';
+import { CoinInfoActions } from '../store/coins/coin-info.types';
 
 interface Portpholio {
 	id: number;
@@ -30,7 +31,6 @@ export class InfoComponent implements OnInit {
 			portpholioId: number;
 			coins: Map<string, CoinInfo>;
 		}>,
-		private coinService: CoinService,
 	) {
 		this.portpholioId$ = this.store.select('portpholioId');
 		this.coins$ = this.store.select('coins');
@@ -50,7 +50,7 @@ export class InfoComponent implements OnInit {
 								result.data.getPortpholioById.wallets.forEach((wallet) => {
 									coins.add(wallet.coin);
 								});
-								this.coinService.fetchCoinInfo(coins);
+								this.store.dispatch(CoinInfoActions.loadCoinInfos({ coins }));
 							}
 
 							return result.data.getPortpholioById;

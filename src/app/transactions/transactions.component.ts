@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TransactionsByPortpholioIdGQL, TransactionTaxEventTypeEnum } from 'src/generated/graphql';
-import { CoinInfo } from '../store/coins/coins.actions';
+import { CoinInfo } from '../store/coins/coin-info.actions';
 
 @Component({
 	selector: 'app-transactions',

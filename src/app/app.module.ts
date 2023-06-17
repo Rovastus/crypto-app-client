@@ -19,7 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { StoreModule } from '@ngrx/store';
 import { portpholioReducer } from './store/portpholio/portpholio.reducer';
-import { coinsReducer } from './store/coins/coins.reducer';
+import { coinsReducer } from './store/coins/coin-info.reducer';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ApolloModule } from 'apollo-angular';
 import { AppRoutingModule } from './app-router.module';
@@ -45,6 +45,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 		MatDialogModule,
 		MatProgressSpinnerModule,
 		MatProgressBarModule,
+		MatSnackBarModule,
 		StoreModule.forRoot({
 			portpholioId: portpholioReducer,
 			coins: coinsReducer,

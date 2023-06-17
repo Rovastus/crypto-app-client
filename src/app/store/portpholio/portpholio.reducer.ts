@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { PortpholioActions } from './portpholio-types';
+import { PortpholioActions } from './portpholio.types';
 
 export const initPortpholioId = -1;
 
