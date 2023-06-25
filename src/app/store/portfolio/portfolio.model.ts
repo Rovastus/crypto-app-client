@@ -1,6 +1,6 @@
 import { FiatEnum, TaxMethodEnum } from 'src/generated/graphql';
 
-export interface PortpholioNameI {
+export interface PortfolioNameI {
   id: number;
   name: string;
 }
@@ -12,7 +12,7 @@ export interface WalletI {
   avcoFiatPerUnit: string;
 }
 
-export interface PortpholioI {
+export interface PortfolioI {
   id: number;
   name: string;
   taxMethod: TaxMethodEnum;

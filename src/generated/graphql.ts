@@ -1,6 +1,6 @@
-import { gql } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
+import { gql } from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -73,8 +73,8 @@ export type File = {
   id: Scalars['BigInt']['output'];
   jsonData: Scalars['String']['output'];
   name: Scalars['String']['output'];
-  portpholio: Portpholio;
-  portpholioId: Scalars['BigInt']['output'];
+  portfolio: Portfolio;
+  portfolioId: Scalars['BigInt']['output'];
   transactions: Array<Transaction>;
   transfers: Array<Transfer>;
 };
@@ -88,14 +88,14 @@ export type FileJsonData = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createPortpholio: Portpholio;
+  createPortfolio: Portfolio;
   importCoinPairPriceHistoryKrakenData: Scalars['String']['output'];
   importFile: Array<File>;
   initCoinPairs: Scalars['String']['output'];
 };
 
 
-export type MutationCreatePortpholioArgs = {
+export type MutationCreatePortfolioArgs = {
   fiat: FiatEnum;
   name: Scalars['String']['input'];
   taxMethod: TaxMethodEnum;
@@ -111,11 +111,11 @@ export type MutationImportCoinPairPriceHistoryKrakenDataArgs = {
 export type MutationImportFileArgs = {
   jsonData: Array<FileJsonData>;
   name: Scalars['String']['input'];
-  portpholioId: Scalars['BigInt']['input'];
+  portfolioId: Scalars['BigInt']['input'];
 };
 
-export type Portpholio = {
-  __typename?: 'Portpholio';
+export type Portfolio = {
+  __typename?: 'Portfolio';
   fiat: FiatEnum;
   files: Array<File>;
   id: Scalars['BigInt']['output'];
@@ -127,31 +127,31 @@ export type Portpholio = {
 
 export type Query = {
   __typename?: 'Query';
-  allPortpholios: Array<Portpholio>;
-  earnsByPortpholioId: Array<Earn>;
-  filesByPortpholioId: Array<File>;
-  getPortpholioById: Portpholio;
-  transactionsByPortpholioId: Array<Transaction>;
+  allPortfolios: Array<Portfolio>;
+  earnsByPortfolioId: Array<Earn>;
+  filesByPortfolioId: Array<File>;
+  getPortfolioById: Portfolio;
+  transactionsByPortfolioId: Array<Transaction>;
 };
 
 
-export type QueryEarnsByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt']['input'];
+export type QueryEarnsByPortfolioIdArgs = {
+  portfolioId: Scalars['BigInt']['input'];
 };
 
 
-export type QueryFilesByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt']['input'];
+export type QueryFilesByPortfolioIdArgs = {
+  portfolioId: Scalars['BigInt']['input'];
 };
 
 
-export type QueryGetPortpholioByIdArgs = {
-  portpholioId: Scalars['BigInt']['input'];
+export type QueryGetPortfolioByIdArgs = {
+  portfolioId: Scalars['BigInt']['input'];
 };
 
 
-export type QueryTransactionsByPortpholioIdArgs = {
-  portpholioId: Scalars['BigInt']['input'];
+export type QueryTransactionsByPortfolioIdArgs = {
+  portfolioId: Scalars['BigInt']['input'];
 };
 
 export enum TaxMethodEnum {
@@ -201,8 +201,8 @@ export type Wallet = {
   avcoFiatPerUnit: Scalars['Decimal']['output'];
   coin: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
-  portpholio: Portpholio;
-  portpholioId: Scalars['BigInt']['output'];
+  portfolio: Portfolio;
+  portfolioId: Scalars['BigInt']['output'];
   totalFiat: Scalars['Decimal']['output'];
 };
 
@@ -216,19 +216,19 @@ export type WalletHistory = {
   oldAmount: Scalars['Decimal']['output'];
   oldAvcoFiatPerUnit: Scalars['Decimal']['output'];
   oldTotalFiat: Scalars['Decimal']['output'];
-  portpholio: Portpholio;
-  portpholioId: Scalars['BigInt']['output'];
+  portfolio: Portfolio;
+  portfolioId: Scalars['BigInt']['output'];
 };
 
-export type EarnsByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt']['input'];
+export type EarnsByPortfolioIdQueryVariables = Exact<{
+  portfolioId: Scalars['BigInt']['input'];
 }>;
 
 
-export type EarnsByPortpholioIdQuery = { __typename?: 'Query', earnsByPortpholioId: Array<{ __typename?: 'Earn', id: any, time: any, amount: any, amountCoin: string }> };
+export type EarnsByPortfolioIdQuery = { __typename?: 'Query', earnsByPortfolioId: Array<{ __typename?: 'Earn', id: any, time: any, amount: any, amountCoin: string }> };
 
 export type ImportFileMutationVariables = Exact<{
-  portpholioId: Scalars['BigInt']['input'];
+  portfolioId: Scalars['BigInt']['input'];
   name: Scalars['String']['input'];
   jsonData: Array<FileJsonData> | FileJsonData;
 }>;
@@ -236,12 +236,12 @@ export type ImportFileMutationVariables = Exact<{
 
 export type ImportFileMutation = { __typename?: 'Mutation', importFile: Array<{ __typename?: 'File', id: any, name: string }> };
 
-export type FilesByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt']['input'];
+export type FilesByPortfolioIdQueryVariables = Exact<{
+  portfolioId: Scalars['BigInt']['input'];
 }>;
 
 
-export type FilesByPortpholioIdQuery = { __typename?: 'Query', filesByPortpholioId: Array<{ __typename?: 'File', id: any, name: string }> };
+export type FilesByPortfolioIdQuery = { __typename?: 'Query', filesByPortfolioId: Array<{ __typename?: 'File', id: any, name: string }> };
 
 export type ImportCoinPairPriceHistoryKrakenDataMutationVariables = Exact<{
   coinPair: Scalars['String']['input'];
@@ -251,37 +251,37 @@ export type ImportCoinPairPriceHistoryKrakenDataMutationVariables = Exact<{
 
 export type ImportCoinPairPriceHistoryKrakenDataMutation = { __typename?: 'Mutation', importCoinPairPriceHistoryKrakenData: string };
 
-export type CreatePortpholioMutationVariables = Exact<{
+export type CreatePortfolioMutationVariables = Exact<{
   name: Scalars['String']['input'];
   taxMethod: TaxMethodEnum;
   fiat: FiatEnum;
 }>;
 
 
-export type CreatePortpholioMutation = { __typename?: 'Mutation', createPortpholio: { __typename?: 'Portpholio', id: any, name: string } };
+export type CreatePortfolioMutation = { __typename?: 'Mutation', createPortfolio: { __typename?: 'Portfolio', id: any, name: string } };
 
-export type AllPortpholiosQueryVariables = Exact<{ [key: string]: never; }>;
+export type AllPortfoliosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllPortpholiosQuery = { __typename?: 'Query', allPortpholios: Array<{ __typename?: 'Portpholio', id: any, name: string }> };
+export type AllPortfoliosQuery = { __typename?: 'Query', allPortfolios: Array<{ __typename?: 'Portfolio', id: any, name: string }> };
 
-export type GetPortpholioByIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt']['input'];
+export type GetPortfolioByIdQueryVariables = Exact<{
+  portfolioId: Scalars['BigInt']['input'];
 }>;
 
 
-export type GetPortpholioByIdQuery = { __typename?: 'Query', getPortpholioById: { __typename?: 'Portpholio', id: any, name: string, taxMethod: TaxMethodEnum, fiat: FiatEnum, wallets: Array<{ __typename?: 'Wallet', id: any, amount: any, coin: string, avcoFiatPerUnit: any }> } };
+export type GetPortfolioByIdQuery = { __typename?: 'Query', getPortfolioById: { __typename?: 'Portfolio', id: any, name: string, taxMethod: TaxMethodEnum, fiat: FiatEnum, wallets: Array<{ __typename?: 'Wallet', id: any, amount: any, coin: string, avcoFiatPerUnit: any }> } };
 
-export type TransactionsByPortpholioIdQueryVariables = Exact<{
-  portpholioId: Scalars['BigInt']['input'];
+export type TransactionsByPortfolioIdQueryVariables = Exact<{
+  portfolioId: Scalars['BigInt']['input'];
 }>;
 
 
-export type TransactionsByPortpholioIdQuery = { __typename?: 'Query', transactionsByPortpholioId: Array<{ __typename?: 'Transaction', id: any, time: any, buy: any, buyCoin: string, price: any, priceCoin: string, fee: any, feeCoin: string, transactionTaxEvents: Array<{ __typename?: 'TransactionTaxEvent', id: any, gainInFiat: any, expensesInFiat: any }> }> };
+export type TransactionsByPortfolioIdQuery = { __typename?: 'Query', transactionsByPortfolioId: Array<{ __typename?: 'Transaction', id: any, time: any, buy: any, buyCoin: string, price: any, priceCoin: string, fee: any, feeCoin: string, transactionTaxEvents: Array<{ __typename?: 'TransactionTaxEvent', id: any, gainInFiat: any, expensesInFiat: any }> }> };
 
-export const EarnsByPortpholioIdDocument = gql`
-    query earnsByPortpholioId($portpholioId: BigInt!) {
-  earnsByPortpholioId(portpholioId: $portpholioId) {
+export const EarnsByPortfolioIdDocument = gql`
+    query earnsByPortfolioId($portfolioId: BigInt!) {
+  earnsByPortfolioId(portfolioId: $portfolioId) {
     id
     time
     amount
@@ -290,111 +290,111 @@ export const EarnsByPortpholioIdDocument = gql`
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class EarnsByPortpholioIdGQL extends Apollo.Query<EarnsByPortpholioIdQuery, EarnsByPortpholioIdQueryVariables> {
-    document = EarnsByPortpholioIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class EarnsByPortfolioIdGQL extends Apollo.Query<EarnsByPortfolioIdQuery, EarnsByPortfolioIdQueryVariables> {
+  document = EarnsByPortfolioIdDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
+}
 export const ImportFileDocument = gql`
-    mutation importFile($portpholioId: BigInt!, $name: String!, $jsonData: [FileJsonData!]!) {
-  importFile(portpholioId: $portpholioId, name: $name, jsonData: $jsonData) {
+    mutation importFile($portfolioId: BigInt!, $name: String!, $jsonData: [FileJsonData!]!) {
+  importFile(portfolioId: $portfolioId, name: $name, jsonData: $jsonData) {
     id
     name
   }
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class ImportFileGQL extends Apollo.Mutation<ImportFileMutation, ImportFileMutationVariables> {
-    document = ImportFileDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class ImportFileGQL extends Apollo.Mutation<ImportFileMutation, ImportFileMutationVariables> {
+  document = ImportFileDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
-export const FilesByPortpholioIdDocument = gql`
-    query filesByPortpholioId($portpholioId: BigInt!) {
-  filesByPortpholioId(portpholioId: $portpholioId) {
+}
+export const FilesByPortfolioIdDocument = gql`
+    query filesByPortfolioId($portfolioId: BigInt!) {
+  filesByPortfolioId(portfolioId: $portfolioId) {
     id
     name
   }
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class FilesByPortpholioIdGQL extends Apollo.Query<FilesByPortpholioIdQuery, FilesByPortpholioIdQueryVariables> {
-    document = FilesByPortpholioIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class FilesByPortfolioIdGQL extends Apollo.Query<FilesByPortfolioIdQuery, FilesByPortfolioIdQueryVariables> {
+  document = FilesByPortfolioIdDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
+}
 export const ImportCoinPairPriceHistoryKrakenDataDocument = gql`
     mutation importCoinPairPriceHistoryKrakenData($coinPair: String!, $jsonData: [CoinPairPriceHistoryKrakenJsonData!]!) {
   importCoinPairPriceHistoryKrakenData(coinPair: $coinPair, jsonData: $jsonData)
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class ImportCoinPairPriceHistoryKrakenDataGQL extends Apollo.Mutation<ImportCoinPairPriceHistoryKrakenDataMutation, ImportCoinPairPriceHistoryKrakenDataMutationVariables> {
-    document = ImportCoinPairPriceHistoryKrakenDataDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class ImportCoinPairPriceHistoryKrakenDataGQL extends Apollo.Mutation<ImportCoinPairPriceHistoryKrakenDataMutation, ImportCoinPairPriceHistoryKrakenDataMutationVariables> {
+  document = ImportCoinPairPriceHistoryKrakenDataDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
-export const CreatePortpholioDocument = gql`
-    mutation createPortpholio($name: String!, $taxMethod: TaxMethodEnum!, $fiat: FiatEnum!) {
-  createPortpholio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
+}
+export const CreatePortfolioDocument = gql`
+    mutation createPortfolio($name: String!, $taxMethod: TaxMethodEnum!, $fiat: FiatEnum!) {
+  createPortfolio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
     id
     name
   }
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CreatePortpholioGQL extends Apollo.Mutation<CreatePortpholioMutation, CreatePortpholioMutationVariables> {
-    document = CreatePortpholioDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class CreatePortfolioGQL extends Apollo.Mutation<CreatePortfolioMutation, CreatePortfolioMutationVariables> {
+  document = CreatePortfolioDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
-export const AllPortpholiosDocument = gql`
-    query allPortpholios {
-  allPortpholios {
+}
+export const AllPortfoliosDocument = gql`
+    query allPortfolios {
+  allPortfolios {
     id
     name
   }
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class AllPortpholiosGQL extends Apollo.Query<AllPortpholiosQuery, AllPortpholiosQueryVariables> {
-    document = AllPortpholiosDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class AllPortfoliosGQL extends Apollo.Query<AllPortfoliosQuery, AllPortfoliosQueryVariables> {
+  document = AllPortfoliosDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
-export const GetPortpholioByIdDocument = gql`
-    query getPortpholioById($portpholioId: BigInt!) {
-  getPortpholioById(portpholioId: $portpholioId) {
+}
+export const GetPortfolioByIdDocument = gql`
+    query getPortfolioById($portfolioId: BigInt!) {
+  getPortfolioById(portfolioId: $portfolioId) {
     id
     name
     taxMethod
@@ -409,19 +409,19 @@ export const GetPortpholioByIdDocument = gql`
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetPortpholioByIdGQL extends Apollo.Query<GetPortpholioByIdQuery, GetPortpholioByIdQueryVariables> {
-    document = GetPortpholioByIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class GetPortfolioByIdGQL extends Apollo.Query<GetPortfolioByIdQuery, GetPortfolioByIdQueryVariables> {
+  document = GetPortfolioByIdDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
-export const TransactionsByPortpholioIdDocument = gql`
-    query transactionsByPortpholioId($portpholioId: BigInt!) {
-  transactionsByPortpholioId(portpholioId: $portpholioId) {
+}
+export const TransactionsByPortfolioIdDocument = gql`
+    query transactionsByPortfolioId($portfolioId: BigInt!) {
+  transactionsByPortfolioId(portfolioId: $portfolioId) {
     id
     time
     buy
@@ -439,13 +439,13 @@ export const TransactionsByPortpholioIdDocument = gql`
 }
     `;
 
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class TransactionsByPortpholioIdGQL extends Apollo.Query<TransactionsByPortpholioIdQuery, TransactionsByPortpholioIdQueryVariables> {
-    document = TransactionsByPortpholioIdDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
+@Injectable({
+  providedIn: 'root'
+})
+export class TransactionsByPortfolioIdGQL extends Apollo.Query<TransactionsByPortfolioIdQuery, TransactionsByPortfolioIdQueryVariables> {
+  document = TransactionsByPortfolioIdDocument;
+
+  constructor(apollo: Apollo.Apollo) {
+    super(apollo);
   }
+}

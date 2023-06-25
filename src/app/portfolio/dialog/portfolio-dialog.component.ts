@@ -2,24 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
-import { CreatePortpholioGQL, FiatEnum, TaxMethodEnum } from 'src/generated/graphql';
+import { CreatePortfolioGQL, FiatEnum, TaxMethodEnum } from 'src/generated/graphql';
 
 @Component({
-  selector: 'app-portpholio-dialog',
-  templateUrl: './portpholio-dialog.component.html',
-  styleUrls: ['./portpholio-dialog.component.css'],
+  selector: 'app-portfolio-dialog',
+  templateUrl: './portfolio-dialog.component.html',
+  styleUrls: ['./portfolio-dialog.component.css'],
 })
-export class PortpholioDialogComponent implements OnInit {
+export class PortfolioDialogComponent implements OnInit {
   fiatList: { key: string; value: FiatEnum }[];
   taxMethodList: { key: string; value: TaxMethodEnum }[];
   loading = false;
-  portpholioForm: FormGroup;
+  portfolioForm: FormGroup;
 
   constructor(
-    public dialogRef: MatDialogRef<PortpholioDialogComponent>,
+    public dialogRef: MatDialogRef<PortfolioDialogComponent>,
     private formBuilder: FormBuilder,
     private snackBarService: SnackBarService,
-    private createPortpholioGQL: CreatePortpholioGQL,
+    private createPortfolioGQL: CreatePortfolioGQL,
   ) {
     this.fiatList = Object.entries(FiatEnum).map(([key, value]) => ({
       key,
@@ -29,7 +29,7 @@ export class PortpholioDialogComponent implements OnInit {
       key,
       value,
     }));
-    this.portpholioForm = this.formBuilder.group({
+    this.portfolioForm = this.formBuilder.group({
       nameField: [null, Validators.required],
       taxMethodField: [null, Validators.required],
       fiatField: [null, Validators.required],
@@ -38,18 +38,18 @@ export class PortpholioDialogComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  createPortpholio(): void {
-    if (this.portpholioForm.valid) {
+  createPortfolio(): void {
+    if (this.portfolioForm.valid) {
       this.loading = true;
-      this.createPortpholioGQL
+      this.createPortfolioGQL
         .mutate({
-          name: this.portpholioForm.value.nameField,
-          taxMethod: this.portpholioForm.value.taxMethodField,
-          fiat: this.portpholioForm.value.fiatField,
+          name: this.portfolioForm.value.nameField,
+          taxMethod: this.portfolioForm.value.taxMethodField,
+          fiat: this.portfolioForm.value.fiatField,
         })
         .subscribe((res) => {
           this.loading = true;
-          this.snackBarService.displayInfo('Portpholio created.');
+          this.snackBarService.displayInfo('Portfolio created.');
 
           this.dialogRef.close(true);
         });

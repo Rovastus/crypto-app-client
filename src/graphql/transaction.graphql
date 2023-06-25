@@ -1,5 +1,5 @@
-query transactionsByPortpholioId($portpholioId: BigInt!) {
-	transactionsByPortpholioId(portpholioId: $portpholioId) {
+query transactionsByPortfolioId($portfolioId: BigInt!) {
+	transactionsByPortfolioId(portfolioId: $portfolioId) {
 		id
 		time
 		buy

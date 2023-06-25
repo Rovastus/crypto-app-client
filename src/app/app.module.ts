@@ -1,36 +1,36 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GraphQLModule } from './graphql.module';
 import { HttpClientModule } from '@angular/common/http';
-import { MatTabsModule } from '@angular/material/tabs';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { PortpholioComponent } from './portpholio/portpholio.component';
-import { PortpholioDialogComponent } from './portpholio/dialog/portpholio-dialog.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatListModule } from '@angular/material/list';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { StoreModule } from '@ngrx/store';
-import { COIN_INFO_STORE_KEY, coinsReducer } from './store/coins/coin-info.reducer';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ApolloModule } from 'apollo-angular';
 import { AppRoutingModule } from './app-router.module';
-import { MatDialogModule } from '@angular/material/dialog';
-import { PORTPHOLIO_DATA_STORE_KEY, portpholioDataReducer } from './store/portpholio/portpholio.reducer';
-import { EffectsModule } from '@ngrx/effects';
-import { PortpholioEffects } from './store/portpholio/portpholio.effects';
+import { AppComponent } from './app.component';
+import { GraphQLModule } from './graphql.module';
+import { PortfolioDialogComponent } from './portfolio/dialog/portfolio-dialog.component';
+import { PortfolioComponent } from './portfolio/portfolio.component';
 import { CoinInfosEffects } from './store/coins/coin-info.effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { COIN_INFO_STORE_KEY, coinsReducer } from './store/coins/coin-info.reducer';
+import { PortfolioEffects } from './store/portfolio/portfolio.effects';
+import { Portfolio_DATA_STORE_KEY, portfolioDataReducer } from './store/portfolio/portfolio.reducer';
 
 @NgModule({
-  declarations: [AppComponent, PortpholioComponent, PortpholioDialogComponent],
+  declarations: [AppComponent, PortfolioComponent, PortfolioDialogComponent],
   imports: [
     ApolloModule,
     BrowserModule,
@@ -51,11 +51,11 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     MatProgressBarModule,
     MatSnackBarModule,
     StoreModule.forRoot({
-      [PORTPHOLIO_DATA_STORE_KEY]: portpholioDataReducer,
+      [Portfolio_DATA_STORE_KEY]: portfolioDataReducer,
       [COIN_INFO_STORE_KEY]: coinsReducer,
     }),
     StoreDevtoolsModule.instrument(),
-    EffectsModule.forRoot(PortpholioEffects, CoinInfosEffects),
+    EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects),
     AppRoutingModule,
   ],
   providers: [],

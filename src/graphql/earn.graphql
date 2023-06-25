@@ -1,5 +1,5 @@
-query earnsByPortpholioId($portpholioId: BigInt!) {
-	earnsByPortpholioId(portpholioId: $portpholioId) {
+query earnsByPortfolioId($portfolioId: BigInt!) {
+	earnsByPortfolioId(portfolioId: $portfolioId) {
 		id
 		time
 		amount

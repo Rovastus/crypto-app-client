@@ -5,8 +5,8 @@ import { switchMap } from 'rxjs/operators';
 import { CoinInfo } from '../store/coins/coin-info.model';
 import { CoinInfoStoreType } from '../store/coins/coin-info.reducer';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
-import { PortpholioApiActions } from '../store/portpholio/portpholio.actions';
-import { PortpholioSelectors } from '../store/portpholio/portpholio.selectors';
+import { PortfolioApiActions } from '../store/portfolio/portfolio.actions';
+import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
 
 @Component({
   selector: 'app-info',
@@ -14,7 +14,7 @@ import { PortpholioSelectors } from '../store/portpholio/portpholio.selectors';
   styleUrls: ['./info.component.css'],
 })
 export class InfoComponent implements OnInit {
-  portpholio$!: Observable<any | undefined>;
+  portfolio$!: Observable<any | undefined>;
   coins$: Observable<CoinInfoStoreType>;
   displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit', 'profit/loss'];
 
@@ -23,15 +23,15 @@ export class InfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.portpholio$ = this.store.select(PortpholioSelectors.selectPortpholioDataFeature).pipe(
+    this.portfolio$ = this.store.select(PortfolioSelectors.selectPortfolioDataFeature).pipe(
       switchMap((p) => {
-        const portpholioId = p.currentPortpholioName?.id;
+        const portfolioId = p.currentPortfolioName?.id;
 
-        if (portpholioId && p.portpholio?.id === portpholioId) {
-          return this.store.select(PortpholioSelectors.selectPortpholio);
-        } else if (portpholioId) {
-          this.store.dispatch(PortpholioApiActions.loadPortpholio({ portpholioId }));
-          return this.store.select(PortpholioSelectors.selectPortpholio);
+        if (portfolioId && p.portfolio?.id === portfolioId) {
+          return this.store.select(PortfolioSelectors.selectPortfolio);
+        } else if (portfolioId) {
+          this.store.dispatch(PortfolioApiActions.loadPortfolio({ portfolioId }));
+          return this.store.select(PortfolioSelectors.selectPortfolio);
         }
 
         return EMPTY;

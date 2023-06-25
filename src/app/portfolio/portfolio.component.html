@@ -1,0 +1,17 @@
+<mat-grid-list cols="12">
+	<mat-grid-tile colspan="11">
+		<mat-form-field appearance="fill">
+			<mat-label>Portfolio</mat-label>
+			<mat-select (selectionChange)="portfolioSelected($event.value)">
+				<mat-option *ngFor="let portfolio of portfolios$ | async" [value]="portfolio">
+					{{ portfolio.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</mat-grid-tile>
+	<mat-grid-tile colspan="1">
+		<button mat-mini-fab color="primary" aria-label="Add a new portfolio." (click)="openDialog()">
+			<mat-icon>add</mat-icon>
+		</button>
+	</mat-grid-tile>
+</mat-grid-list>
