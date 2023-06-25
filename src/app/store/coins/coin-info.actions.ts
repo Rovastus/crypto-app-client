@@ -1,5 +1,16 @@
-import { createAction, props } from '@ngrx/store';
+import { createActionGroup, props } from '@ngrx/store';
 import { CoinInfo } from './coin-info.model';
 
-export const UPDATE_COIN_INFOS = createAction('[CoinInfo] UpdateCoinInfos', props<{ coinInfos: Set<CoinInfo> }>());
-export const LOAD_COIN_INFOS = createAction('[CoinInfo] LoadCoinInfos', props<{ coins: Set<string> }>());
+export const CoinInfoActions = createActionGroup({
+  source: 'CoinInfo',
+  events: {
+    updateCoinInfos: props<{ coinInfos: Set<CoinInfo> }>(),
+  },
+});
+
+export const CoinInfoApiActions = createActionGroup({
+  source: 'CoinInfo',
+  events: {
+    loadCoinInfos: props<{ coins: Set<string> }>(),
+  },
+});

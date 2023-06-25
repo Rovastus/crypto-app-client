@@ -1,31 +1,33 @@
 import { createReducer, on } from '@ngrx/store';
-import { PortpholioActions } from './portpholio.types';
 import { PortpholioI, PortpholioNameI } from './portpholio.model';
+import { PortpholioActions } from './portpholio.actions';
 
+
+export const PORTPHOLIO_DATA_STORE_KEY = 'portpholioData';
 export type PortpholioDataStoreType = {
-	currentPortpholioName: PortpholioNameI | undefined;
-	portpholio: PortpholioI | undefined;
-	portpholiosNames: PortpholioNameI[];
+  currentPortpholioName: PortpholioNameI | undefined;
+  portpholio: PortpholioI | undefined;
+  portpholiosNames: PortpholioNameI[];
 };
 
-export const initPortpholioData: PortpholioDataStoreType = {
-	currentPortpholioName: undefined,
-	portpholio: undefined,
-	portpholiosNames: [],
+const initPortpholioData: PortpholioDataStoreType = {
+  currentPortpholioName: undefined,
+  portpholio: undefined,
+  portpholiosNames: [],
 };
 
 export const portpholioDataReducer = createReducer(
-	initPortpholioData,
-	on(PortpholioActions.SET_CURRENT_PORTPHOLIO_NAME, (state, { portpholioName }) => {
-		return { ...state, currentPortpholioName: portpholioName };
-	}),
-	on(PortpholioActions.RESET_CURRENT_PORTPHOLIO_NAME, (state) => {
-		return { ...state, currentPortpholioName: undefined, portpholio: undefined };
-	}),
-	on(PortpholioActions.SET_PORTPHOLIOS_NAMES, (state, { portpholiosNames }) => {
-		return { ...state, portpholiosNames: portpholiosNames };
-	}),
-	on(PortpholioActions.SET_PORTPHOLIO, (state, { portpholio }) => {
-		return { ...state, portpholio: portpholio };
-	}),
+  initPortpholioData,
+  on(PortpholioActions.setCurrentPortpholioName, (state, { portpholioName }) => {
+    return { ...state, currentPortpholioName: portpholioName };
+  }),
+  on(PortpholioActions.resetCurrentPortpholioName, (state) => {
+    return { ...state, currentPortpholioName: undefined, portpholio: undefined };
+  }),
+  on(PortpholioActions.setPortpholiosNames, (state, { portpholiosNames }) => {
+    return { ...state, portpholiosNames: portpholiosNames };
+  }),
+  on(PortpholioActions.setPortpholio, (state, { portpholio }) => {
+    return { ...state, portpholio: portpholio };
+  }),
 );
