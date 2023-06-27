@@ -1,6 +1,6 @@
+import { gql } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
-import { gql } from 'apollo-angular';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -10,7 +10,7 @@ export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> =
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string; }
+  ID: { input: string; output: string; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -290,16 +290,16 @@ export const EarnsByPortfolioIdDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class EarnsByPortfolioIdGQL extends Apollo.Query<EarnsByPortfolioIdQuery, EarnsByPortfolioIdQueryVariables> {
-  document = EarnsByPortfolioIdDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class EarnsByPortfolioIdGQL extends Apollo.Query<EarnsByPortfolioIdQuery, EarnsByPortfolioIdQueryVariables> {
+    document = EarnsByPortfolioIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const ImportFileDocument = gql`
     mutation importFile($portfolioId: BigInt!, $name: String!, $jsonData: [FileJsonData!]!) {
   importFile(portfolioId: $portfolioId, name: $name, jsonData: $jsonData) {
@@ -309,16 +309,16 @@ export const ImportFileDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ImportFileGQL extends Apollo.Mutation<ImportFileMutation, ImportFileMutationVariables> {
-  document = ImportFileDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ImportFileGQL extends Apollo.Mutation<ImportFileMutation, ImportFileMutationVariables> {
+    document = ImportFileDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const FilesByPortfolioIdDocument = gql`
     query filesByPortfolioId($portfolioId: BigInt!) {
   filesByPortfolioId(portfolioId: $portfolioId) {
@@ -328,32 +328,32 @@ export const FilesByPortfolioIdDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class FilesByPortfolioIdGQL extends Apollo.Query<FilesByPortfolioIdQuery, FilesByPortfolioIdQueryVariables> {
-  document = FilesByPortfolioIdDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FilesByPortfolioIdGQL extends Apollo.Query<FilesByPortfolioIdQuery, FilesByPortfolioIdQueryVariables> {
+    document = FilesByPortfolioIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const ImportCoinPairPriceHistoryKrakenDataDocument = gql`
     mutation importCoinPairPriceHistoryKrakenData($coinPair: String!, $jsonData: [CoinPairPriceHistoryKrakenJsonData!]!) {
   importCoinPairPriceHistoryKrakenData(coinPair: $coinPair, jsonData: $jsonData)
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class ImportCoinPairPriceHistoryKrakenDataGQL extends Apollo.Mutation<ImportCoinPairPriceHistoryKrakenDataMutation, ImportCoinPairPriceHistoryKrakenDataMutationVariables> {
-  document = ImportCoinPairPriceHistoryKrakenDataDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class ImportCoinPairPriceHistoryKrakenDataGQL extends Apollo.Mutation<ImportCoinPairPriceHistoryKrakenDataMutation, ImportCoinPairPriceHistoryKrakenDataMutationVariables> {
+    document = ImportCoinPairPriceHistoryKrakenDataDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const CreatePortfolioDocument = gql`
     mutation createPortfolio($name: String!, $taxMethod: TaxMethodEnum!, $fiat: FiatEnum!) {
   createPortfolio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
@@ -363,16 +363,16 @@ export const CreatePortfolioDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CreatePortfolioGQL extends Apollo.Mutation<CreatePortfolioMutation, CreatePortfolioMutationVariables> {
-  document = CreatePortfolioDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreatePortfolioGQL extends Apollo.Mutation<CreatePortfolioMutation, CreatePortfolioMutationVariables> {
+    document = CreatePortfolioDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const AllPortfoliosDocument = gql`
     query allPortfolios {
   allPortfolios {
@@ -382,16 +382,16 @@ export const AllPortfoliosDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AllPortfoliosGQL extends Apollo.Query<AllPortfoliosQuery, AllPortfoliosQueryVariables> {
-  document = AllPortfoliosDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AllPortfoliosGQL extends Apollo.Query<AllPortfoliosQuery, AllPortfoliosQueryVariables> {
+    document = AllPortfoliosDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const GetPortfolioByIdDocument = gql`
     query getPortfolioById($portfolioId: BigInt!) {
   getPortfolioById(portfolioId: $portfolioId) {
@@ -409,16 +409,16 @@ export const GetPortfolioByIdDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class GetPortfolioByIdGQL extends Apollo.Query<GetPortfolioByIdQuery, GetPortfolioByIdQueryVariables> {
-  document = GetPortfolioByIdDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetPortfolioByIdGQL extends Apollo.Query<GetPortfolioByIdQuery, GetPortfolioByIdQueryVariables> {
+    document = GetPortfolioByIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const TransactionsByPortfolioIdDocument = gql`
     query transactionsByPortfolioId($portfolioId: BigInt!) {
   transactionsByPortfolioId(portfolioId: $portfolioId) {
@@ -439,13 +439,13 @@ export const TransactionsByPortfolioIdDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class TransactionsByPortfolioIdGQL extends Apollo.Query<TransactionsByPortfolioIdQuery, TransactionsByPortfolioIdQueryVariables> {
-  document = TransactionsByPortfolioIdDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class TransactionsByPortfolioIdGQL extends Apollo.Query<TransactionsByPortfolioIdQuery, TransactionsByPortfolioIdQueryVariables> {
+    document = TransactionsByPortfolioIdDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}

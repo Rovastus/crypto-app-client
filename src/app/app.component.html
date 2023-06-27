@@ -1,7 +1,7 @@
 <app-portfolio></app-portfolio>
 
 <nav mat-tab-nav-bar [tabPanel]="tabPanel">
-	<a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.link" (click)="activeLink = link" [active]="activeLink == link">
+	<a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.link" (click)="activeLink = link" [active]="activeLink === link">
 		<mat-icon class="example-tab-icon">{{ link.icon }}</mat-icon>
 		{{ link.label }}
 	</a>

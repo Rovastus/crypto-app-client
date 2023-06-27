@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
@@ -9,7 +9,7 @@ import { CreatePortfolioGQL, FiatEnum, TaxMethodEnum } from 'src/generated/graph
   templateUrl: './portfolio-dialog.component.html',
   styleUrls: ['./portfolio-dialog.component.css'],
 })
-export class PortfolioDialogComponent implements OnInit {
+export class PortfolioDialogComponent {
   fiatList: { key: string; value: FiatEnum }[];
   taxMethodList: { key: string; value: TaxMethodEnum }[];
   loading = false;
@@ -35,8 +35,6 @@ export class PortfolioDialogComponent implements OnInit {
       fiatField: [null, Validators.required],
     });
   }
-
-  ngOnInit(): void { }
 
   createPortfolio(): void {
     if (this.portfolioForm.valid) {

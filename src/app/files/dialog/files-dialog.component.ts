@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,7 +12,7 @@ import { FileJsonData, ImportFileGQL } from 'src/generated/graphql';
   templateUrl: './files-dialog.component.html',
   styleUrls: ['./files-dialog.component.css'],
 })
-export class FilesDialogComponent implements OnInit {
+export class FilesDialogComponent {
   loading = false;
   exportForm: FormGroup;
   portfolioId$: Observable<number>;
@@ -30,8 +30,6 @@ export class FilesDialogComponent implements OnInit {
     });
     this.portfolioId$ = this.store.select('portfolioId');
   }
-
-  ngOnInit(): void { }
 
   createExport(): void {
     if (this.exportForm.valid) {
