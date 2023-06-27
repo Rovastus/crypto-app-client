@@ -8,7 +8,7 @@ import { CoinInfo } from '../store/coins/coin-info.model';
 @Component({
   selector: 'app-earns',
   templateUrl: './earns.component.html',
-  styleUrls: ['./earns.component.css'],
+  styleUrls: ['./earns.component.scss'],
 })
 export class EarnsComponent implements OnInit {
   portfolioId$: Observable<number>;

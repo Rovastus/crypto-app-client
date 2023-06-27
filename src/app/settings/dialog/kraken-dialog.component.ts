@@ -7,7 +7,7 @@ import { CoinPairPriceHistoryKrakenJsonData, ImportCoinPairPriceHistoryKrakenDat
 @Component({
   selector: 'app-kraken-dialog',
   templateUrl: './kraken-dialog.component.html',
-  styleUrls: ['./kraken-dialog.component.css'],
+  styleUrls: ['./kraken-dialog.component.scss'],
 })
 export class KrakenDialogComponent {
   loading = false;

@@ -10,7 +10,7 @@ import { PortfolioDialogComponent } from './dialog/portfolio-dialog.component';
 @Component({
   selector: 'app-portfolio',
   templateUrl: './portfolio.component.html',
-  styleUrls: ['./portfolio.component.css'],
+  styleUrls: ['./portfolio.component.scss'],
 })
 export class PortfolioComponent implements OnInit {
   portfolios$!: Observable<PortfolioNameI[]>;

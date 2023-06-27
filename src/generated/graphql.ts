@@ -294,7 +294,7 @@ export const EarnsByPortfolioIdDocument = gql`
     providedIn: 'root'
   })
   export class EarnsByPortfolioIdGQL extends Apollo.Query<EarnsByPortfolioIdQuery, EarnsByPortfolioIdQueryVariables> {
-    document = EarnsByPortfolioIdDocument;
+    override document = EarnsByPortfolioIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -313,7 +313,7 @@ export const ImportFileDocument = gql`
     providedIn: 'root'
   })
   export class ImportFileGQL extends Apollo.Mutation<ImportFileMutation, ImportFileMutationVariables> {
-    document = ImportFileDocument;
+    override document = ImportFileDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -332,7 +332,7 @@ export const FilesByPortfolioIdDocument = gql`
     providedIn: 'root'
   })
   export class FilesByPortfolioIdGQL extends Apollo.Query<FilesByPortfolioIdQuery, FilesByPortfolioIdQueryVariables> {
-    document = FilesByPortfolioIdDocument;
+    override document = FilesByPortfolioIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -348,7 +348,7 @@ export const ImportCoinPairPriceHistoryKrakenDataDocument = gql`
     providedIn: 'root'
   })
   export class ImportCoinPairPriceHistoryKrakenDataGQL extends Apollo.Mutation<ImportCoinPairPriceHistoryKrakenDataMutation, ImportCoinPairPriceHistoryKrakenDataMutationVariables> {
-    document = ImportCoinPairPriceHistoryKrakenDataDocument;
+    override document = ImportCoinPairPriceHistoryKrakenDataDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -367,7 +367,7 @@ export const CreatePortfolioDocument = gql`
     providedIn: 'root'
   })
   export class CreatePortfolioGQL extends Apollo.Mutation<CreatePortfolioMutation, CreatePortfolioMutationVariables> {
-    document = CreatePortfolioDocument;
+    override document = CreatePortfolioDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -386,7 +386,7 @@ export const AllPortfoliosDocument = gql`
     providedIn: 'root'
   })
   export class AllPortfoliosGQL extends Apollo.Query<AllPortfoliosQuery, AllPortfoliosQueryVariables> {
-    document = AllPortfoliosDocument;
+    override document = AllPortfoliosDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -413,7 +413,7 @@ export const GetPortfolioByIdDocument = gql`
     providedIn: 'root'
   })
   export class GetPortfolioByIdGQL extends Apollo.Query<GetPortfolioByIdQuery, GetPortfolioByIdQueryVariables> {
-    document = GetPortfolioByIdDocument;
+    override document = GetPortfolioByIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -443,7 +443,7 @@ export const TransactionsByPortfolioIdDocument = gql`
     providedIn: 'root'
   })
   export class TransactionsByPortfolioIdGQL extends Apollo.Query<TransactionsByPortfolioIdQuery, TransactionsByPortfolioIdQueryVariables> {
-    document = TransactionsByPortfolioIdDocument;
+    override document = TransactionsByPortfolioIdDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

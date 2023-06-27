@@ -7,7 +7,7 @@ import { CreatePortfolioGQL, FiatEnum, TaxMethodEnum } from 'src/generated/graph
 @Component({
   selector: 'app-portfolio-dialog',
   templateUrl: './portfolio-dialog.component.html',
-  styleUrls: ['./portfolio-dialog.component.css'],
+  styleUrls: ['./portfolio-dialog.component.scss'],
 })
 export class PortfolioDialogComponent {
   fiatList: { key: string; value: FiatEnum }[];

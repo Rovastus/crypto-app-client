@@ -10,7 +10,7 @@ import { FileJsonData, ImportFileGQL } from 'src/generated/graphql';
 @Component({
   selector: 'app-files-dialog',
   templateUrl: './files-dialog.component.html',
-  styleUrls: ['./files-dialog.component.css'],
+  styleUrls: ['./files-dialog.component.scss'],
 })
 export class FilesDialogComponent {
   loading = false;

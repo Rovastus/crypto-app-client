@@ -4,7 +4,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
   selector: 'app-file-input',
   templateUrl: './file-input.component.html',
-  styleUrls: ['./file-input.component.css'],
+  styleUrls: ['./file-input.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

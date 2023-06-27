@@ -11,7 +11,7 @@ import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
 @Component({
   selector: 'app-info',
   templateUrl: './info.component.html',
-  styleUrls: ['./info.component.css'],
+  styleUrls: ['./info.component.scss'],
 })
 export class InfoComponent implements OnInit {
   portfolio$!: Observable<any | undefined>;
