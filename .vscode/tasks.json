@@ -22,6 +22,17 @@
             "label": "FE dev"
         }
       }
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": [],
+      "label": "FE",
+      "options": {
+        "statusbar": {
+            "label": "FE lint"
+        }
+      }
     }
   ]
 }

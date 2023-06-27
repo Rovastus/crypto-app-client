@@ -45,7 +45,7 @@ export class PortfolioDialogComponent {
           taxMethod: this.portfolioForm.value.taxMethodField,
           fiat: this.portfolioForm.value.fiatField,
         })
-        .subscribe((res) => {
+        .subscribe((_res) => {
           this.loading = true;
           this.snackBarService.displayInfo('Portfolio created.');
 
