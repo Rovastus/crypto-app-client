@@ -1,4 +1,4 @@
 export interface CoinInfoResponse {
-	code: string;
-	rate: number;
+  code: string;
+  rate: number;
 }

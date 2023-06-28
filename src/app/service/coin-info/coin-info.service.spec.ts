@@ -3,14 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import { CoinInfoService } from './coin-info.service';
 
 describe('CoinInfoService', () => {
-	let service: CoinInfoService;
+  let service: CoinInfoService;
 
-	beforeEach(() => {
-		TestBed.configureTestingModule({});
-		service = TestBed.inject(CoinInfoService);
-	});
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(CoinInfoService);
+  });
 
-	it('should be created', () => {
-		expect(service).toBeTruthy();
-	});
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 });

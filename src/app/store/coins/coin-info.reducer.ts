@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import { CoinInfo } from './coin-info.model';
 import { environment } from 'src/environments/environment';
 import { CoinInfoActions } from './coin-info.actions';
+import { CoinInfo } from './coin-info.model';
 
 export const COIN_INFO_STORE_KEY = 'coinInfoData';
 export type CoinInfoStoreType = Map<string, CoinInfo>;

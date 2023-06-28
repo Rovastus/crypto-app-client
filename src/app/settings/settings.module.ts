@@ -1,31 +1,31 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { SettingsRoutingModule } from './settings-routing.module';
-import { SettingsComponent } from './settings.component';
-import { KrakenDialogComponent } from './dialog/kraken-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ShareModule } from '../common/share.module';
+import { KrakenDialogComponent } from './dialog/kraken-dialog.component';
+import { SettingsRoutingModule } from './settings-routing.module';
+import { SettingsComponent } from './settings.component';
 
 @NgModule({
-	declarations: [SettingsComponent, KrakenDialogComponent],
-	imports: [
-		CommonModule,
-		ShareModule,
-		ReactiveFormsModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatIconModule,
-		MatDialogModule,
-		MatProgressSpinnerModule,
-		MatButtonModule,
-		SettingsRoutingModule,
-	],
+  declarations: [SettingsComponent, KrakenDialogComponent],
+  imports: [
+    CommonModule,
+    ShareModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatDialogModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    SettingsRoutingModule,
+  ],
 })
-export class SettingsModule {}
+export class SettingsModule { }

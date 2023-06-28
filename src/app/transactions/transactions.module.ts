@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { TransactionsRoutingModule } from './transactions-routing.module';
 import { MatTableModule } from '@angular/material/table';
+import { TransactionsRoutingModule } from './transactions-routing.module';
 import { TransactionsComponent } from './transactions.component';
 
 @NgModule({
-	declarations: [TransactionsComponent],
-	imports: [CommonModule, MatTableModule, TransactionsRoutingModule],
+  declarations: [TransactionsComponent],
+  imports: [CommonModule, MatTableModule, TransactionsRoutingModule],
 })
-export class TransactionsModule {}
+export class TransactionsModule { }
