@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ShareModule } from '../common/share.module';
+import { SharedModule } from '../shared/shared.module';
 import { KrakenDialogComponent } from './dialog/kraken-dialog.component';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { SettingsComponent } from './settings.component';
@@ -17,7 +17,7 @@ import { SettingsComponent } from './settings.component';
   declarations: [SettingsComponent, KrakenDialogComponent],
   imports: [
     CommonModule,
-    ShareModule,
+    SharedModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,

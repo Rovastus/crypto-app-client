@@ -9,7 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { ShareModule } from '../common/share.module';
+import { SharedModule } from '../shared/shared.module';
 import { FilesDialogComponent } from './dialog/files-dialog.component';
 import { FilesRoutingModule } from './files-routing.module';
 import { FilesComponent } from './files.component';
@@ -18,7 +18,7 @@ import { FilesComponent } from './files.component';
   declarations: [FilesComponent, FilesDialogComponent],
   imports: [
     CommonModule,
-    ShareModule,
+    SharedModule,
     ReactiveFormsModule,
     MatDialogModule,
     MatTableModule,

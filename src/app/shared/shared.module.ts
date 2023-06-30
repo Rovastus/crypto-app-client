@@ -8,4 +8,4 @@ import { FileInputComponent } from './file-input/file-input.component';
   imports: [CommonModule],
   exports: [FileInputComponent],
 })
-export class ShareModule { }
+export class SharedModule { }

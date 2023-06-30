@@ -16,6 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EffectsModule } from '@ngrx/effects';
+import { routerReducer } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ApolloModule } from 'apollo-angular';
@@ -53,6 +54,7 @@ import { Portfolio_DATA_STORE_KEY, portfolioDataReducer } from './store/portfoli
     StoreModule.forRoot({
       [Portfolio_DATA_STORE_KEY]: portfolioDataReducer,
       [COIN_INFO_STORE_KEY]: coinsReducer,
+      router: routerReducer,
     }),
     StoreDevtoolsModule.instrument(),
     EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects),

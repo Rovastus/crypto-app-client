@@ -90,7 +90,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createPortfolio: Portfolio;
   importCoinPairPriceHistoryKrakenData: Scalars['String']['output'];
-  importFile: Array<File>;
+  importFile: File;
   initCoinPairs: Scalars['String']['output'];
 };
 
@@ -234,7 +234,7 @@ export type ImportFileMutationVariables = Exact<{
 }>;
 
 
-export type ImportFileMutation = { __typename?: 'Mutation', importFile: Array<{ __typename?: 'File', id: any, name: string }> };
+export type ImportFileMutation = { __typename?: 'Mutation', importFile: { __typename?: 'File', id: any, name: string } };
 
 export type FilesByPortfolioIdQueryVariables = Exact<{
   portfolioId: Scalars['BigInt']['input'];

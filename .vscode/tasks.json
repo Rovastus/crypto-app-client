@@ -1,38 +1,38 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-    {
-      "type": "npm",
-      "script": "generate",
-      "problemMatcher": [],
-      "label": "FE",
-      "options": {
-        "statusbar": {
-            "label": "FE generate"
-        }
-      }
-    },
-    {
-      "type": "npm",
-      "script": "dev",
-      "problemMatcher": [],
-      "label": "FE",
-      "options": {
-        "statusbar": {
-            "label": "FE dev"
-        }
-      }
-    },
-    {
-      "type": "npm",
-      "script": "lint",
-      "problemMatcher": [],
-      "label": "FE",
-      "options": {
-        "statusbar": {
-            "label": "FE lint"
-        }
-      }
-    }
-  ]
+		{
+			"type": "npm",
+			"script": "generate",
+			"problemMatcher": [],
+			"label": "FE",
+			"options": {
+				"statusbar": {
+					"label": "$(database) FE generate"
+				}
+			}
+		},
+		{
+			"type": "npm",
+			"script": "dev",
+			"problemMatcher": [],
+			"label": "FE",
+			"options": {
+				"statusbar": {
+					"label": "$(play) FE dev"
+				}
+			}
+		},
+		{
+			"type": "npm",
+			"script": "lint",
+			"problemMatcher": [],
+			"label": "FE",
+			"options": {
+				"statusbar": {
+					"label": "$(lightbulb) FE lint"
+				}
+			}
+		}
+	]
 }
