@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
+import { CoinPairApiActions } from '../store/coin-pair/coin-pair.actions';
+import { CoinPairSelectors } from '../store/coin-pair/coin-pair.selectors';
 import { KrakenDialogComponent } from './dialog/kraken-dialog.component';
 
 @Component({
@@ -8,11 +11,16 @@ import { KrakenDialogComponent } from './dialog/kraken-dialog.component';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
-  constructor(private dialog: MatDialog) {}
+  private readonly dialog = inject(MatDialog);
+  private readonly store = inject(Store);
+
+  initBinanceCoinPairsLoading$ = this.store.select(CoinPairSelectors.selectInitBinanceCoinPairsLoading);
 
   openKrakenDialog(): void {
-    const dialogRef = this.dialog.open(KrakenDialogComponent, {
-      width: '400px',
-    });
+    this.dialog.open(KrakenDialogComponent, { width: '400px' });
+  }
+
+  initBinanceCoinPairs(): void {
+    this.store.dispatch(CoinPairApiActions.initBinanceCoinPairs());
   }
 }

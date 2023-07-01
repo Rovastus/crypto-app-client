@@ -1,7 +1,13 @@
-<div>
+<div class="container">
   <h2>Binance</h2>
-  <button mat-raised-button>Init Binance coin pairs data</button>
-
+  <button mat-raised-button [disabled]="initBinanceCoinPairsLoading$ | async" (click)="initBinanceCoinPairs()">
+    <mat-icon *ngIf="initBinanceCoinPairsLoading$ | async">
+      <mat-progress-spinner diameter="18" mode="indeterminate"> </mat-progress-spinner>
+    </mat-icon>
+    Init coin pairs data
+  </button>
+</div>
+<div class="container">
   <h2>Kraken</h2>
   <button mat-raised-button (click)="openKrakenDialog()">Import Kraken coin pairs data</button>
 </div>

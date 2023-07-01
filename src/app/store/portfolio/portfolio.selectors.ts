@@ -1,7 +1,7 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { PortfolioDataStoreType, Portfolio_DATA_STORE_KEY } from './portfolio.reducer';
+import { PORTFOLIO_DATA_STORE_KEY, PortfolioDataStoreType } from './portfolio.reducer';
 
-const selectPortfolioDataFeature = createFeatureSelector<PortfolioDataStoreType>(Portfolio_DATA_STORE_KEY);
+const selectPortfolioDataFeature = createFeatureSelector<PortfolioDataStoreType>(PORTFOLIO_DATA_STORE_KEY);
 
 const selectCurrentPortfolioName = createSelector(selectPortfolioDataFeature, (state: PortfolioDataStoreType) => state.currentPortfolioName);
 

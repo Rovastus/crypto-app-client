@@ -3,7 +3,7 @@ import { createReducer, on } from '@ngrx/store';
 import { PortfolioActions, PortfolioLoadingActions } from './portfolio.actions';
 import { PortfolioI, PortfolioNameI } from './portfolio.model';
 
-export const Portfolio_DATA_STORE_KEY = 'portfolioData';
+export const PORTFOLIO_DATA_STORE_KEY = 'portfolioData';
 export type PortfolioDataStoreType = {
   currentPortfolioName: PortfolioNameI | undefined;
   portfolio: PortfolioI | undefined;

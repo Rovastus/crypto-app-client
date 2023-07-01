@@ -37,19 +37,21 @@ export class PortfolioDialogComponent {
   });
 
   createPortfolio(): void {
-    if (this.portfolioForm.valid) {
-      const name = this.portfolioForm.value.nameField;
-      const taxMethod = this.portfolioForm.value.taxMethodField;
-      const fiat = this.portfolioForm.value.fiatField;
-
-      if (!name || !taxMethod || !fiat) {
-        return;
-      }
-
-      const newPortfolio: CreatePortfolioI = { name, taxMethod, fiat };
-      this.closeDialogWhenLoadingFinished = true;
-      this.store.dispatch(PortfolioApiActions.createPortfolio({ portfolio: newPortfolio }));
+    if (!this.portfolioForm.valid) {
+      return;
     }
+
+    const name = this.portfolioForm.value.nameField;
+    const taxMethod = this.portfolioForm.value.taxMethodField;
+    const fiat = this.portfolioForm.value.fiatField;
+
+    if (!name || !taxMethod || !fiat) {
+      return;
+    }
+
+    const newPortfolio: CreatePortfolioI = { name, taxMethod, fiat };
+    this.closeDialogWhenLoadingFinished = true;
+    this.store.dispatch(PortfolioApiActions.createPortfolio({ portfolio: newPortfolio }));
   }
 
   onClose(): void {

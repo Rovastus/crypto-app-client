@@ -38,7 +38,7 @@ export class FilesDialogComponent {
     }
   }
 
-  processCsvData(exportName: string, file: any) {
+  processCsvData(exportName: string, file: Blob) {
     const reader = new FileReader();
     reader.onload = () => {
       const data = reader.result;

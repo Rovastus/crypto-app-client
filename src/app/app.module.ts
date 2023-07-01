@@ -25,10 +25,12 @@ import { AppComponent } from './app.component';
 import { GraphQLModule } from './graphql.module';
 import { PortfolioDialogComponent } from './portfolio/dialog/portfolio-dialog.component';
 import { PortfolioComponent } from './portfolio/portfolio.component';
+import { CoinPairEffects } from './store/coin-pair/coin-pair.effects';
+import { COIN_PAIR_STORE_KEY, coinPairsReducer } from './store/coin-pair/coin-pair.reducer';
 import { CoinInfosEffects } from './store/coins/coin-info.effects';
 import { COIN_INFO_STORE_KEY, coinsReducer } from './store/coins/coin-info.reducer';
 import { PortfolioEffects } from './store/portfolio/portfolio.effects';
-import { Portfolio_DATA_STORE_KEY, portfolioDataReducer } from './store/portfolio/portfolio.reducer';
+import { PORTFOLIO_DATA_STORE_KEY, portfolioDataReducer } from './store/portfolio/portfolio.reducer';
 
 @NgModule({
   declarations: [AppComponent, PortfolioComponent, PortfolioDialogComponent],
@@ -52,12 +54,13 @@ import { Portfolio_DATA_STORE_KEY, portfolioDataReducer } from './store/portfoli
     MatProgressBarModule,
     MatSnackBarModule,
     StoreModule.forRoot({
-      [Portfolio_DATA_STORE_KEY]: portfolioDataReducer,
+      [PORTFOLIO_DATA_STORE_KEY]: portfolioDataReducer,
       [COIN_INFO_STORE_KEY]: coinsReducer,
+      [COIN_PAIR_STORE_KEY]: coinPairsReducer,
       router: routerReducer,
     }),
     StoreDevtoolsModule.instrument(),
-    EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects),
+    EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects, CoinPairEffects),
     AppRoutingModule,
   ],
   providers: [],

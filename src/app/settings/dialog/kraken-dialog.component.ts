@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { CoinPairPriceHistoryKrakenJsonData, ImportCoinPairPriceHistoryKrakenDataGQL } from 'src/generated/graphql';
+import { Store } from '@ngrx/store';
+import { tap } from 'rxjs/operators';
+import { CoinPairApiActions } from 'src/app/store/coin-pair/coin-pair.actions';
+import { CoinPairSelectors } from 'src/app/store/coin-pair/coin-pair.selectors';
+import { CoinPairPriceHistoryKrakenJsonData } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-kraken-dialog',
@@ -10,44 +13,46 @@ import { CoinPairPriceHistoryKrakenJsonData, ImportCoinPairPriceHistoryKrakenDat
   styleUrls: ['./kraken-dialog.component.scss'],
 })
 export class KrakenDialogComponent {
-  loading = false;
-  krakenForm: FormGroup;
+  private readonly dialogRef = inject(MatDialogRef<KrakenDialogComponent>);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly store = inject(Store);
 
-  constructor(
-    public dialogRef: MatDialogRef<KrakenDialogComponent>,
-    private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar,
-    private importKrakenCoinPairsGQL: ImportCoinPairPriceHistoryKrakenDataGQL,
-  ) {
-    this.krakenForm = this.formBuilder.group({
-      coinPairField: [null, Validators.required],
-      fileField: [null, Validators.required],
-    });
-  }
+  private closeDialogWhenLoadingFinished = false;
+  loading$ = this.store.select(CoinPairSelectors.selectImportKrakenCoinPairLoading).pipe(
+    tap((loading) => {
+      if (!loading && this.closeDialogWhenLoadingFinished) {
+        this.dialogRef.close();
+      }
+    }),
+  );
+
+  krakenForm = this.formBuilder.group({
+    coinPairField: ['', Validators.required],
+    fileField: [null, Validators.required],
+  });
 
   krakenImport(): void {
-    if (this.krakenForm.valid) {
-      this.loading = true;
-      this.processCsvData(this.krakenForm.value.coinPairField, this.krakenForm.value.fileField);
+    if (!this.krakenForm.valid) {
+      return;
     }
+
+    const coinPair = this.krakenForm.value.coinPairField;
+    const file = this.krakenForm.value.fileField;
+
+    if (!coinPair || !file) {
+      return;
+    }
+
+    this.processCsvData(coinPair, file);
   }
 
-  processCsvData(coinPair: string, file: any) {
+  private processCsvData(coinPair: string, file: Blob) {
     const reader = new FileReader();
 
     reader.onload = () => {
-      this.importKrakenCoinPairsGQL
-        .mutate({
-          coinPair,
-          jsonData: this.getCsvData(reader.result as string),
-        })
-        .subscribe(() => {
-          this.loading = true;
-          this.snackBar.open('Coin pair data imported.', 'Close', {
-            duration: 5000,
-          });
-          this.dialogRef.close(true);
-        });
+      this.closeDialogWhenLoadingFinished = true;
+      const jsonData = this.getCsvData(reader.result as string);
+      this.store.dispatch(CoinPairApiActions.importKrakenCoinPair({ coinPair, jsonData }));
     };
 
     reader.readAsBinaryString(file);
@@ -70,7 +75,6 @@ export class KrakenDialogComponent {
       });
     }
 
-    console.log(result);
     return result;
   }
 

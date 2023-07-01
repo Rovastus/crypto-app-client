@@ -220,6 +220,11 @@ export type WalletHistory = {
   portfolioId: Scalars['BigInt']['output'];
 };
 
+export type InitCoinPairsMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type InitCoinPairsMutation = { __typename?: 'Mutation', initCoinPairs: string };
+
 export type EarnsByPortfolioIdQueryVariables = Exact<{
   portfolioId: Scalars['BigInt']['input'];
 }>;
@@ -279,6 +284,22 @@ export type TransactionsByPortfolioIdQueryVariables = Exact<{
 
 export type TransactionsByPortfolioIdQuery = { __typename?: 'Query', transactionsByPortfolioId: Array<{ __typename?: 'Transaction', id: any, time: any, buy: any, buyCoin: string, price: any, priceCoin: string, fee: any, feeCoin: string, transactionTaxEvents: Array<{ __typename?: 'TransactionTaxEvent', id: any, gainInFiat: any, expensesInFiat: any }> }> };
 
+export const InitCoinPairsDocument = gql`
+    mutation initCoinPairs {
+  initCoinPairs
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class InitCoinPairsGQL extends Apollo.Mutation<InitCoinPairsMutation, InitCoinPairsMutationVariables> {
+    override document = InitCoinPairsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const EarnsByPortfolioIdDocument = gql`
     query earnsByPortfolioId($portfolioId: BigInt!) {
   earnsByPortfolioId(portfolioId: $portfolioId) {
