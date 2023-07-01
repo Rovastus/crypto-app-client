@@ -15,7 +15,7 @@ import { PortfolioDialogComponent } from './dialog/portfolio-dialog.component';
 export class PortfolioComponent implements OnInit {
   portfolios$!: Observable<PortfolioNameI[]>;
 
-  constructor(private dialog: MatDialog, private readonly store: Store) { }
+  constructor(private dialog: MatDialog, private readonly store: Store) {}
 
   ngOnInit(): void {
     this.portfolios$ = this.store.select(PortfolioSelectors.selectPortfoliosNames);
@@ -23,15 +23,7 @@ export class PortfolioComponent implements OnInit {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(PortfolioDialogComponent, {
-      width: '400px',
-    });
-
-    dialogRef.afterClosed().subscribe((shouldUpdate: boolean) => {
-      if (shouldUpdate) {
-        this.store.dispatch(PortfolioApiActions.loadPortfoliosNames());
-      }
-    });
+    this.dialog.open(PortfolioDialogComponent, { width: '400px' });
   }
 
   portfolioSelected(portfolioName: PortfolioNameI): void {

@@ -19,3 +19,9 @@ export interface PortfolioI {
   fiat: FiatEnum;
   wallets: WalletI[];
 }
+
+export interface CreatePortfolioI {
+  name: string;
+  taxMethod: TaxMethodEnum;
+  fiat: FiatEnum;
+}

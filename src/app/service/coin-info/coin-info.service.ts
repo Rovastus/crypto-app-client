@@ -13,7 +13,7 @@ export class CoinInfoService {
   private readonly coinUrl = `${environment.livecoinwatchApi}coins/single`;
   private readonly headers = { headers: { 'content-type': 'application/json', 'x-api-key': environment.livecoinwatchApiKey } };
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   fetchCoinInfo(coins: Set<string>): Observable<Set<CoinInfo>> {
     if (environment.generateLivecoinwatcTestData) {

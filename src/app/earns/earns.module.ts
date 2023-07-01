@@ -9,4 +9,4 @@ import { EarnsComponent } from './earns.component';
   declarations: [EarnsComponent],
   imports: [CommonModule, MatTableModule, EarnsRoutingModule],
 })
-export class EarnsModule { }
+export class EarnsModule {}

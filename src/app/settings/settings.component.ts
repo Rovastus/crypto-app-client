@@ -8,7 +8,7 @@ import { KrakenDialogComponent } from './dialog/kraken-dialog.component';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent {
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) {}
 
   openKrakenDialog(): void {
     const dialogRef = this.dialog.open(KrakenDialogComponent, {

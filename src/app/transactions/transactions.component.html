@@ -1,104 +1,104 @@
 <table mat-table [dataSource]="transactions$ | async" class="mat-elevation-z8">
-	<ng-container matColumnDef="id">
-		<th mat-header-cell *matHeaderCellDef>Id</th>
-		<td mat-cell *matCellDef="let element">{{ element.id }}</td>
-		<td mat-footer-cell *matFooterCellDef>Total Earn/Loss</td>
-	</ng-container>
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>Id</th>
+    <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    <td mat-footer-cell *matFooterCellDef>Total Earn/Loss</td>
+  </ng-container>
 
-	<ng-container matColumnDef="time">
-		<th mat-header-cell *matHeaderCellDef>Time</th>
-		<td mat-cell *matCellDef="let element">
-			{{ element.time | date : 'MM.dd.yyyy HH:mm:ss zzz' : 'UTC' }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+  <ng-container matColumnDef="time">
+    <th mat-header-cell *matHeaderCellDef>Time</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.time | date : 'MM.dd.yyyy HH:mm:ss zzz' : 'UTC' }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="buy">
-		<th mat-header-cell *matHeaderCellDef>Buy</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get(element.buyCoin)?.imagePath" [alt]="element.buyCoin" class="table-coin-icon" />
+  <ng-container matColumnDef="buy">
+    <th mat-header-cell *matHeaderCellDef>Buy</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get(element.buyCoin)?.imagePath" [alt]="element.buyCoin" class="table-coin-icon" />
 
-			{{ element.buy }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+      {{ element.buy }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="price">
-		<th mat-header-cell *matHeaderCellDef>Price</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get(element.priceCoin)?.imagePath" [alt]="element.priceCoin" class="table-coin-icon" />
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef>Price</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get(element.priceCoin)?.imagePath" [alt]="element.priceCoin" class="table-coin-icon" />
 
-			{{ element.price }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+      {{ element.price }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="fee">
-		<th mat-header-cell *matHeaderCellDef>Fee</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get(element.feeCoin)?.imagePath" [alt]="element.feeCoin" class="table-coin-icon" />
+  <ng-container matColumnDef="fee">
+    <th mat-header-cell *matHeaderCellDef>Fee</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get(element.feeCoin)?.imagePath" [alt]="element.feeCoin" class="table-coin-icon" />
 
-			{{ element.fee }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+      {{ element.fee }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="feeGain">
-		<th mat-header-cell *matHeaderCellDef>Tax fee gain</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
+  <ng-container matColumnDef="feeGain">
+    <th mat-header-cell *matHeaderCellDef>Tax fee gain</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
 
-			{{ getGain(element.transactionTaxEvent, TaxEventType.Fee) }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+      {{ getGain(element.transactionTaxEvent, TaxEventType.Fee) }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="feeExpenses">
-		<th mat-header-cell *matHeaderCellDef>Tax fee expense</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
+  <ng-container matColumnDef="feeExpenses">
+    <th mat-header-cell *matHeaderCellDef>Tax fee expense</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
 
-			{{ getExpenses(element.transactionTaxEvent, TaxEventType.Fee) }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+      {{ getExpenses(element.transactionTaxEvent, TaxEventType.Fee) }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="tradeGain">
-		<th mat-header-cell *matHeaderCellDef>Tax trade gain</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
+  <ng-container matColumnDef="tradeGain">
+    <th mat-header-cell *matHeaderCellDef>Tax trade gain</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
 
-			{{ getGain(element.transactionTaxEvent, TaxEventType.Buy) }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+      {{ getGain(element.transactionTaxEvent, TaxEventType.Buy) }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="tradeExpenses">
-		<th mat-header-cell *matHeaderCellDef>Tax trade expense</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
+  <ng-container matColumnDef="tradeExpenses">
+    <th mat-header-cell *matHeaderCellDef>Tax trade expense</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
 
-			{{ getExpenses(element.transactionTaxEvent, TaxEventType.Buy) }}
-		</td>
-		<td mat-footer-cell *matFooterCellDef></td>
-	</ng-container>
+      {{ getExpenses(element.transactionTaxEvent, TaxEventType.Buy) }}
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
 
-	<ng-container matColumnDef="earnLose">
-		<th mat-header-cell *matHeaderCellDef>Earn/Lose</th>
-		<td mat-cell *matCellDef="let element">
-			<img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
+  <ng-container matColumnDef="earnLose">
+    <th mat-header-cell *matHeaderCellDef>Earn/Lose</th>
+    <td mat-cell *matCellDef="let element">
+      <img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
 
-			{{ getEarnLose(element.transactionTaxEvent) }}
-		</td>
+      {{ getEarnLose(element.transactionTaxEvent) }}
+    </td>
 
-		<td mat-footer-cell *matFooterCellDef>
-			<img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
+    <td mat-footer-cell *matFooterCellDef>
+      <img [src]="(coins$ | async)?.get('EUR')?.imagePath" alt="EUR" class="table-coin-icon" />
 
-			{{ getTotalEarnLose(transactions$ | async) }}
-		</td>
-	</ng-container>
+      {{ getTotalEarnLose(transactions$ | async) }}
+    </td>
+  </ng-container>
 
-	<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-	<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-	<tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
 </table>

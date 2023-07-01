@@ -9,4 +9,4 @@ import { TransactionsComponent } from './transactions.component';
   declarations: [TransactionsComponent],
   imports: [CommonModule, MatTableModule, TransactionsRoutingModule],
 })
-export class TransactionsModule { }
+export class TransactionsModule {}

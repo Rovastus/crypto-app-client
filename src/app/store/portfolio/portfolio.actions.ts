@@ -1,5 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
-import { PortfolioI, PortfolioNameI } from './portfolio.model';
+import { LoadingProp } from '../constants';
+import { CreatePortfolioI, PortfolioI, PortfolioNameI } from './portfolio.model';
 
 export const PortfolioActions = createActionGroup({
   source: 'Portfolio',
@@ -7,7 +8,15 @@ export const PortfolioActions = createActionGroup({
     setCurrentPortfolioName: props<{ portfolioName: PortfolioNameI }>(),
     resetCurrentPortfolioName: emptyProps(),
     setPortfoliosNames: props<{ portfoliosNames: PortfolioNameI[] }>(),
+    addPortfoliosName: props<{ portfolioName: PortfolioNameI }>(),
     setPortfolio: props<{ portfolio: PortfolioI }>(),
+  },
+});
+
+export const PortfolioLoadingActions = createActionGroup({
+  source: 'Portfolio',
+  events: {
+    setCreationPortfolioLoading: props<LoadingProp>(),
   },
 });
 
@@ -16,5 +25,6 @@ export const PortfolioApiActions = createActionGroup({
   events: {
     loadPortfoliosNames: emptyProps(),
     loadPortfolio: props<{ portfolioId: number }>(),
+    createPortfolio: props<{ portfolio: CreatePortfolioI }>(),
   },
 });

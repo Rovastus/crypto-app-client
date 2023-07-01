@@ -28,6 +28,7 @@
     "@apollo/client": "3.7.16",
     "@graphql-codegen/typescript-apollo-angular": "3.5.6",
     "@ngrx/effects": "16.0.1",
+    "@ngrx/entity": "16.0.1",
     "@ngrx/router-store": "16.0.1",
     "@ngrx/store": "16.0.1",
     "@ngrx/store-devtools": "16.0.1",
@@ -68,7 +69,7 @@
   },
   "prettier": {
     "tabWidth": 2,
-    "useTabs": true,
+    "useTabs": false,
     "printWidth": 160,
     "semi": true,
     "singleQuote": true,

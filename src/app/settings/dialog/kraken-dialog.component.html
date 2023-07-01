@@ -1,19 +1,19 @@
 <h1 mat-dialog-title>Import export file</h1>
 <form [formGroup]="krakenForm" (submit)="krakenImport()">
-	<div mat-dialog-content>
-		<mat-form-field appearance="fill">
-			<mat-label>Coin pair</mat-label>
-			<input matInput formControlName="coinPairField" />
-		</mat-form-field>
-		<app-file-input formControlName="fileField"></app-file-input>
-	</div>
-	<div mat-dialog-actions align="end">
-		<button mat-button mat-dialog-close>Close</button>
-		<button mat-button type="submit" [disabled]="loading">
-			<mat-icon *ngIf="loading">
-				<mat-progress-spinner diameter="20" mode="indeterminate" strokeWidth="11%"> </mat-progress-spinner>
-			</mat-icon>
-			Create
-		</button>
-	</div>
+  <div mat-dialog-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Coin pair</mat-label>
+      <input matInput formControlName="coinPairField" />
+    </mat-form-field>
+    <app-file-input formControlName="fileField"></app-file-input>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button type="submit" [disabled]="loading">
+      <mat-icon *ngIf="loading">
+        <mat-progress-spinner diameter="20" mode="indeterminate" strokeWidth="11%"> </mat-progress-spinner>
+      </mat-icon>
+      Create
+    </button>
+  </div>
 </form>

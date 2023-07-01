@@ -30,4 +30,4 @@ import { FilesComponent } from './files.component';
     FilesRoutingModule,
   ],
 })
-export class FilesModule { }
+export class FilesModule {}

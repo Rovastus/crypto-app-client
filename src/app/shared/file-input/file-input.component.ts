@@ -23,7 +23,7 @@ export class FileInputComponent implements ControlValueAccessor {
     this.file = file;
   }
 
-  constructor(private host: ElementRef<HTMLInputElement>) { }
+  constructor(private host: ElementRef<HTMLInputElement>) {}
 
   writeValue() {
     // clear file input

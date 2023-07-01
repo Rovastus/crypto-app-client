@@ -63,4 +63,4 @@ import { Portfolio_DATA_STORE_KEY, portfolioDataReducer } from './store/portfoli
   providers: [],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

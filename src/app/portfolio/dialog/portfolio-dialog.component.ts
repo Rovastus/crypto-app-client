@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
-import { CreatePortfolioGQL, FiatEnum, TaxMethodEnum } from 'src/generated/graphql';
+import { Store } from '@ngrx/store';
+import { tap } from 'rxjs/operators';
+import { FIAT_LIST, TAX_METHOD_LIST } from 'src/app/helpers/enum.helpers';
+import { PortfolioApiActions } from 'src/app/store/portfolio/portfolio.actions';
+import { CreatePortfolioI } from 'src/app/store/portfolio/portfolio.model';
+import { PortfolioSelectors } from 'src/app/store/portfolio/portfolio.selectors';
 
 @Component({
   selector: 'app-portfolio-dialog',
@@ -10,47 +14,41 @@ import { CreatePortfolioGQL, FiatEnum, TaxMethodEnum } from 'src/generated/graph
   styleUrls: ['./portfolio-dialog.component.scss'],
 })
 export class PortfolioDialogComponent {
-  fiatList: { key: string; value: FiatEnum }[];
-  taxMethodList: { key: string; value: TaxMethodEnum }[];
-  loading = false;
-  portfolioForm: FormGroup;
+  private readonly dialogRef = inject(MatDialogRef<PortfolioDialogComponent>);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly store = inject(Store);
 
-  constructor(
-    public dialogRef: MatDialogRef<PortfolioDialogComponent>,
-    private formBuilder: FormBuilder,
-    private snackBarService: SnackBarService,
-    private createPortfolioGQL: CreatePortfolioGQL,
-  ) {
-    this.fiatList = Object.entries(FiatEnum).map(([key, value]) => ({
-      key,
-      value,
-    }));
-    this.taxMethodList = Object.entries(TaxMethodEnum).map(([key, value]) => ({
-      key,
-      value,
-    }));
-    this.portfolioForm = this.formBuilder.group({
-      nameField: [null, Validators.required],
-      taxMethodField: [null, Validators.required],
-      fiatField: [null, Validators.required],
-    });
-  }
+  private closeDialogWhenLoadingFinished = false;
+
+  fiatList = FIAT_LIST;
+  taxMethodList = TAX_METHOD_LIST;
+  loading$ = this.store.select(PortfolioSelectors.selectCreationPortfolioLoading).pipe(
+    tap((loading) => {
+      if (!loading && this.closeDialogWhenLoadingFinished) {
+        this.dialogRef.close();
+      }
+    }),
+  );
+
+  portfolioForm = this.formBuilder.group({
+    nameField: ['', Validators.required],
+    taxMethodField: [TAX_METHOD_LIST[0].value, Validators.required],
+    fiatField: [FIAT_LIST[0].value, Validators.required],
+  });
 
   createPortfolio(): void {
     if (this.portfolioForm.valid) {
-      this.loading = true;
-      this.createPortfolioGQL
-        .mutate({
-          name: this.portfolioForm.value.nameField,
-          taxMethod: this.portfolioForm.value.taxMethodField,
-          fiat: this.portfolioForm.value.fiatField,
-        })
-        .subscribe((_res) => {
-          this.loading = true;
-          this.snackBarService.displayInfo('Portfolio created.');
+      const name = this.portfolioForm.value.nameField;
+      const taxMethod = this.portfolioForm.value.taxMethodField;
+      const fiat = this.portfolioForm.value.fiatField;
 
-          this.dialogRef.close(true);
-        });
+      if (!name || !taxMethod || !fiat) {
+        return;
+      }
+
+      const newPortfolio: CreatePortfolioI = { name, taxMethod, fiat };
+      this.closeDialogWhenLoadingFinished = true;
+      this.store.dispatch(PortfolioApiActions.createPortfolio({ portfolio: newPortfolio }));
     }
   }
 

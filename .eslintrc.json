@@ -1,14 +1,9 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "projects/**/*",
-    "src/generated/*"
-  ],
+  "ignorePatterns": ["projects/**/*", "src/generated/*"],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -35,7 +30,7 @@
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
           "warn",
-          { 
+          {
             "argsIgnorePattern": "^_",
             "varsIgnorePattern": "^_",
             "caughtErrorsIgnorePattern": "^_"
@@ -44,13 +39,8 @@
       }
     },
     {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended",
-        "plugin:@angular-eslint/template/accessibility"
-      ],
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended", "plugin:@angular-eslint/template/accessibility"],
       "rules": {}
     }
   ]

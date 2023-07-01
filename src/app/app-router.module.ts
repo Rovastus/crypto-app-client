@@ -15,4 +15,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes), StoreRouterConnectingModule.forRoot()],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

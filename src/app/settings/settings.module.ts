@@ -28,4 +28,4 @@ import { SettingsComponent } from './settings.component';
     SettingsRoutingModule,
   ],
 })
-export class SettingsModule { }
+export class SettingsModule {}
