@@ -14,54 +14,51 @@
     </mat-list-item>
   </mat-list>
 
-  <table *ngIf="coins$ | async as coins" mat-table [dataSource]="portfolio.wallet" class="mat-elevation-z8">
+  <table *ngIf="tableData$ | async as tableData" mat-table [dataSource]="tableData.rows" class="mat-elevation-z8">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef>Id</th>
-      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
       <td mat-footer-cell *matFooterCellDef>Total Profit/Loss</td>
     </ng-container>
 
     <ng-container matColumnDef="coin">
       <th mat-header-cell *matHeaderCellDef>Coin</th>
-      <td mat-cell *matCellDef="let element">
-        <img [src]="coins.get(element.coin)?.imagePath" [alt]="element.coin" class="table-coin-icon" />
-
-        {{ element.amount }}
+      <td mat-cell *matCellDef="let row">
+        <img [src]="row.coinImagePath" [alt]="row.coin" class="table-coin-icon" />
+        {{ row.amount }}
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container matColumnDef="avcoFiatPerUnit">
       <th mat-header-cell *matHeaderCellDef>Avg. price per coin</th>
-      <td mat-cell *matCellDef="let element">
-        <img [src]="coins.get(portfolio.fiat)?.imagePath" [alt]="portfolio.fiat" class="table-coin-icon" />
-
-        {{ element.avcoFiatPerUnit }}
+      <td mat-cell *matCellDef="let row">
+        <img [src]="row.coinImagePath" [alt]="row.coin" class="table-coin-icon" />
+        {{ row.avcoFiatPerUnit }}
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container matColumnDef="total">
       <th mat-header-cell *matHeaderCellDef>Price in fiat</th>
-      <td mat-cell *matCellDef="let element">
-        <img [src]="coins.get(portfolio.fiat)?.imagePath" [alt]="portfolio.fiat" class="table-coin-icon" />
+      <td mat-cell *matCellDef="let row">
+        <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
 
-        {{ element.amount * element.avcoFiatPerUnit | number : '1.0-8' }}
+        {{ row.total | number : '1.0-8' }}
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container matColumnDef="profit/loss">
       <th mat-header-cell *matHeaderCellDef>Profit/Loss</th>
-      <td mat-cell *matCellDef="let element">
-        <img [src]="coins.get(portfolio.fiat)?.imagePath" [alt]="portfolio.fiat" class="table-coin-icon" />
-
-        {{ calculateCurrentTotal(element.amount, element.avcoFiatPerUnit, coins.get(element.coin)) | number : '1.0-8' }}
+      <td mat-cell *matCellDef="let row">
+        <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
+        {{ row.profitOrLoss | number : '1.0-8' }}
       </td>
       <td mat-footer-cell *matFooterCellDef>
-        <img [src]="coins.get(portfolio?.fiat)?.imagePath" [alt]="portfolio.fiat" class="table-coin-icon" />
+        <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
 
-        {{ getTotalProfitLoss(portfolio.wallet, coins) | number : '1.0-8' }}
+        {{ tableData.totalProfitOrloss | number : '1.0-8' }}
       </td>
     </ng-container>
 
