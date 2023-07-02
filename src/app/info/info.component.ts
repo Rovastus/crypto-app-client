@@ -9,6 +9,7 @@ import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioApiActions } from '../store/portfolio/portfolio.actions';
 import { PortfolioI, WalletI } from '../store/portfolio/portfolio.model';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
+import { PortfolioTableDataI, PortfolioTableRowI } from './info.model';
 
 @Component({
   selector: 'app-info',
@@ -38,7 +39,7 @@ export class InfoComponent {
 
   displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit', 'profit/loss'];
 
-  private mapPortfolioTableData(data: [PortfolioI | undefined, CoinInfoStoreType]) {
+  private mapPortfolioTableData(data: [PortfolioI | undefined, CoinInfoStoreType]): PortfolioTableDataI {
     const portfolio = data[0];
     const coins = data[1];
 
