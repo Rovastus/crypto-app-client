@@ -27,7 +27,7 @@ export class FilesEffects {
             this.snackBarService.displayError('Error while loading files');
             return EMPTY;
           }),
-          map((files) => FilesActions.setFiles({ files })),
+          map((files) => FilesActions.setFiles({ files, portfolioId })),
         );
       }),
     ),

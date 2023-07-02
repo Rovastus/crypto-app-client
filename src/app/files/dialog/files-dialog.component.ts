@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { FileJsonData, ImportFileGQL } from 'src/generated/graphql';
+import { map, take, tap } from 'rxjs/operators';
+import { FilesService } from 'src/app/service/files/files.service';
+import { FilesSelectors } from 'src/app/store/files/files.selectors';
+import { PortfolioSelectors } from 'src/app/store/portfolio/portfolio.selectors';
+import { FileJsonData } from 'src/generated/graphql';
 
 @Component({
   selector: 'app-files-dialog',
@@ -13,59 +14,57 @@ import { FileJsonData, ImportFileGQL } from 'src/generated/graphql';
   styleUrls: ['./files-dialog.component.scss'],
 })
 export class FilesDialogComponent {
-  loading = false;
-  exportForm: FormGroup;
-  portfolioId$: Observable<number>;
+  private readonly dialogRef = inject(MatDialogRef<FilesDialogComponent>);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly store = inject(Store);
+  private readonly filesService = inject(FilesService);
 
-  constructor(
-    public dialogRef: MatDialogRef<FilesDialogComponent>,
-    private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar,
-    private importFileGQL: ImportFileGQL,
-    private store: Store<{ portfolioId: number }>,
-  ) {
-    this.exportForm = this.formBuilder.group({
-      nameField: [null, Validators.required],
-      fileField: [null, Validators.required],
-    });
-    this.portfolioId$ = this.store.select('portfolioId');
-  }
+  exportForm = this.formBuilder.group({
+    nameField: [null, Validators.required],
+    fileField: [null, Validators.required],
+  });
 
-  createExport(): void {
-    if (this.exportForm.valid) {
-      this.loading = true;
-      this.processCsvData(this.exportForm.value.nameField, this.exportForm.value.fileField);
+  private closeDialogWhenLoadingFinished = false;
+  loading$ = this.store.select(FilesSelectors.selectCreationFileLoading).pipe(
+    tap((loading) => {
+      if (!loading && this.closeDialogWhenLoadingFinished) {
+        this.dialogRef.close();
+      }
+    }),
+  );
+
+  portfolioId$ = this.store.select(PortfolioSelectors.selectCurrentPortfolioName).pipe(
+    take(1),
+    map((portfolioName) => portfolioName?.id),
+  );
+
+  createExport(portfolioId: number | undefined): void {
+    if (!this.exportForm.valid) {
+      return;
     }
+
+    const name = this.exportForm.value.nameField;
+    const file = this.exportForm.value.fileField;
+
+    if (!name || !file || !portfolioId) {
+      return;
+    }
+
+    this.processCsvData(portfolioId, name, file);
   }
 
-  processCsvData(exportName: string, file: Blob) {
+  private processCsvData(portfolioId: number, name: string, file: Blob) {
     const reader = new FileReader();
     reader.onload = () => {
-      const data = reader.result;
-      const json = this.getCsvData(data as string);
-      json.sort((a, b) => (a.utcTime < b.utcTime ? -1 : 1));
-      this.portfolioId$.pipe(take(1)).subscribe((portfolioId: number) => {
-        this.importFileGQL
-          .mutate({
-            portfolioId,
-            name: exportName,
-            jsonData: json,
-          })
-          .subscribe(() => {
-            this.loading = true;
-            this.snackBar.open('File imported.', 'Close', {
-              duration: 5000,
-            });
-            this.dialogRef.close(true);
-          });
-      });
+      const jsonData = this.getCsvData(reader.result as string);
+      this.filesService.createFile({ portfolioId, name, jsonData });
     };
     reader.readAsBinaryString(file);
   }
 
-  private getCsvData(data: string): Array<FileJsonData> {
+  private getCsvData(data: string): FileJsonData[] {
     const lines = data.split('\n');
-    const result: Array<FileJsonData> = [];
+    const result: FileJsonData[] = [];
     const headers = lines[0].split(',');
     for (let i = 1; i < lines.length; i++) {
       const obj: FileJsonData = {

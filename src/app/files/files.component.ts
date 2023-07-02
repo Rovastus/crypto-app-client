@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { FilesByPortfolioIdGQL } from 'src/generated/graphql';
+import { combineLatest } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { FilesApiActions } from '../store/files/files.actions';
+import { FilesSelectors } from '../store/files/files.selectors';
+import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
 import { FilesDialogComponent } from './dialog/files-dialog.component';
 
 @Component({
@@ -11,35 +13,31 @@ import { FilesDialogComponent } from './dialog/files-dialog.component';
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.scss'],
 })
-export class FilesComponent implements OnInit {
-  dataString!: string | null;
-  portfolioId$: Observable<number>;
-  exports$!: Observable<any>;
+export class FilesComponent {
+  private readonly dialog = inject(MatDialog);
+  private readonly store = inject(Store);
+
+  files$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolioName), this.store.select(FilesSelectors.selectPortfolioId)]).pipe(
+    switchMap((response) => {
+      const currentPortfolioId = response[0]?.id;
+      const filesPortfolioId = response[1];
+
+      if (currentPortfolioId && currentPortfolioId === filesPortfolioId) {
+        return this.store.select(FilesSelectors.selectFiles);
+      } else if (currentPortfolioId) {
+        this.store.dispatch(FilesApiActions.loadFiles({ portfolioId: currentPortfolioId }));
+        return this.store.select(FilesSelectors.selectFiles);
+      }
+
+      return [];
+    }),
+  );
+
+  loading$ = this.store.select(FilesSelectors.selectFileLoading);
+
   displayedColumns: string[] = ['id', 'name'];
 
-  constructor(private dialog: MatDialog, private getFilesByPortfolioIdGQL: FilesByPortfolioIdGQL, private store: Store<{ portfolioId: number }>) {
-    this.portfolioId$ = this.store.select('portfolioId');
-  }
-
-  ngOnInit(): void {
-    this.portfolioId$.subscribe((portfolioId) => {
-      if (portfolioId !== -1) {
-        this.exports$ = this.getFilesByPortfolioIdGQL
-          .watch({
-            portfolioId,
-          })
-          .valueChanges.pipe(map((result: any) => result.data.exportsByPortfolioId));
-      }
-    });
-  }
-
   openDialog(): void {
-    const dialogRef = this.dialog.open(FilesDialogComponent, {
-      width: '500px',
-    });
-
-    dialogRef.afterClosed().subscribe((update: boolean) => {
-      console.log('The dialog was closed');
-    });
+    this.dialog.open(FilesDialogComponent, { width: '500px' });
   }
 }

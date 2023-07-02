@@ -5,7 +5,7 @@ import { CreateFileI, FileI } from './files.model';
 export const FilesActions = createActionGroup({
   source: 'Files',
   events: {
-    setFiles: props<{ files: FileI[] }>(),
+    setFiles: props<{ portfolioId: number; files: FileI[] }>(),
     addFile: props<{ file: FileI }>(),
     resetFiles: emptyProps(),
   },

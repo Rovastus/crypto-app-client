@@ -8,5 +8,5 @@ export interface FileI {
 export interface CreateFileI {
   portfolioId: number;
   name: string;
-  jsonData: FileJsonData;
+  jsonData: FileJsonData[];
 }
