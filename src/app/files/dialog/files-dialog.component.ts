@@ -4,6 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { map, take, tap } from 'rxjs/operators';
 import { FilesService } from 'src/app/service/files/files.service';
+import { FilesApiActions } from 'src/app/store/files/files.actions';
 import { FilesSelectors } from 'src/app/store/files/files.selectors';
 import { PortfolioSelectors } from 'src/app/store/portfolio/portfolio.selectors';
 import { FileJsonData } from 'src/generated/graphql';
@@ -57,7 +58,7 @@ export class FilesDialogComponent {
     const reader = new FileReader();
     reader.onload = () => {
       const jsonData = this.getCsvData(reader.result as string);
-      this.filesService.createFile({ portfolioId, name, jsonData });
+      this.store.dispatch(FilesApiActions.createFile({ createFile: { portfolioId, name, jsonData } }));
     };
     reader.readAsBinaryString(file);
   }
@@ -78,7 +79,8 @@ export class FilesDialogComponent {
         continue;
       }
       for (let j = 0; j < headers.length; j++) {
-        switch (headers[j]) {
+        const header = headers[j].trim();
+        switch (header) {
           case 'UTC_Time':
             obj.utcTime = currentline[j];
             break;
@@ -98,7 +100,6 @@ export class FilesDialogComponent {
       result.push(obj);
     }
 
-    console.log(result);
     return result;
   }
 
