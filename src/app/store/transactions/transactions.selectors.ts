@@ -7,10 +7,10 @@ const selectPortfolioId = createSelector(selectTransactionDataFeature, (state: T
 
 const selectTransactionLoading = createSelector(selectTransactionDataFeature, (state: TransactionState) => state.transactinLoading);
 
-const { selectEntities } = transactionsAdapter.getSelectors();
+const { selectAll } = transactionsAdapter.getSelectors();
 
 export const TransactionSelectors = {
-  selectTransactions: selectEntities,
+  selectTransactions: selectAll,
   selectPortfolioId,
   selectTransactionLoading,
 };

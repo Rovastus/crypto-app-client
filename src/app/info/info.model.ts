@@ -1,15 +1,15 @@
-export interface PortfolioTableDataI {
-  rows: PortfolioTableRowI[];
+export interface WalletTableDataI {
+  rows: WalletTableRowI[];
   fiat: string;
   fiatImagePath: string;
-  totalProfitOrloss: string;
+  totalEarnOrloss: string;
 }
 
-export interface PortfolioTableRowI {
+export interface WalletTableRowI {
   id: number;
   coin: string;
   coinImagePath: string;
   total: string;
   avcoFiatPerUnit: string;
-  profitOrLoss: string;
+  earnOrLoss: string;
 }

@@ -48,7 +48,7 @@ export class PortfolioEffects {
             portfolio.wallets.forEach((wallet) => {
               coins.add(wallet.coin);
             });
-            CoinInfoApiActions.loadCoinInfos({ coins });
+            this.store.dispatch(CoinInfoApiActions.loadCoinInfos({ coins }));
           }),
           map((portfolio) => PortfolioActions.setPortfolio({ portfolio })),
         ),
@@ -69,7 +69,7 @@ export class PortfolioEffects {
           }),
           map((portfolio) => {
             this.snackBarService.displayInfo('Portfolio created.');
-            const portfolioName: PortfolioNameI = { id: portfolio.createPortfolio.id, name: portfolio.createPortfolio.name };
+            const portfolioName: PortfolioNameI = { id: portfolio.id, name: portfolio.name };
             return PortfolioActions.addPortfoliosName({ portfolioName });
           }),
         );

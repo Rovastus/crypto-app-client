@@ -1,3 +1,5 @@
+import { TransactionTaxEventTypeEnum } from 'src/generated/graphql';
+
 export interface TransactionI {
   id: number;
   time: string;
@@ -14,4 +16,5 @@ export interface TransactionTaxEventI {
   id: number;
   gainInFiat: string;
   expensesInFiat: string;
+  type: TransactionTaxEventTypeEnum;
 }

@@ -44,21 +44,21 @@
       <td mat-cell *matCellDef="let row">
         <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
 
-        {{ row.total | number : '1.0-8' }}
+        {{ row.total }}
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
-    <ng-container matColumnDef="profit/loss">
+    <ng-container matColumnDef="earnOrLoss">
       <th mat-header-cell *matHeaderCellDef>Profit/Loss</th>
       <td mat-cell *matCellDef="let row">
         <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-        {{ row.profitOrLoss | number : '1.0-8' }}
+        {{ row.earnOrLoss }}
       </td>
       <td mat-footer-cell *matFooterCellDef>
         <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
 
-        {{ tableData.totalProfitOrloss | number : '1.0-8' }}
+        {{ tableData.totalEarnOrloss }}
       </td>
     </ng-container>
 
