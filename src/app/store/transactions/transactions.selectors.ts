@@ -7,7 +7,7 @@ const selectPortfolioId = createSelector(selectTransactionsDataFeature, (state: 
 
 const selectTransactionsLoading = createSelector(selectTransactionsDataFeature, (state: TransactionsState) => state.transactinLoading);
 
-const { selectAll } = transactionsAdapter.getSelectors();
+const { selectAll } = transactionsAdapter.getSelectors(selectTransactionsDataFeature);
 
 export const TransactionsSelectors = {
   selectTransactions: selectAll,

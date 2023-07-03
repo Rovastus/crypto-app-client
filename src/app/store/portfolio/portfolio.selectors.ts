@@ -7,7 +7,7 @@ const selectCurrentPortfolio = createSelector(selectPortfoliosDataFeature, (stat
 
 const selectCreationPortfolioLoading = createSelector(selectPortfoliosDataFeature, (state: PortfoliosState) => state.creationPortfolioLoading);
 
-const { selectAll } = portfoliosAdapter.getSelectors();
+const { selectAll } = portfoliosAdapter.getSelectors(selectPortfoliosDataFeature);
 
 export const PortfolioSelectors = {
   selectPortfoliosDataFeature,

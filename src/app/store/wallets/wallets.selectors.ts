@@ -7,7 +7,7 @@ const selectPortfolioId = createSelector(selectWalletsDataFeature, (state: Walle
 
 const selectWalletsLoading = createSelector(selectWalletsDataFeature, (state: WalletsState) => state.walletsLoading);
 
-const { selectAll } = walletsAdapter.getSelectors();
+const { selectAll } = walletsAdapter.getSelectors(selectWalletsDataFeature);
 
 export const WalletsSelectors = {
   selectWallets: selectAll,

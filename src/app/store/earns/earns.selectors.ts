@@ -7,7 +7,7 @@ const selectPortfolioId = createSelector(selectEarnsDataFeature, (state: EarnsSt
 
 const selectEarnsLoading = createSelector(selectEarnsDataFeature, (state: EarnsState) => state.earnsLoading);
 
-const { selectAll } = earnsAdapter.getSelectors();
+const { selectAll } = earnsAdapter.getSelectors(selectEarnsDataFeature);
 
 export const EarnsSelectors = {
   selectEarns: selectAll,
