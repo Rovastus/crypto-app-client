@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
+import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { CoinInfoStoreType } from '../store/coins/coin-info.reducer';
+import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { EarnsApiActions } from '../store/earns/earns.action';
 import { EarnI } from '../store/earns/earns.model';
@@ -32,13 +33,13 @@ export class EarnsComponent {
       return this.store.select(EarnsSelectors.selectEarns);
     }),
   );
-  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfoFeature);
+  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
 
   tableData$: Observable<EarnsTableDataI> = combineLatest([this.earns$, this.coins$]).pipe(map((data) => this.mapEarnsTableData(data)));
 
   displayedColumns: string[] = ['id', 'time', 'amount'];
 
-  private mapEarnsTableData(data: [EarnI[] | undefined, CoinInfoStoreType]): EarnsTableDataI {
+  private mapEarnsTableData(data: [EarnI[] | undefined, Dictionary<CoinInfoI>]): EarnsTableDataI {
     const earns = data[0];
     const coins = data[1];
 
@@ -55,8 +56,8 @@ export class EarnsComponent {
     };
   }
 
-  private mapEarnToEarnTableRow(earn: EarnI, coins: CoinInfoStoreType): EarnTableRowI {
-    const amountCoinImagePath = coins.get(earn.amountCoin)?.imagePath;
+  private mapEarnToEarnTableRow(earn: EarnI, coins: Dictionary<CoinInfoI>): EarnTableRowI {
+    const amountCoinImagePath = coins[earn.amountCoin]?.imagePath;
 
     return {
       id: earn.id,

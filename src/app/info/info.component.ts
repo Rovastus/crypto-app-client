@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
+import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
 import { EMPTY, Observable, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { CoinInfo } from '../store/coins/coin-info.model';
-import { CoinInfoStoreType } from '../store/coins/coin-info.reducer';
+import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioI } from '../store/portfolio/portfolio.model';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
@@ -37,12 +37,12 @@ export class InfoComponent {
       return this.store.select(WalletsSelectors.selectWallets);
     }),
   );
-  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfoFeature);
+  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
   tableData$: Observable<WalletsTableDataI> = combineLatest([this.portfolio$, this.wallets$, this.coins$]).pipe(map((data) => this.mapWalletTableData(data)));
 
   displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit', 'earnOrLoss'];
 
-  private mapWalletTableData(data: [PortfolioI | undefined, WalletI[], CoinInfoStoreType]): WalletsTableDataI {
+  private mapWalletTableData(data: [PortfolioI | undefined, WalletI[], Dictionary<CoinInfoI>]): WalletsTableDataI {
     const portfolio = data[0];
     const wallets = data[1];
     const coins = data[2];
@@ -59,7 +59,7 @@ export class InfoComponent {
     const rows = wallets.map<WalletTableRowI>((wallet) => this.mapWalletToWalletTableRow(wallet, coins));
     const totalEarnOrloss = this.getTotalEarnOrLoss(rows);
     const fiat = portfolio.fiat;
-    const fiatImagePath = coins.get(fiat)?.imagePath;
+    const fiatImagePath = coins[fiat]?.imagePath;
 
     return {
       rows,
@@ -69,15 +69,15 @@ export class InfoComponent {
     };
   }
 
-  private mapWalletToWalletTableRow(wallet: WalletI, coins: CoinInfoStoreType): WalletTableRowI {
-    const coinImagePath = coins.get(wallet.coin)?.imagePath;
+  private mapWalletToWalletTableRow(wallet: WalletI, coins: Dictionary<CoinInfoI>): WalletTableRowI {
+    const coinImagePath = coins[wallet.coin]?.imagePath;
     return {
       id: wallet.id,
       coin: wallet.coin,
       coinImagePath: coinImagePath ? coinImagePath : '',
       avcoFiatPerUnit: wallet.avcoFiatPerUnit,
       total: this.calculateWalletTotal(wallet),
-      earnOrLoss: this.calculateWalletEarnOrLoss(wallet, coins.get(wallet.coin)),
+      earnOrLoss: this.calculateWalletEarnOrLoss(wallet, coins[wallet.coin]),
     };
   }
 
@@ -85,7 +85,7 @@ export class InfoComponent {
     return new Decimal(wallet.amount).mul(new Decimal(wallet.avcoFiatPerUnit)).toString();
   }
 
-  private calculateWalletEarnOrLoss(wallet: WalletI, coinInfo: CoinInfo | undefined): string {
+  private calculateWalletEarnOrLoss(wallet: WalletI, coinInfo: CoinInfoI | undefined): string {
     if (!coinInfo) {
       return '0';
     }

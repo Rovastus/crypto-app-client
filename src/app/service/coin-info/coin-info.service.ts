@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FiatEnum } from 'src/generated/graphql';
-import { CoinInfo } from '../../store/coins/coin-info.model';
+import { CoinInfoI } from '../../store/coins/coin-info.model';
 import { CoinInfoResponse } from './coin-info.model';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class CoinInfoService {
 
   constructor(private http: HttpClient) {}
 
-  fetchCoinInfo(coins: Set<string>): Observable<Set<CoinInfo>> {
+  fetchCoinInfo(coins: Set<string>): Observable<CoinInfoI[]> {
     if (environment.generateLivecoinwatcTestData) {
       return this.fetchTestCoinInfo(coins);
     } else {
@@ -23,21 +23,21 @@ export class CoinInfoService {
     }
   }
 
-  private fetchTestCoinInfo(coins: Set<string>): Observable<Set<CoinInfo>> {
-    const coinInfos = new Set<CoinInfo>();
+  private fetchTestCoinInfo(coins: Set<string>): Observable<CoinInfoI[]> {
+    const coinInfos: CoinInfoI[] = [];
     coins.forEach((coin) => {
-      coinInfos.add({ coin, priceInFiat: 100, imagePath: `${environment.coinImageUrl}${coin.toLowerCase()}.webp` });
+      coinInfos.push({ coin, priceInFiat: 100, imagePath: `${environment.coinImageUrl}${coin.toLowerCase()}.webp` });
     });
     return of(coinInfos);
   }
 
-  private fetchApiCoinInfo(coins: Set<string>): Observable<Set<CoinInfo>> {
+  private fetchApiCoinInfo(coins: Set<string>): Observable<CoinInfoI[]> {
     const body = { currency: FiatEnum.Eur, codes: coins, meta: false };
     return this.http.post<CoinInfoResponse[]>(this.coinUrl, body, this.headers).pipe(
       map((data) => {
-        const coinInfos = new Set<CoinInfo>();
+        const coinInfos: CoinInfoI[] = [];
         data.forEach((coin) => {
-          coinInfos.add({ coin: coin.code, priceInFiat: coin.rate, imagePath: `${environment.coinImageUrl}${coin.code.toLowerCase()}.webp` });
+          coinInfos.push({ coin: coin.code, priceInFiat: coin.rate, imagePath: `${environment.coinImageUrl}${coin.code.toLowerCase()}.webp` });
         });
         return coinInfos;
       }),

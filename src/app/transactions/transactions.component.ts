@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
+import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
 import { EMPTY, Observable, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { FiatEnum, TransactionTaxEventTypeEnum } from 'src/generated/graphql';
-import { CoinInfoStoreType } from '../store/coins/coin-info.reducer';
+import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
 import { TransactionsApiActions } from '../store/transactions/transactions.action';
@@ -37,14 +38,14 @@ export class TransactionsComponent {
       return this.store.select(TransactionsSelectors.selectTransactions);
     }),
   );
-  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfoFeature);
+  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
 
   tableData$: Observable<TransactionsTableDataI> = combineLatest([this.transactions$, this.coins$]).pipe(map((data) => this.mapTransactionsTableData(data)));
 
   displayedColumns: string[] = ['id', 'time', 'buy', 'price', 'fee', 'feeGain', 'feeExpenses', 'tradeGain', 'tradeExpenses', 'earnOrLose'];
   readonly TaxEventType = TransactionTaxEventTypeEnum;
 
-  private mapTransactionsTableData(data: [TransactionI[] | undefined, CoinInfoStoreType]): TransactionsTableDataI {
+  private mapTransactionsTableData(data: [TransactionI[] | undefined, Dictionary<CoinInfoI>]): TransactionsTableDataI {
     const transactions = data[0];
     const coins = data[1];
 
@@ -58,7 +59,7 @@ export class TransactionsComponent {
     }
 
     const rows = transactions.map<TransactionTableRowI>((transaction) => this.mapTransactionToTransactionTableRow(transaction, coins));
-    const fiatImagePath = coins.get(FiatEnum.Eur)?.imagePath;
+    const fiatImagePath = coins[FiatEnum.Eur]?.imagePath;
 
     return {
       rows,
@@ -68,10 +69,10 @@ export class TransactionsComponent {
     };
   }
 
-  private mapTransactionToTransactionTableRow(transaction: TransactionI, coins: CoinInfoStoreType): TransactionTableRowI {
-    const buyCoinImagePath = coins.get(transaction.buyCoin)?.imagePath;
-    const priceCoinImagePath = coins.get(transaction.priceCoin)?.imagePath;
-    const feeCoinImagePath = coins.get(transaction.feeCoin)?.imagePath;
+  private mapTransactionToTransactionTableRow(transaction: TransactionI, coins: Dictionary<CoinInfoI>): TransactionTableRowI {
+    const buyCoinImagePath = coins[transaction.buyCoin]?.imagePath;
+    const priceCoinImagePath = coins[transaction.priceCoin]?.imagePath;
+    const feeCoinImagePath = coins[transaction.feeCoin]?.imagePath;
 
     return {
       id: transaction.id,
