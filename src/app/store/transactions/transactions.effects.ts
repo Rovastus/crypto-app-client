@@ -20,7 +20,7 @@ export class TransactionsEffects {
       ofType(TransactionsApiActions.loadTransactions),
       tap(() => this.store.dispatch(TransactionsLoadingActions.setTransactionsLoading(LOADING_TRUE))),
       mergeMap(({ portfolioId }) => {
-        return this.transactionsService.getTransactionsByPortfolioIdGQ(portfolioId).pipe(
+        return this.transactionsService.getTransactionsByPortfolioId(portfolioId).pipe(
           finalize(() => this.store.dispatch(TransactionsLoadingActions.setTransactionsLoading(LOADING_FALSE))),
           takeUntil(this.actions$.pipe(ofType(TransactionsApiActions.loadTransactions))),
           catchError(() => {
