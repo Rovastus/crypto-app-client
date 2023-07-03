@@ -12,7 +12,7 @@ export const FilesActions = createActionGroup({
 });
 
 export const FilesLoadingActions = createActionGroup({
-  source: 'Files',
+  source: 'Files Loading',
   events: {
     setFilesLoading: props<LoadingProp>(),
     setCreationFileLoading: props<LoadingProp>(),

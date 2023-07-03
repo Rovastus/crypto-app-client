@@ -33,6 +33,8 @@ import { FilesEffects } from './store/files/files.effects';
 import { FILE_DATA_STORE_KEY, fileDataReducer } from './store/files/files.reducer';
 import { PortfolioEffects } from './store/portfolio/portfolio.effects';
 import { PORTFOLIO_DATA_STORE_KEY, portfolioDataReducer } from './store/portfolio/portfolio.reducer';
+import { TransactionsEffects } from './store/transactions/transactions.effects';
+import { TRANSACTIONS_DATA_STORE_KEY, transactionsDataReducer } from './store/transactions/transactions.reducer';
 
 @NgModule({
   declarations: [AppComponent, PortfolioComponent, PortfolioDialogComponent],
@@ -60,10 +62,11 @@ import { PORTFOLIO_DATA_STORE_KEY, portfolioDataReducer } from './store/portfoli
       [COIN_INFO_STORE_KEY]: coinsReducer,
       [COIN_PAIR_STORE_KEY]: coinPairsReducer,
       [FILE_DATA_STORE_KEY]: fileDataReducer,
+      [TRANSACTIONS_DATA_STORE_KEY]: transactionsDataReducer,
       router: routerReducer,
     }),
     StoreDevtoolsModule.instrument(),
-    EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects, CoinPairEffects, FilesEffects),
+    EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects, CoinPairEffects, FilesEffects, TransactionsEffects),
     AppRoutingModule,
   ],
   providers: [],

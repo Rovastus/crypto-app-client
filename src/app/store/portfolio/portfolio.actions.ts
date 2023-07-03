@@ -14,7 +14,7 @@ export const PortfolioActions = createActionGroup({
 });
 
 export const PortfolioLoadingActions = createActionGroup({
-  source: 'Portfolio',
+  source: 'Portfolio Loading',
   events: {
     setCreationPortfolioLoading: props<LoadingProp>(),
   },

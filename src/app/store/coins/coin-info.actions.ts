@@ -9,7 +9,7 @@ export const CoinInfoActions = createActionGroup({
 });
 
 export const CoinInfoApiActions = createActionGroup({
-  source: 'CoinInfo',
+  source: 'CoinInfo API',
   events: {
     loadCoinInfos: props<{ coins: Set<string> }>(),
   },

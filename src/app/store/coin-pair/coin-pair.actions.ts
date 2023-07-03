@@ -11,7 +11,7 @@ export const CoinPairLoadingActions = createActionGroup({
 });
 
 export const CoinPairApiActions = createActionGroup({
-  source: 'CoinPair',
+  source: 'CoinPair API',
   events: {
     initBinanceCoinPairs: emptyProps(),
     importKrakenCoinPair: props<{ coinPair: string; jsonData: CoinPairPriceHistoryKrakenJsonData[] }>(),
