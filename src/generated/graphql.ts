@@ -282,7 +282,7 @@ export type TransactionsByPortfolioIdQueryVariables = Exact<{
 }>;
 
 
-export type TransactionsByPortfolioIdQuery = { __typename?: 'Query', transactionsByPortfolioId: Array<{ __typename?: 'Transaction', id: any, time: any, buy: any, buyCoin: string, price: any, priceCoin: string, fee: any, feeCoin: string, transactionTaxEvents: Array<{ __typename?: 'TransactionTaxEvent', id: any, gainInFiat: any, expensesInFiat: any }> }> };
+export type TransactionsByPortfolioIdQuery = { __typename?: 'Query', transactionsByPortfolioId: Array<{ __typename?: 'Transaction', id: any, time: any, buy: any, buyCoin: string, price: any, priceCoin: string, fee: any, feeCoin: string, transactionTaxEvents: Array<{ __typename?: 'TransactionTaxEvent', id: any, type: TransactionTaxEventTypeEnum, gainInFiat: any, expensesInFiat: any }> }> };
 
 export const InitCoinPairsDocument = gql`
     mutation initCoinPairs {
@@ -453,6 +453,7 @@ export const TransactionsByPortfolioIdDocument = gql`
     feeCoin
     transactionTaxEvents {
       id
+      type
       gainInFiat
       expensesInFiat
     }

@@ -25,7 +25,7 @@ export const transactionsDataReducer = createReducer(
   on(TransactionsActions.clearTransactions, (state) => {
     return transactionsAdapter.removeAll({ ...state, portfolioId: undefined });
   }),
-  on(TransactionsLoadingActions.setTransactionLoading, (state, { loading }) => {
+  on(TransactionsLoadingActions.setTransactionsLoading, (state, { loading }) => {
     return { ...state, transactinLoading: loading };
   }),
 );

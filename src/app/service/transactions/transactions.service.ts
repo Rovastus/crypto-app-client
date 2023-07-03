@@ -7,10 +7,10 @@ import { TransactionsByPortfolioIdGQL } from 'src/generated/graphql';
   providedIn: 'root',
 })
 export class TransactionsService {
-  private readonly getTransactionsByPortfolioIdGQL = inject(TransactionsByPortfolioIdGQL);
+  private readonly transactionsByPortfolioIdGQL = inject(TransactionsByPortfolioIdGQL);
 
-  getTransactionsByPortfolioIdGQ(portfolioId: number): Observable<TransactionI[]> {
-    return this.getTransactionsByPortfolioIdGQL.fetch({ portfolioId }).pipe(
+  getTransactionsByPortfolioId(portfolioId: number): Observable<TransactionI[]> {
+    return this.transactionsByPortfolioIdGQL.fetch({ portfolioId }).pipe(
       map((result) => {
         if (result.errors) throw result.errors;
         if (!result.data) throw 'No data found';

@@ -1,17 +1,18 @@
 query transactionsByPortfolioId($portfolioId: BigInt!) {
-	transactionsByPortfolioId(portfolioId: $portfolioId) {
-		id
-		time
-		buy
-		buyCoin
-		price
-		priceCoin
-		fee
-		feeCoin
-		transactionTaxEvents {
-			id
-			gainInFiat
-			expensesInFiat
-		}
-	}
+  transactionsByPortfolioId(portfolioId: $portfolioId) {
+    id
+    time
+    buy
+    buyCoin
+    price
+    priceCoin
+    fee
+    feeCoin
+    transactionTaxEvents {
+      id
+      type
+      gainInFiat
+      expensesInFiat
+    }
+  }
 }

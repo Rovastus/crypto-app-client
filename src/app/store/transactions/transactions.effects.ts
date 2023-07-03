@@ -18,10 +18,10 @@ export class TransactionsEffects {
   loadTransactions$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TransactionsApiActions.loadTransactions),
-      tap(() => this.store.dispatch(TransactionsLoadingActions.setTransactionLoading(LOADING_TRUE))),
+      tap(() => this.store.dispatch(TransactionsLoadingActions.setTransactionsLoading(LOADING_TRUE))),
       mergeMap(({ portfolioId }) => {
         return this.transactionsService.getTransactionsByPortfolioIdGQ(portfolioId).pipe(
-          finalize(() => this.store.dispatch(TransactionsLoadingActions.setTransactionLoading(LOADING_FALSE))),
+          finalize(() => this.store.dispatch(TransactionsLoadingActions.setTransactionsLoading(LOADING_FALSE))),
           takeUntil(this.actions$.pipe(ofType(TransactionsApiActions.loadTransactions))),
           catchError(() => {
             this.snackBarService.displayError('Error while loading transactions');

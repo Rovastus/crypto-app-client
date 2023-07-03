@@ -3,7 +3,7 @@ import { LoadingProp } from '../constants';
 import { TransactionI } from './transactions.model';
 
 export const TransactionsActions = createActionGroup({
-  source: 'Transaction',
+  source: 'Transactions',
   events: {
     setTransactions: props<{ portfolioId: number; transactions: TransactionI[] }>(),
     clearTransactions: emptyProps(),
@@ -11,14 +11,14 @@ export const TransactionsActions = createActionGroup({
 });
 
 export const TransactionsLoadingActions = createActionGroup({
-  source: 'Transaction Loading',
+  source: 'Transactions Loading',
   events: {
-    setTransactionLoading: props<LoadingProp>(),
+    setTransactionsLoading: props<LoadingProp>(),
   },
 });
 
 export const TransactionsApiActions = createActionGroup({
-  source: 'Transaction',
+  source: 'Transactions',
   events: {
     loadTransactions: props<{ portfolioId: number }>(),
   },
