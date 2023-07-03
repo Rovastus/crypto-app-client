@@ -1,20 +1,17 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { PORTFOLIO_DATA_STORE_KEY, PortfolioDataStoreType } from './portfolio.reducer';
+import { PORTFOLIOS_DATA_STORE_KEY, PortfoliosState, portfoliosAdapter } from './portfolio.reducer';
 
-const selectPortfolioDataFeature = createFeatureSelector<PortfolioDataStoreType>(PORTFOLIO_DATA_STORE_KEY);
+const selectPortfoliosDataFeature = createFeatureSelector<PortfoliosState>(PORTFOLIOS_DATA_STORE_KEY);
 
-const selectCurrentPortfolioName = createSelector(selectPortfolioDataFeature, (state: PortfolioDataStoreType) => state.currentPortfolioName);
+const selectCurrentPortfolio = createSelector(selectPortfoliosDataFeature, (state: PortfoliosState) => state.currentPortfolio);
 
-const selectPortfolio = createSelector(selectPortfolioDataFeature, (state: PortfolioDataStoreType) => state.portfolio);
+const selectCreationPortfolioLoading = createSelector(selectPortfoliosDataFeature, (state: PortfoliosState) => state.creationPortfolioLoading);
 
-const selectPortfoliosNames = createSelector(selectPortfolioDataFeature, (state: PortfolioDataStoreType) => state.portfoliosNames);
-
-const selectCreationPortfolioLoading = createSelector(selectPortfolioDataFeature, (state: PortfolioDataStoreType) => state.creationPortfolioLoading);
+const { selectAll } = portfoliosAdapter.getSelectors();
 
 export const PortfolioSelectors = {
-  selectPortfolioDataFeature,
-  selectCurrentPortfolioName,
-  selectPortfolio,
-  selectPortfoliosNames,
+  selectPortfoliosDataFeature,
+  selectPortfolios: selectAll,
+  selectCurrentPortfolio,
   selectCreationPortfolioLoading,
 };

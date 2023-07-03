@@ -33,9 +33,9 @@ export class FilesDialogComponent {
     }),
   );
 
-  portfolioId$ = this.store.select(PortfolioSelectors.selectCurrentPortfolioName).pipe(
+  portfolioId$ = this.store.select(PortfolioSelectors.selectCurrentPortfolio).pipe(
     take(1),
-    map((portfolioName) => portfolioName?.id),
+    map((portfolio) => portfolio?.id),
   );
 
   createExport(portfolioId: number | undefined): void {

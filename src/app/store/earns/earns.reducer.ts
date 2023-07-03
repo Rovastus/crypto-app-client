@@ -17,7 +17,7 @@ const initialState: EarnsState = earnsAdapter.getInitialState({
   earnsLoading: false,
 });
 
-export const transactionsDataReducer = createReducer(
+export const earnsDataReducer = createReducer(
   initialState,
   on(EarnsActions.setEarns, (state, { portfolioId, earns }) => {
     return earnsAdapter.setAll(earns, { ...state, portfolioId: portfolioId });

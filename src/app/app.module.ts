@@ -29,12 +29,16 @@ import { CoinPairEffects } from './store/coin-pair/coin-pair.effects';
 import { COIN_PAIR_STORE_KEY, coinPairsReducer } from './store/coin-pair/coin-pair.reducer';
 import { CoinInfosEffects } from './store/coins/coin-info.effects';
 import { COIN_INFO_STORE_KEY, coinsReducer } from './store/coins/coin-info.reducer';
+import { EarnsEffects } from './store/earns/earns.effects';
+import { EARNS_DATA_STORE_KEY, earnsDataReducer } from './store/earns/earns.reducer';
 import { FilesEffects } from './store/files/files.effects';
 import { FILE_DATA_STORE_KEY, fileDataReducer } from './store/files/files.reducer';
 import { PortfolioEffects } from './store/portfolio/portfolio.effects';
-import { PORTFOLIO_DATA_STORE_KEY, portfolioDataReducer } from './store/portfolio/portfolio.reducer';
+import { PORTFOLIOS_DATA_STORE_KEY, portfolioDataReducer } from './store/portfolio/portfolio.reducer';
 import { TransactionsEffects } from './store/transactions/transactions.effects';
 import { TRANSACTIONS_DATA_STORE_KEY, transactionsDataReducer } from './store/transactions/transactions.reducer';
+import { WalletsEffects } from './store/wallets/wallets.effects';
+import { WALLETS_DATA_STORE_KEY, walletsDataReducer } from './store/wallets/wallets.reducer';
 
 @NgModule({
   declarations: [AppComponent, PortfolioComponent, PortfolioDialogComponent],
@@ -58,15 +62,17 @@ import { TRANSACTIONS_DATA_STORE_KEY, transactionsDataReducer } from './store/tr
     MatProgressBarModule,
     MatSnackBarModule,
     StoreModule.forRoot({
-      [PORTFOLIO_DATA_STORE_KEY]: portfolioDataReducer,
+      [PORTFOLIOS_DATA_STORE_KEY]: portfolioDataReducer,
       [COIN_INFO_STORE_KEY]: coinsReducer,
       [COIN_PAIR_STORE_KEY]: coinPairsReducer,
       [FILE_DATA_STORE_KEY]: fileDataReducer,
       [TRANSACTIONS_DATA_STORE_KEY]: transactionsDataReducer,
+      [EARNS_DATA_STORE_KEY]: earnsDataReducer,
+      [WALLETS_DATA_STORE_KEY]: walletsDataReducer,
       router: routerReducer,
     }),
     StoreDevtoolsModule.instrument(),
-    EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects, CoinPairEffects, FilesEffects, TransactionsEffects),
+    EffectsModule.forRoot(PortfolioEffects, CoinInfosEffects, CoinPairEffects, FilesEffects, TransactionsEffects, EarnsEffects, WalletsEffects),
     AppRoutingModule,
   ],
   providers: [],

@@ -1,28 +1,17 @@
 mutation createPortfolio($name: String!, $taxMethod: TaxMethodEnum!, $fiat: FiatEnum!) {
-	createPortfolio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
-		id
-		name
-	}
+  createPortfolio(name: $name, taxMethod: $taxMethod, fiat: $fiat) {
+    id
+    name
+    taxMethod
+    fiat
+  }
 }
 
 query allPortfolios {
-	allPortfolios {
-		id
-		name
-	}
-}
-
-query getPortfolioById($portfolioId: BigInt!) {
-	getPortfolioById(portfolioId: $portfolioId) {
-		id
-		name
-		taxMethod
-		fiat
-		wallets {
-			id
-			amount
-			coin
-			avcoFiatPerUnit
-		}
-	}
+  allPortfolios {
+    id
+    name
+    taxMethod
+    fiat
+  }
 }

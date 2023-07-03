@@ -5,10 +5,8 @@ import { EMPTY } from 'rxjs';
 import { catchError, finalize, map, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import { PortfolioService } from 'src/app/service/portfolio/portfolio.service';
 import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
-import { CoinInfoApiActions } from '../coins/coin-info.actions';
 import { LOADING_FALSE, LOADING_TRUE } from '../constants';
 import { PortfolioActions, PortfolioApiActions, PortfolioLoadingActions } from './portfolio.actions';
-import { PortfolioNameI } from './portfolio.model';
 
 @Injectable()
 export class PortfolioEffects {
@@ -17,42 +15,19 @@ export class PortfolioEffects {
   private readonly portfolioService = inject(PortfolioService);
   private readonly snackBarService = inject(SnackBarService);
 
-  loadPortfoliosNames$ = createEffect(() =>
+  loadPortfolios$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(PortfolioApiActions.loadPortfoliosNames),
+      ofType(PortfolioApiActions.loadPortfolios),
       mergeMap(() => {
-        return this.portfolioService.getAllPortfoliosNames().pipe(
-          takeUntil(this.actions$.pipe(ofType(PortfolioApiActions.loadPortfoliosNames))),
+        return this.portfolioService.getAllPortfolios().pipe(
+          takeUntil(this.actions$.pipe(ofType(PortfolioApiActions.loadPortfolios))),
           catchError(() => {
             this.snackBarService.displayError('Error while loading portfolios');
             return EMPTY;
           }),
-          map((portfoliosNames) => PortfolioActions.setPortfoliosNames({ portfoliosNames })),
+          map((portfolios) => PortfolioActions.setPortfolios({ portfolios })),
         );
       }),
-    ),
-  );
-
-  loadPortfolio$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(PortfolioApiActions.loadPortfolio),
-      mergeMap(({ portfolioId }) =>
-        this.portfolioService.getPortfolioById(portfolioId).pipe(
-          takeUntil(this.actions$.pipe(ofType(PortfolioApiActions.loadPortfolio))),
-          catchError(() => {
-            this.snackBarService.displayError('Error while loading portfolio');
-            return EMPTY;
-          }),
-          tap((portfolio) => {
-            const coins: Set<string> = new Set();
-            portfolio.wallets.forEach((wallet) => {
-              coins.add(wallet.coin);
-            });
-            this.store.dispatch(CoinInfoApiActions.loadCoinInfos({ coins }));
-          }),
-          map((portfolio) => PortfolioActions.setPortfolio({ portfolio })),
-        ),
-      ),
     ),
   );
 
@@ -69,8 +44,7 @@ export class PortfolioEffects {
           }),
           map((portfolio) => {
             this.snackBarService.displayInfo('Portfolio created.');
-            const portfolioName: PortfolioNameI = { id: portfolio.id, name: portfolio.name };
-            return PortfolioActions.addPortfoliosName({ portfolioName });
+            return PortfolioActions.addPortfolio({ portfolio });
           }),
         );
       }),

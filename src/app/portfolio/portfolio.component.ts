@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { PortfolioActions, PortfolioApiActions } from '../store/portfolio/portfolio.actions';
-import { PortfolioNameI } from '../store/portfolio/portfolio.model';
+import { PortfolioI } from '../store/portfolio/portfolio.model';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
 import { PortfolioDialogComponent } from './dialog/portfolio-dialog.component';
 
@@ -13,20 +13,20 @@ import { PortfolioDialogComponent } from './dialog/portfolio-dialog.component';
   styleUrls: ['./portfolio.component.scss'],
 })
 export class PortfolioComponent implements OnInit {
-  portfolios$!: Observable<PortfolioNameI[]>;
+  private readonly dialog = inject(MatDialog);
+  private readonly store = inject(Store);
 
-  constructor(private dialog: MatDialog, private readonly store: Store) {}
+  portfolios$: Observable<PortfolioI[]> = this.store.select(PortfolioSelectors.selectPortfolios);
 
   ngOnInit(): void {
-    this.portfolios$ = this.store.select(PortfolioSelectors.selectPortfoliosNames);
-    this.store.dispatch(PortfolioApiActions.loadPortfoliosNames());
+    this.store.dispatch(PortfolioApiActions.loadPortfolios());
   }
 
   openDialog(): void {
     this.dialog.open(PortfolioDialogComponent, { width: '400px' });
   }
 
-  portfolioSelected(portfolioName: PortfolioNameI): void {
-    this.store.dispatch(PortfolioActions.setCurrentPortfolioName({ portfolioName }));
+  portfolioSelected(portfolio: PortfolioI): void {
+    this.store.dispatch(PortfolioActions.setCurrentPortfolio({ portfolio }));
   }
 }

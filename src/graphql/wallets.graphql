@@ -1,0 +1,8 @@
+query getWalletsByPortfolioId($portfolioId: BigInt!) {
+  getWalletsByPortfolioId(portfolioId: $portfolioId) {
+    id
+    amount
+    coin
+    avcoFiatPerUnit
+  }
+}

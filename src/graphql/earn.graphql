@@ -1,8 +1,8 @@
 query earnsByPortfolioId($portfolioId: BigInt!) {
-	earnsByPortfolioId(portfolioId: $portfolioId) {
-		id
-		time
-		amount
-		amountCoin
-	}
+  earnsByPortfolioId(portfolioId: $portfolioId) {
+    id
+    time
+    amount
+    amountCoin
+  }
 }

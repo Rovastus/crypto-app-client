@@ -5,14 +5,14 @@ import { TransactionI } from './transactions.model';
 
 export const TRANSACTIONS_DATA_STORE_KEY = 'transactionsData';
 
-export interface TransactionState extends EntityState<TransactionI> {
+export interface TransactionsState extends EntityState<TransactionI> {
   portfolioId: number | undefined;
   transactinLoading: boolean;
 }
 
 export const transactionsAdapter: EntityAdapter<TransactionI> = createEntityAdapter<TransactionI>();
 
-const initialState: TransactionState = transactionsAdapter.getInitialState({
+const initialState: TransactionsState = transactionsAdapter.getInitialState({
   portfolioId: undefined,
   transactinLoading: false,
 });

@@ -1,13 +1,13 @@
 mutation importFile($portfolioId: BigInt!, $name: String!, $jsonData: [FileJsonData!]!) {
-	importFile(portfolioId: $portfolioId, name: $name, jsonData: $jsonData) {
-		id
-		name
-	}
+  importFile(portfolioId: $portfolioId, name: $name, jsonData: $jsonData) {
+    id
+    name
+  }
 }
 
 query filesByPortfolioId($portfolioId: BigInt!) {
-	filesByPortfolioId(portfolioId: $portfolioId) {
-		id
-		name
-	}
+  filesByPortfolioId(portfolioId: $portfolioId) {
+    id
+    name
+  }
 }

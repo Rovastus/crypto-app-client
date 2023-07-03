@@ -21,7 +21,7 @@ export class TransactionsComponent {
   private readonly store = inject(Store);
 
   private transactions$ = combineLatest([
-    this.store.select(PortfolioSelectors.selectCurrentPortfolioName),
+    this.store.select(PortfolioSelectors.selectCurrentPortfolio),
     this.store.select(TransactionsSelectors.selectPortfolioId),
   ]).pipe(
     switchMap((data) => {

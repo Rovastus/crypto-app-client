@@ -18,7 +18,7 @@ import { EarnTableRowI, EarnsTableDataI } from './earns.model';
 export class EarnsComponent {
   private readonly store = inject(Store);
 
-  private earns$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolioName), this.store.select(EarnsSelectors.selectPortfolioId)]).pipe(
+  private earns$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolio), this.store.select(EarnsSelectors.selectPortfolioId)]).pipe(
     switchMap((data) => {
       const portfolioId = data[0]?.id;
       const earnPortfolioId = data[1];

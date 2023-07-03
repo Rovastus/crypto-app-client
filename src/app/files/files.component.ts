@@ -17,7 +17,7 @@ export class FilesComponent {
   private readonly dialog = inject(MatDialog);
   private readonly store = inject(Store);
 
-  files$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolioName), this.store.select(FilesSelectors.selectPortfolioId)]).pipe(
+  files$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolio), this.store.select(FilesSelectors.selectPortfolioId)]).pipe(
     switchMap((response) => {
       const portfolioId = response[0]?.id;
       const filesPortfolioId = response[1];
