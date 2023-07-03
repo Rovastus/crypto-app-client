@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
+import { EMPTY, combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { FilesApiActions } from '../store/files/files.actions';
 import { FilesSelectors } from '../store/files/files.selectors';
@@ -19,17 +19,16 @@ export class FilesComponent {
 
   files$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolioName), this.store.select(FilesSelectors.selectPortfolioId)]).pipe(
     switchMap((response) => {
-      const currentPortfolioId = response[0]?.id;
+      const portfolioId = response[0]?.id;
       const filesPortfolioId = response[1];
 
-      if (currentPortfolioId && currentPortfolioId === filesPortfolioId) {
-        return this.store.select(FilesSelectors.selectFiles);
-      } else if (currentPortfolioId) {
-        this.store.dispatch(FilesApiActions.loadFiles({ portfolioId: currentPortfolioId }));
-        return this.store.select(FilesSelectors.selectFiles);
+      if (!portfolioId) return EMPTY;
+
+      if (filesPortfolioId !== portfolioId) {
+        this.store.dispatch(FilesApiActions.loadFiles({ portfolioId: portfolioId }));
       }
 
-      return [];
+      return this.store.select(FilesSelectors.selectFiles);
     }),
   );
 

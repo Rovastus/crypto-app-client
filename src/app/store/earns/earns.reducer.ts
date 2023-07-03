@@ -10,9 +10,9 @@ export interface EarnsState extends EntityState<EarnI> {
   earnsLoading: boolean;
 }
 
-export const transactionsAdapter: EntityAdapter<EarnI> = createEntityAdapter<EarnI>();
+export const earnsAdapter: EntityAdapter<EarnI> = createEntityAdapter<EarnI>();
 
-const initialState: EarnsState = transactionsAdapter.getInitialState({
+const initialState: EarnsState = earnsAdapter.getInitialState({
   portfolioId: undefined,
   earnsLoading: false,
 });
@@ -20,10 +20,10 @@ const initialState: EarnsState = transactionsAdapter.getInitialState({
 export const transactionsDataReducer = createReducer(
   initialState,
   on(EarnsActions.setEarns, (state, { portfolioId, earns }) => {
-    return transactionsAdapter.setAll(earns, { ...state, portfolioId: portfolioId });
+    return earnsAdapter.setAll(earns, { ...state, portfolioId: portfolioId });
   }),
   on(EarnsActions.clearEarns, (state) => {
-    return transactionsAdapter.removeAll({ ...state, portfolioId: undefined });
+    return earnsAdapter.removeAll({ ...state, portfolioId: undefined });
   }),
   on(EarnsLoadingActions.setEarnsLoading, (state, { loading }) => {
     return { ...state, earnsLoading: loading };

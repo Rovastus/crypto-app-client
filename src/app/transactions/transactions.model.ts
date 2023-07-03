@@ -1,4 +1,4 @@
-export interface TransactionTableDataI {
+export interface TransactionsTableDataI {
   rows: TransactionTableRowI[];
   fiat: string;
   fiatImagePath: string;

@@ -9,7 +9,7 @@ import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioApiActions } from '../store/portfolio/portfolio.actions';
 import { PortfolioI, WalletI } from '../store/portfolio/portfolio.model';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
-import { WalletTableDataI, WalletTableRowI } from './info.model';
+import { WalletTableRowI, WalletsTableDataI } from './info.model';
 
 @Component({
   selector: 'app-info',
@@ -23,23 +23,22 @@ export class InfoComponent {
     switchMap((p) => {
       const portfolioId = p.currentPortfolioName?.id;
 
-      if (portfolioId && p.portfolio?.id === portfolioId) {
-        return this.store.select(PortfolioSelectors.selectPortfolio);
-      } else if (portfolioId) {
+      if (!portfolioId) return EMPTY;
+
+      if (p.portfolio?.id !== portfolioId) {
         this.store.dispatch(PortfolioApiActions.loadPortfolio({ portfolioId }));
-        return this.store.select(PortfolioSelectors.selectPortfolio);
       }
 
-      return EMPTY;
+      return this.store.select(PortfolioSelectors.selectPortfolio);
     }),
   );
   private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfoFeature);
 
-  tableData$: Observable<WalletTableDataI> = combineLatest([this.portfolio$, this.coins$]).pipe(map((data) => this.mapWalletTableData(data)));
+  tableData$: Observable<WalletsTableDataI> = combineLatest([this.portfolio$, this.coins$]).pipe(map((data) => this.mapWalletTableData(data)));
 
   displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit', 'earnOrLoss'];
 
-  private mapWalletTableData(data: [PortfolioI | undefined, CoinInfoStoreType]): WalletTableDataI {
+  private mapWalletTableData(data: [PortfolioI | undefined, CoinInfoStoreType]): WalletsTableDataI {
     const portfolio = data[0];
     const coins = data[1];
 

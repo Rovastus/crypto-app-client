@@ -9,8 +9,8 @@ import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
 import { TransactionsApiActions } from '../store/transactions/transactions.action';
 import { TransactionI, TransactionTaxEventI } from '../store/transactions/transactions.model';
-import { TransactionSelectors } from '../store/transactions/transactions.selectors';
-import { TransactionTableDataI, TransactionTableRowI } from './transactions.model';
+import { TransactionsSelectors } from '../store/transactions/transactions.selectors';
+import { TransactionTableRowI, TransactionsTableDataI } from './transactions.model';
 
 @Component({
   selector: 'app-transactions',
@@ -22,30 +22,29 @@ export class TransactionsComponent {
 
   private transactions$ = combineLatest([
     this.store.select(PortfolioSelectors.selectCurrentPortfolioName),
-    this.store.select(TransactionSelectors.selectPortfolioId),
+    this.store.select(TransactionsSelectors.selectPortfolioId),
   ]).pipe(
     switchMap((data) => {
       const portfolioId = data[0]?.id;
       const currentPortfolioId = data[1];
 
-      if (portfolioId && currentPortfolioId === portfolioId) {
-        return this.store.select(TransactionSelectors.selectTransactions);
-      } else if (portfolioId) {
+      if (!portfolioId) return EMPTY;
+
+      if (currentPortfolioId !== portfolioId) {
         this.store.dispatch(TransactionsApiActions.loadTransactions({ portfolioId }));
-        return this.store.select(TransactionSelectors.selectTransactions);
       }
 
-      return EMPTY;
+      return this.store.select(TransactionsSelectors.selectTransactions);
     }),
   );
   private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfoFeature);
 
-  tableData$: Observable<TransactionTableDataI> = combineLatest([this.transactions$, this.coins$]).pipe(map((data) => this.mapTransactionsTableData(data)));
+  tableData$: Observable<TransactionsTableDataI> = combineLatest([this.transactions$, this.coins$]).pipe(map((data) => this.mapTransactionsTableData(data)));
 
   displayedColumns: string[] = ['id', 'time', 'buy', 'price', 'fee', 'feeGain', 'feeExpenses', 'tradeGain', 'tradeExpenses', 'earnOrLose'];
   readonly TaxEventType = TransactionTaxEventTypeEnum;
 
-  private mapTransactionsTableData(data: [TransactionI[] | undefined, CoinInfoStoreType]): TransactionTableDataI {
+  private mapTransactionsTableData(data: [TransactionI[] | undefined, CoinInfoStoreType]): TransactionsTableDataI {
     const transactions = data[0];
     const coins = data[1];
 

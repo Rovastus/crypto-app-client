@@ -1,4 +1,4 @@
-export interface WalletTableDataI {
+export interface WalletsTableDataI {
   rows: WalletTableRowI[];
   fiat: string;
   fiatImagePath: string;

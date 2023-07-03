@@ -9,7 +9,7 @@ const selectTransactionsLoading = createSelector(selectTransactionsDataFeature, 
 
 const { selectAll } = transactionsAdapter.getSelectors();
 
-export const TransactionSelectors = {
+export const TransactionsSelectors = {
   selectTransactions: selectAll,
   selectPortfolioId,
   selectTransactionsLoading,
