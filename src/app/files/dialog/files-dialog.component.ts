@@ -70,24 +70,25 @@ export class FilesDialogComponent {
         description: '',
         data: '',
       };
-      const currentline = lines[i].split(';');
-      if (currentline.length === 1) {
+      const currentlines = lines[i].split(';');
+      if (currentlines.length === 1) {
         continue;
       }
       for (let j = 0; j < headers.length; j++) {
         const header = headers[j].trim();
+        const currentLine = currentlines[j].trim();
         switch (header) {
           case 'UTC_Time':
-            obj.utcTime = currentline[j];
+            obj.utcTime = currentLine;
             break;
           case 'Operation':
-            obj.operation = currentline[j];
+            obj.operation = currentLine;
             break;
           case 'Description':
-            obj.description = currentline[j];
+            obj.description = currentLine;
             break;
           case 'Data':
-            obj.data = currentline[j];
+            obj.data = currentLine;
             break;
           default:
             break;
