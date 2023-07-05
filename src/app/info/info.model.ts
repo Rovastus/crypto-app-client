@@ -8,6 +8,7 @@ export interface WalletsTableDataI {
 export interface WalletTableRowI {
   id: number;
   coin: string;
+  coinAmount: string;
   coinImagePath: string;
   total: string;
   avcoFiatPerUnit: string;

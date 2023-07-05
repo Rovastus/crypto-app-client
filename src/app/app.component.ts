@@ -24,7 +24,7 @@ export class AppComponent {
     startWith(this.navLinks()[0]),
     map(() => {
       const activeLink = this.navLinks().find((tab) => tab.link === '.' + this.router.url);
-      return activeLink ? activeLink : this.navLinks()[0];
+      return activeLink ?? this.navLinks()[0];
     }),
   );
 

@@ -65,7 +65,7 @@ export class EarnsComponent {
       time: earn.time,
       amount: earn.amount,
       amountCoin: earn.amountCoin,
-      amountCoinImagePath: amountCoinImagePath ? amountCoinImagePath : '',
+      amountCoinImagePath: amountCoinImagePath ?? '',
     };
   }
 }

@@ -41,7 +41,7 @@ export class InfoComponent {
   private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
   tableData$: Observable<WalletsTableDataI> = combineLatest([this.portfolio$, this.wallets$, this.coins$]).pipe(map((data) => this.mapWalletTableData(data)));
 
-  displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit', 'earnOrLoss'];
+  displayedColumns: string[] = ['id', 'coin', 'amount', 'total', 'avcoFiatPerUnit', 'earnOrLoss'];
 
   private mapWalletTableData(data: [PortfolioI | undefined, WalletI[], Dictionary<CoinInfoI>]): WalletsTableDataI {
     const portfolio = data[0];
@@ -66,7 +66,7 @@ export class InfoComponent {
       rows,
       totalEarnOrloss: totalEarnOrloss,
       fiat,
-      fiatImagePath: fiatImagePath ? fiatImagePath : '',
+      fiatImagePath: fiatImagePath ?? '',
     };
   }
 
@@ -75,7 +75,8 @@ export class InfoComponent {
     return {
       id: wallet.id,
       coin: wallet.coin,
-      coinImagePath: coinImagePath ? coinImagePath : '',
+      coinAmount: wallet.amount,
+      coinImagePath: coinImagePath ?? '',
       avcoFiatPerUnit: wallet.avcoFiatPerUnit,
       total: this.calculateWalletTotal(wallet),
       earnOrLoss: this.calculateWalletEarnOrLoss(wallet, coins[wallet.coin]),

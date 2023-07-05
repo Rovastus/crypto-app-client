@@ -66,7 +66,7 @@ export class TransactionsComponent {
       rows,
       totalEarnOrLose: this.getTotalEarnOrLose(rows),
       fiat: FiatEnum.Eur,
-      fiatImagePath: fiatImagePath ? fiatImagePath : '',
+      fiatImagePath: fiatImagePath ?? '',
     };
   }
 
@@ -79,11 +79,11 @@ export class TransactionsComponent {
       id: transaction.id,
       time: transaction.time,
       buy: transaction.buy,
-      buyCoinImagePath: buyCoinImagePath ? buyCoinImagePath : '',
+      buyCoinImagePath: buyCoinImagePath ?? '',
       price: transaction.price,
-      priceCoinImagePath: priceCoinImagePath ? priceCoinImagePath : '',
+      priceCoinImagePath: priceCoinImagePath ?? '',
       fee: transaction.fee,
-      feeCoinImagePath: feeCoinImagePath ? feeCoinImagePath : '',
+      feeCoinImagePath: feeCoinImagePath ?? '',
       feeGain: this.getGain(transaction.transactionTaxEvents, TransactionTaxEventTypeEnum.Fee),
       feeExpenses: this.getExpenses(transaction.transactionTaxEvents, TransactionTaxEventTypeEnum.Fee),
       tradeGain: this.getGain(transaction.transactionTaxEvents, TransactionTaxEventTypeEnum.Buy),
@@ -94,12 +94,12 @@ export class TransactionsComponent {
 
   private getGain(transactionTaxEvents: TransactionTaxEventI[], type: TransactionTaxEventTypeEnum): string {
     const transactionTaxEvent = transactionTaxEvents.find((element) => element.type === type);
-    return transactionTaxEvent ? transactionTaxEvent.gainInFiat : '-';
+    return transactionTaxEvent?.gainInFiat ?? '-';
   }
 
   private getExpenses(transactionTaxEvents: TransactionTaxEventI[], type: TransactionTaxEventTypeEnum): string {
     const transactionTaxEvent = transactionTaxEvents.find((element) => element.type === type);
-    return transactionTaxEvent ? transactionTaxEvent.expensesInFiat : '-';
+    return transactionTaxEvent?.expensesInFiat ?? '-';
   }
 
   private getEarnOrLose(transactionTaxEvents: TransactionTaxEventI[]): string {
