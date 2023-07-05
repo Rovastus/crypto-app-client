@@ -3,25 +3,25 @@
   <div mat-dialog-content>
     <mat-form-field appearance="fill">
       <mat-label>Name</mat-label>
-      <input matInput formControlName="nameField" />
+      <input matInput formControlName="name" />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Tax method</mat-label>
-      <mat-select formControlName="taxMethodField">
+      <mat-select formControlName="taxMethod">
         <mat-option *ngFor="let taxMethod of taxMethodList" [value]="taxMethod.value">{{ taxMethod.value }}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Fiat</mat-label>
-      <mat-select formControlName="fiatField">
+      <mat-select formControlName="fiat">
         <mat-option *ngFor="let fiat of fiatList" [value]="fiat.value">{{ fiat.value }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Close</button>
-    <button mat-button type="submit" [disabled]="loading$ | async">
-      <mat-icon *ngIf="loading$ | async">
+    <button mat-button type="submit" [disabled]="creationPortfolioLoading() || !portfolioForm.valid">
+      <mat-icon *ngIf="creationPortfolioLoading()">
         <mat-progress-spinner diameter="18" mode="indeterminate"> </mat-progress-spinner>
       </mat-icon>
       Create

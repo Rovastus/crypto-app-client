@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -12,28 +12,36 @@ import { PortfolioSelectors } from 'src/app/store/portfolio/portfolio.selectors'
   selector: 'app-portfolio-dialog',
   templateUrl: './portfolio-dialog.component.html',
   styleUrls: ['./portfolio-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortfolioDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<PortfolioDialogComponent>);
   private readonly formBuilder = inject(FormBuilder);
   private readonly store = inject(Store);
 
-  private closeDialogWhenLoadingFinished = false;
-
   fiatList = FIAT_LIST;
   taxMethodList = TAX_METHOD_LIST;
+
+  private closeDialogWhenLoadingFinished = signal(false);
+  creationPortfolioLoading = this.store.selectSignal(PortfolioSelectors.selectCreationPortfolioLoading);
+  private closeDialogRefEffect = effect(() => {
+    if (this.closeDialogWhenLoadingFinished() && !this.creationPortfolioLoading()) {
+      this.dialogRef.close();
+    }
+  });
+
   loading$ = this.store.select(PortfolioSelectors.selectCreationPortfolioLoading).pipe(
     tap((loading) => {
-      if (!loading && this.closeDialogWhenLoadingFinished) {
+      if (!loading && this.closeDialogWhenLoadingFinished()) {
         this.dialogRef.close();
       }
     }),
   );
 
-  portfolioForm = this.formBuilder.group({
-    nameField: ['', Validators.required],
-    taxMethodField: [TAX_METHOD_LIST[0].value, Validators.required],
-    fiatField: [FIAT_LIST[0].value, Validators.required],
+  portfolioForm = this.formBuilder.nonNullable.group({
+    name: ['', Validators.required],
+    taxMethod: [TAX_METHOD_LIST[0].value, Validators.required],
+    fiat: [FIAT_LIST[0].value, Validators.required],
   });
 
   createPortfolio(): void {
@@ -41,16 +49,9 @@ export class PortfolioDialogComponent {
       return;
     }
 
-    const name = this.portfolioForm.value.nameField;
-    const taxMethod = this.portfolioForm.value.taxMethodField;
-    const fiat = this.portfolioForm.value.fiatField;
+    const newPortfolio: CreatePortfolioI = this.portfolioForm.getRawValue();
 
-    if (!name || !taxMethod || !fiat) {
-      return;
-    }
-
-    const newPortfolio: CreatePortfolioI = { name, taxMethod, fiat };
-    this.closeDialogWhenLoadingFinished = true;
+    this.closeDialogWhenLoadingFinished.set(true);
     this.store.dispatch(PortfolioApiActions.createPortfolio({ portfolio: newPortfolio }));
   }
 
