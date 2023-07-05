@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, WritableSignal, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -12,23 +12,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true,
     },
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileInputComponent implements ControlValueAccessor {
   onChange!: (file: File | null) => void;
-  file: File | null = null;
+  file: WritableSignal<File | null> = signal(null);
 
   @HostListener('change', ['$event.target.files']) emitFiles(event: FileList) {
     const file = event && event.item(0);
     this.onChange(file);
-    this.file = file;
+    this.file.set(file);
   }
 
   constructor(private host: ElementRef<HTMLInputElement>) {}
 
   writeValue() {
-    // clear file input
     this.host.nativeElement.value = '';
-    this.file = null;
+    this.file.set(null);
   }
 
   registerOnChange(fn: (file: File | null) => void): void {

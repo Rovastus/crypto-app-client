@@ -1,9 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { map, take, tap } from 'rxjs/operators';
-import { FilesService } from 'src/app/service/files/files.service';
 import { FilesApiActions } from 'src/app/store/files/files.actions';
 import { FilesSelectors } from 'src/app/store/files/files.selectors';
 import { PortfolioSelectors } from 'src/app/store/portfolio/portfolio.selectors';
@@ -13,39 +11,36 @@ import { FileJsonData } from 'src/generated/graphql';
   selector: 'app-files-dialog',
   templateUrl: './files-dialog.component.html',
   styleUrls: ['./files-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilesDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<FilesDialogComponent>);
   private readonly formBuilder = inject(FormBuilder);
   private readonly store = inject(Store);
-  private readonly filesService = inject(FilesService);
 
-  exportForm = this.formBuilder.group({
-    nameField: [null, Validators.required],
+  exportForm = this.formBuilder.nonNullable.group({
+    nameField: ['', Validators.required],
     fileField: [null, Validators.required],
   });
 
-  private closeDialogWhenLoadingFinished = false;
-  loading$ = this.store.select(FilesSelectors.selectCreationFileLoading).pipe(
-    tap((loading) => {
-      if (!loading && this.closeDialogWhenLoadingFinished) {
-        this.dialogRef.close();
-      }
-    }),
-  );
+  private closeDialogWhenLoadingFinished = signal(false);
+  creationFileLoading = this.store.selectSignal(FilesSelectors.selectCreationFileLoading);
+  private closeDialogRefEffect = effect(() => {
+    if (!this.creationFileLoading() && this.closeDialogWhenLoadingFinished()) {
+      this.dialogRef.close();
+    }
+  });
 
-  portfolioId$ = this.store.select(PortfolioSelectors.selectCurrentPortfolio).pipe(
-    take(1),
-    map((portfolio) => portfolio?.id),
-  );
+  private portfolioId = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolioId);
 
-  createExport(portfolioId: number | undefined): void {
+  createExport(): void {
     if (!this.exportForm.valid) {
       return;
     }
 
     const name = this.exportForm.value.nameField;
     const file = this.exportForm.value.fileField;
+    const portfolioId = this.portfolioId();
 
     if (!name || !file || !portfolioId) {
       return;
@@ -58,6 +53,7 @@ export class FilesDialogComponent {
     const reader = new FileReader();
     reader.onload = () => {
       const jsonData = this.getCsvData(reader.result as string);
+      this.closeDialogWhenLoadingFinished.set(true);
       this.store.dispatch(FilesApiActions.createFile({ createFile: { portfolioId, name, jsonData } }));
     };
     reader.readAsBinaryString(file);
@@ -66,7 +62,7 @@ export class FilesDialogComponent {
   private getCsvData(data: string): FileJsonData[] {
     const lines = data.split('\n');
     const result: FileJsonData[] = [];
-    const headers = lines[0].split(',');
+    const headers = lines[0].split(';');
     for (let i = 1; i < lines.length; i++) {
       const obj: FileJsonData = {
         utcTime: '',
@@ -74,7 +70,7 @@ export class FilesDialogComponent {
         description: '',
         data: '',
       };
-      const currentline = lines[i].split(',');
+      const currentline = lines[i].split(';');
       if (currentline.length === 1) {
         continue;
       }

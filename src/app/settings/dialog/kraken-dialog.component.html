@@ -9,8 +9,8 @@
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Close</button>
-    <button mat-button type="submit" [disabled]="loading$ | async">
-      <mat-icon *ngIf="loading$ | async">
+    <button mat-button type="submit" [disabled]="importKrakenCoinPairLoading()">
+      <mat-icon *ngIf="importKrakenCoinPairLoading()">
         <mat-progress-spinner diameter="18" mode="indeterminate"> </mat-progress-spinner>
       </mat-icon>
       Create

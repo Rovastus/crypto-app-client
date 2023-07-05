@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@ang
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { tap } from 'rxjs/operators';
 import { FIAT_LIST, TAX_METHOD_LIST } from 'src/app/helpers/enum.helpers';
 import { PortfolioApiActions } from 'src/app/store/portfolio/portfolio.actions';
 import { CreatePortfolioI } from 'src/app/store/portfolio/portfolio.model';
@@ -25,18 +24,10 @@ export class PortfolioDialogComponent {
   private closeDialogWhenLoadingFinished = signal(false);
   creationPortfolioLoading = this.store.selectSignal(PortfolioSelectors.selectCreationPortfolioLoading);
   private closeDialogRefEffect = effect(() => {
-    if (this.closeDialogWhenLoadingFinished() && !this.creationPortfolioLoading()) {
+    if (!this.creationPortfolioLoading() && this.closeDialogWhenLoadingFinished()) {
       this.dialogRef.close();
     }
   });
-
-  loading$ = this.store.select(PortfolioSelectors.selectCreationPortfolioLoading).pipe(
-    tap((loading) => {
-      if (!loading && this.closeDialogWhenLoadingFinished()) {
-        this.dialogRef.close();
-      }
-    }),
-  );
 
   portfolioForm = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],

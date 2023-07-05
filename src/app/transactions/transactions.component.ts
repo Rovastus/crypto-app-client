@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
@@ -17,6 +17,7 @@ import { TransactionTableRowI, TransactionsTableDataI } from './transactions.mod
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionsComponent {
   private readonly store = inject(Store);

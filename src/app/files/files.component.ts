@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { EMPTY, combineLatest } from 'rxjs';
@@ -12,6 +12,7 @@ import { FilesDialogComponent } from './dialog/files-dialog.component';
   selector: 'app-files',
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilesComponent {
   private readonly dialog = inject(MatDialog);

@@ -1,21 +1,19 @@
-<ng-container *ngIf="portfolioId$ | async as portfolioId">
-  <h1 mat-dialog-title>Import export file</h1>
-  <form [formGroup]="exportForm" (submit)="createExport(portfolioId)">
-    <div mat-dialog-content>
-      <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="nameField" />
-      </mat-form-field>
-      <app-file-input formControlName="fileField"></app-file-input>
-    </div>
-    <div mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Close</button>
-      <button mat-button type="submit" [disabled]="loading$ | async">
-        <mat-icon *ngIf="loading$ | async">
-          <mat-progress-spinner diameter="18" mode="indeterminate"> </mat-progress-spinner>
-        </mat-icon>
-        Create
-      </button>
-    </div>
-  </form>
-</ng-container>
+<h1 mat-dialog-title>Import export file</h1>
+<form [formGroup]="exportForm" (submit)="createExport()">
+  <div mat-dialog-content>
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="nameField" />
+    </mat-form-field>
+    <app-file-input formControlName="fileField"></app-file-input>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-button type="submit" [disabled]="creationFileLoading()">
+      <mat-icon *ngIf="creationFileLoading()">
+        <mat-progress-spinner diameter="18" mode="indeterminate"> </mat-progress-spinner>
+      </mat-icon>
+      Create
+    </button>
+  </div>
+</form>

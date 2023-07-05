@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import { EMPTY, Observable, combineLatest } from 'rxjs';
@@ -15,6 +15,7 @@ import { EarnTableRowI, EarnsTableDataI } from './earns.model';
   selector: 'app-earns',
   templateUrl: './earns.component.html',
   styleUrls: ['./earns.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EarnsComponent {
   private readonly store = inject(Store);

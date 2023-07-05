@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Binance</h2>
-  <button mat-raised-button [disabled]="initBinanceCoinPairsLoading$ | async" (click)="initBinanceCoinPairs()">
-    <mat-icon *ngIf="initBinanceCoinPairsLoading$ | async">
+  <button mat-raised-button [disabled]="initBinanceCoinPairsLoading()" (click)="initBinanceCoinPairs()">
+    <mat-icon *ngIf="initBinanceCoinPairsLoading()">
       <mat-progress-spinner diameter="18" mode="indeterminate"> </mat-progress-spinner>
     </mat-icon>
     Init coin pairs data

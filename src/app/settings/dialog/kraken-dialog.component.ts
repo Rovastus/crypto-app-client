@@ -1,8 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { tap } from 'rxjs/operators';
 import { CoinPairApiActions } from 'src/app/store/coin-pair/coin-pair.actions';
 import { CoinPairSelectors } from 'src/app/store/coin-pair/coin-pair.selectors';
 import { CoinPairPriceHistoryKrakenJsonData } from 'src/generated/graphql';
@@ -11,22 +10,22 @@ import { CoinPairPriceHistoryKrakenJsonData } from 'src/generated/graphql';
   selector: 'app-kraken-dialog',
   templateUrl: './kraken-dialog.component.html',
   styleUrls: ['./kraken-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KrakenDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<KrakenDialogComponent>);
   private readonly formBuilder = inject(FormBuilder);
   private readonly store = inject(Store);
 
-  private closeDialogWhenLoadingFinished = false;
-  loading$ = this.store.select(CoinPairSelectors.selectImportKrakenCoinPairLoading).pipe(
-    tap((loading) => {
-      if (!loading && this.closeDialogWhenLoadingFinished) {
-        this.dialogRef.close();
-      }
-    }),
-  );
+  private closeDialogWhenLoadingFinished = signal(false);
+  importKrakenCoinPairLoading = this.store.selectSignal(CoinPairSelectors.selectImportKrakenCoinPairLoading);
+  private closeDialogRefEffect = effect(() => {
+    if (!this.importKrakenCoinPairLoading() && this.closeDialogWhenLoadingFinished()) {
+      this.dialogRef.close();
+    }
+  });
 
-  krakenForm = this.formBuilder.group({
+  krakenForm = this.formBuilder.nonNullable.group({
     coinPairField: ['', Validators.required],
     fileField: [null, Validators.required],
   });
@@ -50,8 +49,8 @@ export class KrakenDialogComponent {
     const reader = new FileReader();
 
     reader.onload = () => {
-      this.closeDialogWhenLoadingFinished = true;
       const jsonData = this.getCsvData(reader.result as string);
+      this.closeDialogWhenLoadingFinished.set(true);
       this.store.dispatch(CoinPairApiActions.importKrakenCoinPair({ coinPair, jsonData }));
     };
 
