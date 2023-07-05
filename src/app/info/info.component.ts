@@ -1,9 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
-import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioI } from '../store/portfolio/portfolio.model';
@@ -17,36 +15,33 @@ import { WalletTableRowI, WalletsTableDataI } from './info.model';
   selector: 'app-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoComponent {
   private readonly store = inject(Store);
 
-  portfolio$ = this.store.select(PortfolioSelectors.selectCurrentPortfolio);
+  portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
+  wallet = this.store.selectSignal(WalletsSelectors.selectWallets);
 
-  private wallets$ = combineLatest([this.portfolio$, this.store.select(WalletsSelectors.selectPortfolioId)]).pipe(
-    switchMap((response) => {
-      const portfolioId = response[0]?.id;
-      const walletPortfolioId = response[1];
+  private fetchWalletDataEffect = effect(() => {
+    const portfolioId = this.portfolio()?.id;
+    if (!portfolioId) return;
 
-      if (!portfolioId) return EMPTY;
+    const walletPortfolioId = this.store.selectSignal(WalletsSelectors.selectPortfolioId);
 
-      if (walletPortfolioId !== portfolioId) {
-        this.store.dispatch(WalletsApiActions.loadWallets({ portfolioId }));
-      }
+    if (walletPortfolioId() !== portfolioId) {
+      this.store.dispatch(WalletsApiActions.loadWallets({ portfolioId }));
+    }
+  });
 
-      return this.store.select(WalletsSelectors.selectWallets);
-    }),
-  );
-  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
-  tableData$: Observable<WalletsTableDataI> = combineLatest([this.portfolio$, this.wallets$, this.coins$]).pipe(map((data) => this.mapWalletTableData(data)));
+  tableData = computed(() => {
+    const coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
+    return this.mapWalletTableData(this.portfolio(), this.wallet(), coins());
+  });
 
   displayedColumns: string[] = ['id', 'coin', 'total', 'avcoFiatPerUnit', 'earnOrLoss'];
 
-  private mapWalletTableData(data: [PortfolioI | undefined, WalletI[], Dictionary<CoinInfoI>]): WalletsTableDataI {
-    const portfolio = data[0];
-    const wallets = data[1];
-    const coins = data[2];
-
+  private mapWalletTableData(portfolio: PortfolioI | undefined, wallets: WalletI[], coins: Dictionary<CoinInfoI>): WalletsTableDataI {
     if (!portfolio || !wallets || !coins) {
       return {
         rows: [],
