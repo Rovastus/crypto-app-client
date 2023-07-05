@@ -32,7 +32,7 @@ export class FilesComponent {
     }),
   );
 
-  loading$ = this.store.select(FilesSelectors.selectFileLoading);
+  loading = this.store.selectSignal(FilesSelectors.selectFileLoading);
 
   displayedColumns: string[] = ['id', 'name'];
 
