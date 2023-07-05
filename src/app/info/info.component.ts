@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
@@ -17,6 +17,7 @@ import { WalletTableRowI, WalletsTableDataI } from './info.model';
   selector: 'app-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoComponent {
   private readonly store = inject(Store);
