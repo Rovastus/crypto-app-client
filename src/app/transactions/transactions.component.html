@@ -54,7 +54,7 @@
 <ng-template #coinWithValueTmpl let-col="column" let-row="row" let-value="value">
   <img [src]="row[col.extraData.coinImagePath]" [alt]="row[col.extraData.coin]" class="table-coin-icon" />
   <span>
-    {{ value | number : '1.2-2' }}
+    {{ value | number : '1.2-8' }}
   </span>
 </ng-template>
 
