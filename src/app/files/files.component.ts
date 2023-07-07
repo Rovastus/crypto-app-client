@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, effect, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { EMPTY, combineLatest } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { asapScheduler } from 'rxjs';
+import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
+import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { FilesApiActions } from '../store/files/files.actions';
 import { FilesSelectors } from '../store/files/files.selectors';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
@@ -14,28 +15,30 @@ import { FilesDialogComponent } from './dialog/files-dialog.component';
   styleUrls: ['./files.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilesComponent {
+export class FilesComponent extends AppNgxDatatable implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly store = inject(Store);
 
-  files$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolio), this.store.select(FilesSelectors.selectPortfolioId)]).pipe(
-    switchMap((response) => {
-      const portfolioId = response[0]?.id;
-      const filesPortfolioId = response[1];
+  portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
+  portfolioChangedEffect = effect(() => {
+    const portfolioId = this.portfolio()?.id;
+    if (portfolioId) {
+      asapScheduler.schedule(() => this.store.dispatch(FilesApiActions.loadFiles({ portfolioId: portfolioId })));
+    }
+  });
 
-      if (!portfolioId) return EMPTY;
+  files = this.store.selectSignal(FilesSelectors.selectFiles);
+  loadingIndicator = this.store.selectSignal(FilesSelectors.selectFileLoading);
 
-      if (filesPortfolioId !== portfolioId) {
-        this.store.dispatch(FilesApiActions.loadFiles({ portfolioId: portfolioId }));
-      }
+  cols: WritableSignal<AppTableColumn[]> = signal([]);
 
-      return this.store.select(FilesSelectors.selectFiles);
-    }),
-  );
-
-  loading = this.store.selectSignal(FilesSelectors.selectFileLoading);
-
-  displayedColumns: string[] = ['id', 'name'];
+  ngOnInit(): void {
+    const columnsSettings: AppTableColumnSettings = new Map([
+      ['Id', { prop: 'id' }],
+      ['Name', { prop: 'name' }],
+    ]);
+    this.cols.set(this.createColumns(columnsSettings, undefined));
+  }
 
   openDialog(): void {
     this.dialog.open(FilesDialogComponent, { width: '500px' });

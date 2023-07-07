@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { SharedModule } from '../shared/shared.module';
 import { FilesDialogComponent } from './dialog/files-dialog.component';
 import { FilesRoutingModule } from './files-routing.module';
@@ -21,8 +21,8 @@ import { FilesComponent } from './files.component';
     CommonModule,
     SharedModule,
     ReactiveFormsModule,
+    NgxDatatableModule,
     MatDialogModule,
-    MatTableModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,

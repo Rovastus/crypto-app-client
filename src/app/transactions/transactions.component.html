@@ -1,101 +1,73 @@
-<table *ngIf="tableData$ | async as tableData" mat-table [dataSource]="tableData.rows" class="mat-elevation-z8">
-  <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef>Id</th>
-    <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-    <td mat-footer-cell *matFooterCellDef>Total</td>
-  </ng-container>
+<div *ngIf="portfolio()" class="app-container">
+  <ngx-datatable
+    class="material"
+    [rows]="tableData().rows"
+    [columns]="cols()"
+    [columnMode]="columnMode()"
+    [headerHeight]="50"
+    [rowHeight]="rowHeight()"
+    [footerHeight]="50"
+    [loadingIndicator]="loadingIndicator()"
+    [scrollbarV]="true"
+    [scrollbarH]="false"
+    [virtualization]="true">
+    <ngx-datatable-footer>
+      <ng-template ngx-datatable-footer-template>
+        <div class="footer-container">
+          <div>
+            <strong>Total fee gains:</strong>
+            <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+            <span [ngClass]="tableData().totalFeeGains.startsWith('-') ? 'warn' : 'success'"> {{ tableData().totalFeeGains }}</span>
+          </div>
+          <div>
+            <strong>Total fee expenses:</strong>
+            <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+            <span [ngClass]="tableData().totalFeeExpenses.startsWith('-') ? 'warn' : 'success'"> {{ tableData().totalFeeExpenses }}</span>
+          </div>
+          <div>
+            <strong>Total trade gains:</strong>
+            <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+            <span [ngClass]="tableData().totalTradeGains.startsWith('-') ? 'warn' : 'success'"> {{ tableData().totalTradeGains }}</span>
+          </div>
+          <div>
+            <strong>Total trade expenses:</strong>
+            <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+            <span [ngClass]="tableData().totalTradeExpenses.startsWith('-') ? 'warn' : 'success'"> {{ tableData().totalTradeExpenses }}</span>
+          </div>
+          <div>
+            <strong>Total earn or lose:</strong>
+            <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+            <span [ngClass]="tableData().totalEarnOrLose.startsWith('-') ? 'warn' : 'success'"> {{ tableData().totalEarnOrLose }}</span>
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-footer>
+  </ngx-datatable>
+</div>
 
-  <ng-container matColumnDef="time">
-    <th mat-header-cell *matHeaderCellDef>Time</th>
-    <td mat-cell *matCellDef="let row">
-      {{ row.time | date : 'MM.dd.yyyy HH:mm:ss zzz' : 'UTC' }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
+<ng-template #dateTmpl let-row="row" let-value="value">
+  <span>
+    {{ value | date : 'MM.dd.yyyy HH:mm:ss zzz' : 'UTC' }}
+  </span>
+</ng-template>
 
-  <ng-container matColumnDef="buy">
-    <th mat-header-cell *matHeaderCellDef>Buy</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="row.buyCoinImagePath" [alt]="row.buyCoin" class="table-coin-icon" />
-      {{ row.buy }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
+<ng-template #coinWithValueTmpl let-col="column" let-row="row" let-value="value">
+  <img [src]="row[col.extraData.coinImagePath]" [alt]="row[col.extraData.coin]" class="table-coin-icon" />
+  <span>
+    {{ value | number : '1.2-2' }}
+  </span>
+</ng-template>
 
-  <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef>Price</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="row.priceCoinImagePath" [alt]="row.buyCoin" class="table-coin-icon" />
-      {{ row.price }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
+<ng-template #fiatWithValueTmpl let-row="row" let-value="value">
+  <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+  <span>
+    {{ value | number : '1.2-2' }}
+  </span>
+</ng-template>
 
-  <ng-container matColumnDef="fee">
-    <th mat-header-cell *matHeaderCellDef>Fee</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="row.feeCoinImagePath" [alt]="row.buyCoin" class="table-coin-icon" />
-      {{ row.fee }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
-
-  <ng-container matColumnDef="feeGain">
-    <th mat-header-cell *matHeaderCellDef>Tax fee gain</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ row.feeGain }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
-
-  <ng-container matColumnDef="feeExpenses">
-    <th mat-header-cell *matHeaderCellDef>Tax fee expense</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ row.feeExpenses }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef></td>
-  </ng-container>
-
-  <ng-container matColumnDef="tradeGain">
-    <th mat-header-cell *matHeaderCellDef>Tax trade gain</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ row.tradeGain }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef>
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ tableData.totalTradeGains }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="tradeExpenses">
-    <th mat-header-cell *matHeaderCellDef>Tax trade expense</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ row.tradeExpenses }}
-    </td>
-    <td mat-footer-cell *matFooterCellDef>
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ tableData.totalTradeExpenses }}
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="earnOrLose">
-    <th mat-header-cell *matHeaderCellDef>Earn/Lose</th>
-    <td mat-cell *matCellDef="let row">
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ row.earnOrLose }}
-    </td>
-
-    <td mat-footer-cell *matFooterCellDef>
-      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-      {{ tableData.totalEarnOrLose }}
-    </td>
-  </ng-container>
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
-</table>
+<ng-template #fiatWithValueWithColorTmpl let-row="row" let-value="value">
+  <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+  <span [ngClass]="value?.startsWith('-') ? 'warn' : 'success'">
+    {{ value | number : '1.2-2' }}
+  </span>
+</ng-template>

@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
-import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { asapScheduler } from 'rxjs';
 import { FiatEnum, TransactionTaxEventTypeEnum } from 'src/generated/graphql';
+import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
+import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
@@ -19,43 +20,55 @@ import { TransactionTableRowI, TransactionsTableDataI } from './transactions.mod
   styleUrls: ['./transactions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TransactionsComponent {
+export class TransactionsComponent extends AppNgxDatatable implements OnInit {
   private readonly store = inject(Store);
 
-  private transactions$ = combineLatest([
-    this.store.select(PortfolioSelectors.selectCurrentPortfolio),
-    this.store.select(TransactionsSelectors.selectPortfolioId),
-  ]).pipe(
-    switchMap((data) => {
-      const portfolioId = data[0]?.id;
-      const currentPortfolioId = data[1];
+  @ViewChild('dateTmpl', { static: true }) private dateTmpl!: TemplateRef<unknown>;
+  @ViewChild('coinWithValueTmpl', { static: true }) private coinWithValueTmpl!: TemplateRef<unknown>;
+  @ViewChild('fiatWithValueTmpl', { static: true }) private fiatWithValueTmpl!: TemplateRef<unknown>;
+  @ViewChild('fiatWithValueWithColorTmpl', { static: true }) private fiatWithValueWithColorTmpl!: TemplateRef<unknown>;
+  cols: WritableSignal<AppTableColumn[]> = signal([]);
 
-      if (!portfolioId) return EMPTY;
+  portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
+  portfolioChangedEffect = effect(() => {
+    const portfolioId = this.portfolio()?.id;
+    if (portfolioId) {
+      asapScheduler.schedule(() => this.store.dispatch(TransactionsApiActions.loadTransactions({ portfolioId })));
+    }
+  });
 
-      if (currentPortfolioId !== portfolioId) {
-        this.store.dispatch(TransactionsApiActions.loadTransactions({ portfolioId }));
-      }
+  private transactions = this.store.selectSignal(TransactionsSelectors.selectTransactions);
+  private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
 
-      return this.store.select(TransactionsSelectors.selectTransactions);
-    }),
-  );
-  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
+  tableData = computed(() => {
+    return this.mapTransactionsTableData(this.transactions(), this.coins());
+  });
+  loadingIndicator = this.store.selectSignal(TransactionsSelectors.selectTransactionsLoading);
 
-  tableData$: Observable<TransactionsTableDataI> = combineLatest([this.transactions$, this.coins$]).pipe(map((data) => this.mapTransactionsTableData(data)));
+  ngOnInit(): void {
+    const columnsSettings: AppTableColumnSettings = new Map([
+      ['Time', { cellTemplate: this.dateTmpl, prop: 'time' }],
+      ['Buy', { cellTemplate: this.coinWithValueTmpl, prop: 'buy', extraData: { coin: 'buyCoinImagePath', coinImagePath: 'buyCoinImagePath' } }],
+      ['Price', { cellTemplate: this.coinWithValueTmpl, prop: 'price', extraData: { coin: 'priceCoin', coinImagePath: 'priceCoinImagePath' } }],
+      ['Fee', { cellTemplate: this.coinWithValueTmpl, prop: 'fee', extraData: { coin: 'feeCoin', coinImagePath: 'feeCoinImagePath' } }],
+      ['feeGain', { cellTemplate: this.fiatWithValueTmpl, prop: 'feeGain' }],
+      ['feeExpenses', { cellTemplate: this.fiatWithValueTmpl, prop: 'feeExpenses' }],
+      ['tradeGain', { cellTemplate: this.fiatWithValueTmpl, prop: 'tradeGain' }],
+      ['tradeExpenses', { cellTemplate: this.fiatWithValueTmpl, prop: 'tradeExpenses' }],
+      ['earnOrLose', { cellTemplate: this.fiatWithValueWithColorTmpl, prop: 'earnOrLose' }],
+    ]);
+    this.cols.set(this.createColumns(columnsSettings, undefined));
+  }
 
-  displayedColumns: string[] = ['id', 'time', 'buy', 'price', 'fee', 'feeGain', 'feeExpenses', 'tradeGain', 'tradeExpenses', 'earnOrLose'];
-  readonly TaxEventType = TransactionTaxEventTypeEnum;
-
-  private mapTransactionsTableData(data: [TransactionI[] | undefined, Dictionary<CoinInfoI>]): TransactionsTableDataI {
-    const transactions = data[0];
-    const coins = data[1];
-
+  private mapTransactionsTableData(transactions: TransactionI[] | undefined, coins: Dictionary<CoinInfoI>): TransactionsTableDataI {
     if (!transactions || !coins) {
       return {
         rows: [],
-        totalTradeGains: '-',
-        totalTradeExpenses: '-',
-        totalEarnOrLose: '-',
+        totalFeeGains: '',
+        totalFeeExpenses: '',
+        totalTradeGains: '',
+        totalTradeExpenses: '',
+        totalEarnOrLose: '',
         fiat: '',
         fiatImagePath: '',
       };
@@ -66,6 +79,8 @@ export class TransactionsComponent {
 
     return {
       rows,
+      totalFeeGains: this.getTotalFeeGains(rows),
+      totalFeeExpenses: this.getTotalFeeExpenses(rows),
       totalTradeGains: this.getTotalTradeGains(rows),
       totalTradeExpenses: this.getTotalTradeExpenses(rows),
       totalEarnOrLose: this.getTotalEarnOrLose(rows),
@@ -83,10 +98,13 @@ export class TransactionsComponent {
       id: transaction.id,
       time: transaction.time,
       buy: transaction.buy,
+      buyCoin: transaction.buyCoin,
       buyCoinImagePath: buyCoinImagePath ?? '',
       price: transaction.price,
+      priceCoin: transaction.priceCoin,
       priceCoinImagePath: priceCoinImagePath ?? '',
       fee: transaction.fee,
+      feeCoin: transaction.feeCoin,
       feeCoinImagePath: feeCoinImagePath ?? '',
       feeGain: this.getGain(transaction.transactionTaxEvents, TransactionTaxEventTypeEnum.Fee),
       feeExpenses: this.getExpenses(transaction.transactionTaxEvents, TransactionTaxEventTypeEnum.Fee),
@@ -98,17 +116,17 @@ export class TransactionsComponent {
 
   private getGain(transactionTaxEvents: TransactionTaxEventI[], type: TransactionTaxEventTypeEnum): string {
     const transactionTaxEvent = transactionTaxEvents.find((element) => element.type === type);
-    return transactionTaxEvent?.gainInFiat ?? '-';
+    return transactionTaxEvent?.gainInFiat ?? '';
   }
 
   private getExpenses(transactionTaxEvents: TransactionTaxEventI[], type: TransactionTaxEventTypeEnum): string {
     const transactionTaxEvent = transactionTaxEvents.find((element) => element.type === type);
-    return transactionTaxEvent?.expensesInFiat ?? '-';
+    return transactionTaxEvent?.expensesInFiat ?? '';
   }
 
   private getEarnOrLose(transactionTaxEvents: TransactionTaxEventI[]): string {
     if (transactionTaxEvents.length === 0) {
-      return '-';
+      return '';
     }
 
     let gainInFiatTotal = new Decimal(0);
@@ -121,14 +139,44 @@ export class TransactionsComponent {
     return gainInFiatTotal.minus(expensesInFiatTotal).toFixed(8);
   }
 
+  private getTotalFeeGains(rows: TransactionTableRowI[]): string {
+    if (rows.length === 0) {
+      return '';
+    }
+
+    let totalFeeGains = new Decimal(0);
+    rows.forEach((row) => {
+      if (row.feeGain.length > 0) {
+        totalFeeGains = totalFeeGains.plus(new Decimal(row.feeGain));
+      }
+    });
+
+    return totalFeeGains.toFixed(8);
+  }
+
+  private getTotalFeeExpenses(rows: TransactionTableRowI[]): string {
+    if (rows.length === 0) {
+      return '';
+    }
+
+    let totalFeeExpenses = new Decimal(0);
+    rows.forEach((row) => {
+      if (row.feeExpenses.length > 0) {
+        totalFeeExpenses = totalFeeExpenses.plus(new Decimal(row.feeExpenses));
+      }
+    });
+
+    return totalFeeExpenses.toFixed(8);
+  }
+
   private getTotalTradeGains(rows: TransactionTableRowI[]): string {
     if (rows.length === 0) {
-      return '-';
+      return '';
     }
 
     let totalTradeGains = new Decimal(0);
     rows.forEach((row) => {
-      if (row.tradeGain !== '-') {
+      if (row.tradeGain.length > 0) {
         totalTradeGains = totalTradeGains.plus(new Decimal(row.tradeGain));
       }
     });
@@ -138,12 +186,12 @@ export class TransactionsComponent {
 
   private getTotalTradeExpenses(rows: TransactionTableRowI[]): string {
     if (rows.length === 0) {
-      return '-';
+      return '';
     }
 
     let totalTradeExpenses = new Decimal(0);
     rows.forEach((row) => {
-      if (row.tradeExpenses !== '-') {
+      if (row.tradeExpenses.length > 0) {
         totalTradeExpenses = totalTradeExpenses.plus(new Decimal(row.tradeExpenses));
       }
     });
@@ -153,12 +201,12 @@ export class TransactionsComponent {
 
   private getTotalEarnOrLose(rows: TransactionTableRowI[]): string {
     if (rows.length === 0) {
-      return '-';
+      return '';
     }
 
     let totalEarnOrLose = new Decimal(0);
     rows.forEach((row) => {
-      if (row.earnOrLose !== '-') {
+      if (row.earnOrLose.length > 0) {
         totalEarnOrLose = totalEarnOrLose.plus(new Decimal(row.earnOrLose));
       }
     });

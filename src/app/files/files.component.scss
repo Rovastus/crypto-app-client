@@ -1,9 +1,7 @@
-table {
-  width: 100%;
+.app-container {
+  gap: 0.5rem;
 }
 
-.fab-position {
-  position: fixed;
-  bottom: 21px;
-  right: 25px;
+button {
+  place-self: flex-end;
 }

@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
-import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { asapScheduler } from 'rxjs';
+import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
+import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { EarnsApiActions } from '../store/earns/earns.action';
@@ -17,33 +18,38 @@ import { EarnTableRowI, EarnsTableDataI } from './earns.model';
   styleUrls: ['./earns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EarnsComponent {
+export class EarnsComponent extends AppNgxDatatable implements OnInit {
   private readonly store = inject(Store);
 
-  private earns$ = combineLatest([this.store.select(PortfolioSelectors.selectCurrentPortfolio), this.store.select(EarnsSelectors.selectPortfolioId)]).pipe(
-    switchMap((data) => {
-      const portfolioId = data[0]?.id;
-      const earnPortfolioId = data[1];
+  @ViewChild('dateTmpl', { static: true }) private dateTmpl!: TemplateRef<unknown>;
+  @ViewChild('coinWithValueTmpl', { static: true }) private coinWithValueTmpl!: TemplateRef<unknown>;
+  cols: WritableSignal<AppTableColumn[]> = signal([]);
 
-      if (!portfolioId) return EMPTY;
+  portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
+  portfolioChangedEffect = effect(() => {
+    const portfolioId = this.portfolio()?.id;
+    if (portfolioId) {
+      asapScheduler.schedule(() => this.store.dispatch(EarnsApiActions.loadEarns({ portfolioId })));
+    }
+  });
 
-      if (earnPortfolioId !== portfolioId) {
-        this.store.dispatch(EarnsApiActions.loadEarns({ portfolioId }));
-      }
+  private earns = this.store.selectSignal(EarnsSelectors.selectEarns);
+  private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
+  tableData = computed(() => {
+    return this.mapEarnsTableData(this.earns(), this.coins());
+  });
+  loadingIndicator = this.store.selectSignal(EarnsSelectors.selectEarnsLoading);
 
-      return this.store.select(EarnsSelectors.selectEarns);
-    }),
-  );
-  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
+  ngOnInit(): void {
+    const columnsSettings: AppTableColumnSettings = new Map([
+      ['Id', { prop: 'id' }],
+      ['Time', { cellTemplate: this.dateTmpl, prop: 'time' }],
+      ['Amount', { cellTemplate: this.coinWithValueTmpl, prop: 'amount' }],
+    ]);
+    this.cols.set(this.createColumns(columnsSettings, undefined));
+  }
 
-  tableData$: Observable<EarnsTableDataI> = combineLatest([this.earns$, this.coins$]).pipe(map((data) => this.mapEarnsTableData(data)));
-
-  displayedColumns: string[] = ['id', 'time', 'amount'];
-
-  private mapEarnsTableData(data: [EarnI[] | undefined, Dictionary<CoinInfoI>]): EarnsTableDataI {
-    const earns = data[0];
-    const coins = data[1];
-
+  private mapEarnsTableData(earns: EarnI[] | undefined, coins: Dictionary<CoinInfoI>): EarnsTableDataI {
     if (!earns || !coins) {
       return {
         rows: [],
