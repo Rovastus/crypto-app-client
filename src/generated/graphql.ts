@@ -263,12 +263,12 @@ export type CreatePortfolioMutationVariables = Exact<{
 }>;
 
 
-export type CreatePortfolioMutation = { __typename?: 'Mutation', createPortfolio: { __typename?: 'Portfolio', id: any, name: string, taxMethod: TaxMethodEnum, fiat: FiatEnum } };
+export type CreatePortfolioMutation = { __typename?: 'Mutation', createPortfolio: { __typename?: 'Portfolio', id: any, name: string, taxMethod: TaxMethodEnum, fiat: FiatEnum, wallets: Array<{ __typename?: 'Wallet', coin: string }> } };
 
 export type AllPortfoliosQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AllPortfoliosQuery = { __typename?: 'Query', allPortfolios: Array<{ __typename?: 'Portfolio', id: any, name: string, taxMethod: TaxMethodEnum, fiat: FiatEnum }> };
+export type AllPortfoliosQuery = { __typename?: 'Query', allPortfolios: Array<{ __typename?: 'Portfolio', id: any, name: string, taxMethod: TaxMethodEnum, fiat: FiatEnum, wallets: Array<{ __typename?: 'Wallet', coin: string }> }> };
 
 export type TransactionsByPortfolioIdQueryVariables = Exact<{
   portfolioId: Scalars['BigInt']['input'];
@@ -382,6 +382,9 @@ export const CreatePortfolioDocument = gql`
     name
     taxMethod
     fiat
+    wallets {
+      coin
+    }
   }
 }
     `;
@@ -403,6 +406,9 @@ export const AllPortfoliosDocument = gql`
     name
     taxMethod
     fiat
+    wallets {
+      coin
+    }
   }
 }
     `;

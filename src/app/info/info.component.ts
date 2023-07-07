@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Signal, TemplateRef, ViewChild, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
-import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { asapScheduler } from 'rxjs';
 import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
 import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { CoinInfoI } from '../store/coins/coin-info.model';
@@ -30,37 +29,23 @@ export class InfoComponent extends AppNgxDatatable implements OnInit {
   @ViewChild('fiatWithValueWithColorTmpl', { static: true }) private fiatWithValueWithColorTmpl!: TemplateRef<unknown>;
   cols: WritableSignal<AppTableColumn[]> = signal([]);
 
-  private portfolio$ = this.store.select(PortfolioSelectors.selectCurrentPortfolio);
+  portfolioSig = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
+  portfolioChangedEffect = effect(() => {
+    const portfolioId = this.portfolioSig()?.id;
+    if (portfolioId) {
+      asapScheduler.schedule(() => this.store.dispatch(WalletsApiActions.loadWallets({ portfolioId })));
+    }
+  });
 
-  private wallets$ = combineLatest([this.portfolio$, this.store.select(WalletsSelectors.selectPortfolioId)]).pipe(
-    switchMap((response) => {
-      const portfolioId = response[0]?.id;
-      const walletPortfolioId = response[1];
+  private walletSig: Signal<WalletI[]> = this.store.selectSignal(WalletsSelectors.selectWallets);
 
-      if (!portfolioId) return EMPTY;
+  walletLoadingSig = this.store.selectSignal(WalletsSelectors.selectWalletsLoading);
 
-      if (walletPortfolioId !== portfolioId) {
-        this.store.dispatch(WalletsApiActions.loadWallets({ portfolioId }));
-      }
+  private coinsSig = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
 
-      return this.store.select(WalletsSelectors.selectWallets);
-    }),
-    shareReplay(),
-  );
-  private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
-  private tableData$: Observable<WalletsTableDataI> = combineLatest([this.portfolio$, this.wallets$, this.coins$]).pipe(
-    map((data) => this.mapWalletTableData(data)),
-    shareReplay(),
-  );
-
-  private walletLoading$ = this.store.select(WalletsSelectors.selectWalletsLoading);
-
-  vm$ = combineLatest([this.portfolio$, this.tableData$, this.walletLoading$]).pipe(
-    map((data) => {
-      return { portfolio: data[0], tableData: data[1], walletLoading: data[2] };
-    }),
-    shareReplay(),
-  );
+  tableDataSig = computed(() => {
+    return this.mapWalletTableData(this.portfolioSig(), this.walletSig(), this.coinsSig());
+  });
 
   ngOnInit(): void {
     const columnsSettings: AppTableColumnSettings = new Map([
@@ -73,11 +58,7 @@ export class InfoComponent extends AppNgxDatatable implements OnInit {
     this.cols.set(this.createColumns(columnsSettings, undefined));
   }
 
-  private mapWalletTableData(data: [PortfolioI | undefined, WalletI[], Dictionary<CoinInfoI>]): WalletsTableDataI {
-    const portfolio = data[0];
-    const wallets = data[1];
-    const coins = data[2];
-
+  private mapWalletTableData(portfolio: PortfolioI | undefined, wallets: WalletI[], coins: Dictionary<CoinInfoI>): WalletsTableDataI {
     if (!portfolio || !wallets || !coins) {
       return {
         rows: [],

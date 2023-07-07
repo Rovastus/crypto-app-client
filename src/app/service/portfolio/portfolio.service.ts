@@ -16,7 +16,15 @@ export class PortfolioService {
         if (result.errors) throw result.errors;
         if (!result.data) throw 'No data was created';
 
-        return result.data.allPortfolios;
+        return result.data.allPortfolios.map<PortfolioI>((portfolio) => {
+          return {
+            id: portfolio.id,
+            name: portfolio.name,
+            taxMethod: portfolio.taxMethod,
+            fiat: portfolio.fiat,
+            coins: portfolio.wallets.map((wallet) => wallet.coin),
+          };
+        });
       }),
     );
   }
@@ -27,7 +35,14 @@ export class PortfolioService {
         if (result.errors) throw result.errors;
         if (!result.data) throw 'No data was created';
 
-        return result.data.createPortfolio;
+        const portfolio = result.data.createPortfolio;
+        return {
+          id: portfolio.id,
+          name: portfolio.name,
+          taxMethod: portfolio.taxMethod,
+          fiat: portfolio.fiat,
+          coins: portfolio.wallets.map((wallet) => wallet.coin),
+        };
       }),
     );
   }

@@ -15,7 +15,7 @@ export class CoinInfoService {
 
   constructor(private http: HttpClient) {}
 
-  fetchCoinInfo(coins: Set<string>): Observable<CoinInfoI[]> {
+  fetchCoinInfo(coins: string[]): Observable<CoinInfoI[]> {
     if (environment.generateLivecoinwatcTestData) {
       return this.fetchTestCoinInfo(coins);
     } else {
@@ -23,7 +23,7 @@ export class CoinInfoService {
     }
   }
 
-  private fetchTestCoinInfo(coins: Set<string>): Observable<CoinInfoI[]> {
+  private fetchTestCoinInfo(coins: string[]): Observable<CoinInfoI[]> {
     const coinInfos: CoinInfoI[] = [];
     coins.forEach((coin) => {
       coinInfos.push({ coin, priceInFiat: 100, imagePath: `${environment.coinImageUrl}${coin.toLowerCase()}.webp` });
@@ -31,7 +31,7 @@ export class CoinInfoService {
     return of(coinInfos);
   }
 
-  private fetchApiCoinInfo(coins: Set<string>): Observable<CoinInfoI[]> {
+  private fetchApiCoinInfo(coins: string[]): Observable<CoinInfoI[]> {
     const body = { currency: FiatEnum.Eur, codes: coins, meta: false };
     return this.http.post<CoinInfoResponse[]>(this.coinUrl, body, this.headers).pipe(
       map((data) => {

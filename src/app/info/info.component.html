@@ -1,44 +1,42 @@
-<ng-container *ngIf="vm$ | async as vm">
-  <div *ngIf="vm.portfolio" class="app-container">
-    <mat-list>
-      <mat-list-item>
-        <span matListItemTitle>Name:</span>
-        <span matListItemLine>{{ vm.portfolio.name }}</span>
-      </mat-list-item>
-      <mat-list-item>
-        <span matListItemTitle>Tax Method:</span>
-        <span matListItemLine>{{ vm.portfolio.taxMethod }}</span>
-      </mat-list-item>
-      <mat-list-item>
-        <span matListItemTitle>Fiat:</span>
-        <span matListItemLine>{{ vm.portfolio.fiat }}</span>
-      </mat-list-item>
-    </mat-list>
+<div *ngIf="portfolioSig() as portfolio" class="app-container">
+  <mat-list>
+    <mat-list-item>
+      <span matListItemTitle>Name:</span>
+      <span matListItemLine>{{ portfolio.name }}</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span matListItemTitle>Tax Method:</span>
+      <span matListItemLine>{{ portfolio.taxMethod }}</span>
+    </mat-list-item>
+    <mat-list-item>
+      <span matListItemTitle>Fiat:</span>
+      <span matListItemLine>{{ portfolio.fiat }}</span>
+    </mat-list-item>
+  </mat-list>
 
-    <ngx-datatable
-      class="material"
-      [rows]="vm.tableData.rows"
-      [columns]="cols()"
-      [columnMode]="columnMode()"
-      [headerHeight]="50"
-      [rowHeight]="rowHeight()"
-      [footerHeight]="50"
-      [loadingIndicator]="vm.walletLoading"
-      [scrollbarV]="true"
-      [scrollbarH]="false"
-      [virtualization]="true">
-      <ngx-datatable-footer>
-        <ng-template ngx-datatable-footer-template>
-          <div class="footer-container">
-            <strong>Total earn or lose:</strong>
-            <img [src]="vm.tableData.fiatImagePath" [alt]="vm.tableData.fiat" class="table-coin-icon" />
-            <span [ngClass]="vm?.tableData?.totalEarnOrLoss?.startsWith('-') ? 'warn' : 'success'"> {{ vm.tableData.totalEarnOrLoss }}</span>
-          </div>
-        </ng-template>
-      </ngx-datatable-footer>
-    </ngx-datatable>
-  </div>
-</ng-container>
+  <ngx-datatable
+    class="material"
+    [rows]="tableDataSig().rows"
+    [columns]="cols()"
+    [columnMode]="columnMode()"
+    [headerHeight]="50"
+    [rowHeight]="rowHeight()"
+    [footerHeight]="50"
+    [loadingIndicator]="walletLoadingSig()"
+    [scrollbarV]="true"
+    [scrollbarH]="false"
+    [virtualization]="true">
+    <ngx-datatable-footer>
+      <ng-template ngx-datatable-footer-template>
+        <div class="footer-container">
+          <strong>Total earn or lose:</strong>
+          <img [src]="tableDataSig().fiatImagePath" [alt]="tableDataSig().fiat" class="table-coin-icon" />
+          <span [ngClass]="tableDataSig().totalEarnOrLoss.startsWith('-') ? 'warn' : 'success'"> {{ tableDataSig().totalEarnOrLoss }}</span>
+        </div>
+      </ng-template>
+    </ngx-datatable-footer>
+  </ngx-datatable>
+</div>
 
 <ng-template #coinNameTmpl let-row="row" let-value="value">
   <img [src]="row.coinImagePath" [alt]="value" class="table-coin-icon" />
@@ -57,14 +55,14 @@
 </ng-template>
 
 <ng-template #fiatWithValueTmpl let-row="row" let-value="value">
-  <img [src]="(vm$ | async)?.tableData?.fiatImagePath" [alt]="(vm$ | async)?.tableData?.fiat" class="table-coin-icon" />
+  <img [src]="tableDataSig().fiatImagePath" [alt]="tableDataSig().fiat" class="table-coin-icon" />
   <span>
     {{ value | number : '1.2-2' }}
   </span>
 </ng-template>
 
 <ng-template #fiatWithValueWithColorTmpl let-row="row" let-value="value">
-  <img [src]="(vm$ | async)?.tableData?.fiatImagePath" [alt]="(vm$ | async)?.tableData?.fiat" class="table-coin-icon" />
+  <img [src]="tableDataSig().fiatImagePath" [alt]="tableDataSig().fiat" class="table-coin-icon" />
   <span [ngClass]="value?.startsWith('-') ? 'warn' : 'success'">
     {{ value | number : '1.2-2' }}
   </span>

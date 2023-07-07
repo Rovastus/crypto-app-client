@@ -5,6 +5,7 @@ export interface PortfolioI {
   name: string;
   taxMethod: TaxMethodEnum;
   fiat: FiatEnum;
+  coins: string[];
 }
 
 export interface CreatePortfolioI {

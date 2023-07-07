@@ -4,6 +4,9 @@ mutation createPortfolio($name: String!, $taxMethod: TaxMethodEnum!, $fiat: Fiat
     name
     taxMethod
     fiat
+    wallets {
+      coin
+    }
   }
 }
 
@@ -13,5 +16,8 @@ query allPortfolios {
     name
     taxMethod
     fiat
+    wallets {
+      coin
+    }
   }
 }

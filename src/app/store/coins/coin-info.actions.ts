@@ -7,10 +7,3 @@ export const CoinInfoActions = createActionGroup({
     updateCoinInfos: props<{ coinInfos: CoinInfoI[] }>(),
   },
 });
-
-export const CoinInfoApiActions = createActionGroup({
-  source: 'CoinInfo API',
-  events: {
-    loadCoinInfos: props<{ coins: Set<string> }>(),
-  },
-});
