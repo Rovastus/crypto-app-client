@@ -1,4 +1,4 @@
-<div *ngIf="portfolioSig() as portfolio" class="app-container">
+<div *ngIf="portfolio() as portfolio" class="app-container">
   <mat-list>
     <mat-list-item>
       <span matListItemTitle>Name:</span>
@@ -16,13 +16,13 @@
 
   <ngx-datatable
     class="material"
-    [rows]="tableDataSig().rows"
+    [rows]="tableData().rows"
     [columns]="cols()"
     [columnMode]="columnMode()"
     [headerHeight]="50"
     [rowHeight]="rowHeight()"
     [footerHeight]="50"
-    [loadingIndicator]="walletLoadingSig()"
+    [loadingIndicator]="walletLoading()"
     [scrollbarV]="true"
     [scrollbarH]="false"
     [virtualization]="true">
@@ -30,8 +30,8 @@
       <ng-template ngx-datatable-footer-template>
         <div class="footer-container">
           <strong>Total earn or lose:</strong>
-          <img [src]="tableDataSig().fiatImagePath" [alt]="tableDataSig().fiat" class="table-coin-icon" />
-          <span [ngClass]="tableDataSig().totalEarnOrLoss.startsWith('-') ? 'warn' : 'success'"> {{ tableDataSig().totalEarnOrLoss }}</span>
+          <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
+          <span [ngClass]="tableData().totalEarnOrLoss.startsWith('-') ? 'warn' : 'success'"> {{ tableData().totalEarnOrLoss }}</span>
         </div>
       </ng-template>
     </ngx-datatable-footer>
@@ -55,14 +55,14 @@
 </ng-template>
 
 <ng-template #fiatWithValueTmpl let-row="row" let-value="value">
-  <img [src]="tableDataSig().fiatImagePath" [alt]="tableDataSig().fiat" class="table-coin-icon" />
+  <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
   <span>
     {{ value | number : '1.2-2' }}
   </span>
 </ng-template>
 
 <ng-template #fiatWithValueWithColorTmpl let-row="row" let-value="value">
-  <img [src]="tableDataSig().fiatImagePath" [alt]="tableDataSig().fiat" class="table-coin-icon" />
+  <img [src]="tableData().fiatImagePath" [alt]="tableData().fiat" class="table-coin-icon" />
   <span [ngClass]="value?.startsWith('-') ? 'warn' : 'success'">
     {{ value | number : '1.2-2' }}
   </span>

@@ -29,22 +29,22 @@ export class InfoComponent extends AppNgxDatatable implements OnInit {
   @ViewChild('fiatWithValueWithColorTmpl', { static: true }) private fiatWithValueWithColorTmpl!: TemplateRef<unknown>;
   cols: WritableSignal<AppTableColumn[]> = signal([]);
 
-  portfolioSig = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
+  portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
   portfolioChangedEffect = effect(() => {
-    const portfolioId = this.portfolioSig()?.id;
+    const portfolioId = this.portfolio()?.id;
     if (portfolioId) {
       asapScheduler.schedule(() => this.store.dispatch(WalletsApiActions.loadWallets({ portfolioId })));
     }
   });
 
-  private walletSig: Signal<WalletI[]> = this.store.selectSignal(WalletsSelectors.selectWallets);
+  private wallet: Signal<WalletI[]> = this.store.selectSignal(WalletsSelectors.selectWallets);
 
-  walletLoadingSig = this.store.selectSignal(WalletsSelectors.selectWalletsLoading);
+  walletLoading = this.store.selectSignal(WalletsSelectors.selectWalletsLoading);
 
-  private coinsSig = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
+  private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
 
-  tableDataSig = computed(() => {
-    return this.mapWalletTableData(this.portfolioSig(), this.walletSig(), this.coinsSig());
+  tableData = computed(() => {
+    return this.mapWalletTableData(this.portfolio(), this.wallet(), this.coins());
   });
 
   ngOnInit(): void {
