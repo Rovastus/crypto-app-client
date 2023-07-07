@@ -2,7 +2,7 @@
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>Id</th>
     <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-    <td mat-footer-cell *matFooterCellDef>Total Earn/Loss</td>
+    <td mat-footer-cell *matFooterCellDef>Total</td>
   </ng-container>
 
   <ng-container matColumnDef="time">
@@ -64,7 +64,10 @@
       <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
       {{ row.tradeGain }}
     </td>
-    <td mat-footer-cell *matFooterCellDef></td>
+    <td mat-footer-cell *matFooterCellDef>
+      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
+      {{ tableData.totalTradeGains }}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="tradeExpenses">
@@ -73,7 +76,10 @@
       <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
       {{ row.tradeExpenses }}
     </td>
-    <td mat-footer-cell *matFooterCellDef></td>
+    <td mat-footer-cell *matFooterCellDef>
+      <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
+      {{ tableData.totalTradeExpenses }}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="earnOrLose">

@@ -2,6 +2,8 @@ export interface TransactionsTableDataI {
   rows: TransactionTableRowI[];
   fiat: string;
   fiatImagePath: string;
+  totalTradeGains: string;
+  totalTradeExpenses: string;
   totalEarnOrLose: string;
 }
 

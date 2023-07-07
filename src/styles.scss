@@ -1,9 +1,26 @@
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
+@import '../node_modules/@swimlane/ngx-datatable/index.css';
+@import '../node_modules/@swimlane/ngx-datatable/themes/material.css';
+@import '../node_modules/@swimlane/ngx-datatable/assets/icons.css';
+
+$ngx-datatable-border: 2px solid rgba(0, 0, 0, 0.12);
+$ngx-datatable-row-border: 1px solid rgba(0, 0, 0, 0.12);
+
 img.table-coin-icon {
   width: 20px;
   height: 20px;
   margin-bottom: -4px;
+}
+
+span {
+  &.warn {
+    color: #f44336;
+  }
+
+  &.success {
+    color: rgb(38, 160, 66);
+  }
 }
 
 th.mat-header-cell {
@@ -12,4 +29,43 @@ th.mat-header-cell {
 
 td.mat-footer-cell {
   font-weight: bold;
+}
+
+.app-container {
+  height: calc(100vh - 160px);
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .ngx-datatable {
+    height: 100%;
+    width: 100%;
+
+    &.material {
+      .datatable-header {
+        border-bottom: $ngx-datatable-border;
+      }
+
+      .datatable-body {
+        overflow-x: hidden;
+
+        .datatable-body-row {
+          border-bottom: $ngx-datatable-row-border;
+        }
+      }
+
+      .datatable-footer {
+        border-top: $ngx-datatable-border;
+        color: black;
+        .datatable-footer-inner {
+          padding: 0.9rem 1.2rem;
+
+          & > div {
+            width: 100%;
+            display: flex;
+          }
+        }
+      }
+    }
+  }
 }

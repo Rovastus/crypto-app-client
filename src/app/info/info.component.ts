@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, inject, signal } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
 import { EMPTY, Observable, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
+import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioI } from '../store/portfolio/portfolio.model';
@@ -19,10 +21,16 @@ import { WalletTableRowI, WalletsTableDataI } from './info.model';
   styleUrls: ['./info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InfoComponent {
+export class InfoComponent extends AppNgxDatatable implements OnInit {
   private readonly store = inject(Store);
 
-  portfolio$ = this.store.select(PortfolioSelectors.selectCurrentPortfolio);
+  @ViewChild('coinNameTmpl', { static: true }) private coinNameTmpl!: TemplateRef<unknown>;
+  @ViewChild('coinWithValueTmpl', { static: true }) private coinWithValueTmpl!: TemplateRef<unknown>;
+  @ViewChild('fiatWithValueTmpl', { static: true }) private fiatWithValueTmpl!: TemplateRef<unknown>;
+  @ViewChild('fiatWithValueWithColorTmpl', { static: true }) private fiatWithValueWithColorTmpl!: TemplateRef<unknown>;
+  cols: WritableSignal<AppTableColumn[]> = signal([]);
+
+  private portfolio$ = this.store.select(PortfolioSelectors.selectCurrentPortfolio);
 
   private wallets$ = combineLatest([this.portfolio$, this.store.select(WalletsSelectors.selectPortfolioId)]).pipe(
     switchMap((response) => {
@@ -37,11 +45,33 @@ export class InfoComponent {
 
       return this.store.select(WalletsSelectors.selectWallets);
     }),
+    shareReplay(),
   );
   private coins$ = this.store.select(CoinInfoSelectors.selectCoinInfos);
-  tableData$: Observable<WalletsTableDataI> = combineLatest([this.portfolio$, this.wallets$, this.coins$]).pipe(map((data) => this.mapWalletTableData(data)));
+  private tableData$: Observable<WalletsTableDataI> = combineLatest([this.portfolio$, this.wallets$, this.coins$]).pipe(
+    map((data) => this.mapWalletTableData(data)),
+    shareReplay(),
+  );
 
-  displayedColumns: string[] = ['id', 'coin', 'amount', 'total', 'avcoFiatPerUnit', 'earnOrLoss'];
+  private walletLoading$ = this.store.select(WalletsSelectors.selectWalletsLoading);
+
+  vm$ = combineLatest([this.portfolio$, this.tableData$, this.walletLoading$]).pipe(
+    map((data) => {
+      return { portfolio: data[0], tableData: data[1], walletLoading: data[2] };
+    }),
+    shareReplay(),
+  );
+
+  ngOnInit(): void {
+    const columnsSettings: AppTableColumnSettings = new Map([
+      ['Coin', { cellTemplate: this.coinNameTmpl, name: 'Coin', prop: 'coin' }],
+      ['Amount', { cellTemplate: this.coinWithValueTmpl, prop: 'coinAmount' }],
+      ['Total', { cellTemplate: this.fiatWithValueTmpl, prop: 'total' }],
+      ['Fiat per unit', { cellTemplate: this.fiatWithValueTmpl, prop: 'avcoFiatPerUnit' }],
+      ['Earn or loss', { cellTemplate: this.fiatWithValueWithColorTmpl, prop: 'earnOrLoss' }],
+    ]);
+    this.cols.set(this.createColumns(columnsSettings, undefined));
+  }
 
   private mapWalletTableData(data: [PortfolioI | undefined, WalletI[], Dictionary<CoinInfoI>]): WalletsTableDataI {
     const portfolio = data[0];
@@ -53,7 +83,7 @@ export class InfoComponent {
         rows: [],
         fiat: '',
         fiatImagePath: '',
-        totalEarnOrloss: '0',
+        totalEarnOrLoss: '0',
       };
     }
 
@@ -64,7 +94,7 @@ export class InfoComponent {
 
     return {
       rows,
-      totalEarnOrloss: totalEarnOrloss,
+      totalEarnOrLoss: totalEarnOrloss,
       fiat,
       fiatImagePath: fiatImagePath ?? '',
     };
@@ -95,7 +125,7 @@ export class InfoComponent {
     const paidPrice = new Decimal(wallet.amount).mul(new Decimal(wallet.avcoFiatPerUnit));
     const currentPrice = new Decimal(wallet.amount).mul(new Decimal(coinInfo.priceInFiat));
 
-    return paidPrice.minus(currentPrice).toFixed(8);
+    return currentPrice.minus(paidPrice).toFixed(8);
   }
 
   private getTotalEarnOrLoss(rows: WalletTableRowI[]): string {

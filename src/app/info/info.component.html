@@ -1,77 +1,71 @@
-<ng-container *ngIf="portfolio$ | async as portfolio">
-  <mat-list>
-    <mat-list-item>
-      <span matListItemTitle>Name:</span>
-      <span matListItemLine>{{ portfolio.name }}</span>
-    </mat-list-item>
-    <mat-list-item>
-      <span matListItemTitle>Tax Method:</span>
-      <span matListItemLine>{{ portfolio.taxMethod }}</span>
-    </mat-list-item>
-    <mat-list-item>
-      <span matListItemTitle>Fiat:</span>
-      <span matListItemLine>{{ portfolio.fiat }}</span>
-    </mat-list-item>
-  </mat-list>
+<ng-container *ngIf="vm$ | async as vm">
+  <div *ngIf="vm.portfolio" class="app-container">
+    <mat-list>
+      <mat-list-item>
+        <span matListItemTitle>Name:</span>
+        <span matListItemLine>{{ vm.portfolio.name }}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <span matListItemTitle>Tax Method:</span>
+        <span matListItemLine>{{ vm.portfolio.taxMethod }}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <span matListItemTitle>Fiat:</span>
+        <span matListItemLine>{{ vm.portfolio.fiat }}</span>
+      </mat-list-item>
+    </mat-list>
 
-  <table *ngIf="tableData$ | async as tableData" mat-table [dataSource]="tableData.rows" class="mat-elevation-z8">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>Id</th>
-      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
-      <td mat-footer-cell *matFooterCellDef>Total Profit/Loss</td>
-    </ng-container>
-
-    <ng-container matColumnDef="coin">
-      <th mat-header-cell *matHeaderCellDef>Coin</th>
-      <td mat-cell *matCellDef="let row">
-        {{ row.coin }}
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
-    </ng-container>
-
-    <ng-container matColumnDef="amount">
-      <th mat-header-cell *matHeaderCellDef>Amount</th>
-      <td mat-cell *matCellDef="let row">
-        <img [src]="row.coinImagePath" [alt]="row.coin" class="table-coin-icon" />
-        {{ row.coinAmount }}
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
-    </ng-container>
-
-    <ng-container matColumnDef="avcoFiatPerUnit">
-      <th mat-header-cell *matHeaderCellDef>Avg. price per coin</th>
-      <td mat-cell *matCellDef="let row">
-        <img [src]="row.coinImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-        {{ row.avcoFiatPerUnit }}
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
-    </ng-container>
-
-    <ng-container matColumnDef="total">
-      <th mat-header-cell *matHeaderCellDef>Price in fiat</th>
-      <td mat-cell *matCellDef="let row">
-        <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-
-        {{ row.total }}
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
-    </ng-container>
-
-    <ng-container matColumnDef="earnOrLoss">
-      <th mat-header-cell *matHeaderCellDef>Profit/Loss</th>
-      <td mat-cell *matCellDef="let row">
-        <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-        {{ row.earnOrLoss }}
-      </td>
-      <td mat-footer-cell *matFooterCellDef>
-        <img [src]="tableData.fiatImagePath" [alt]="tableData.fiat" class="table-coin-icon" />
-
-        {{ tableData.totalEarnOrloss }}
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
-  </table>
+    <ngx-datatable
+      class="material"
+      [rows]="vm.tableData.rows"
+      [columns]="cols()"
+      [columnMode]="columnMode()"
+      [headerHeight]="50"
+      [rowHeight]="rowHeight()"
+      [footerHeight]="50"
+      [loadingIndicator]="vm.walletLoading"
+      [scrollbarV]="true"
+      [scrollbarH]="false"
+      [virtualization]="true">
+      <ngx-datatable-footer>
+        <ng-template ngx-datatable-footer-template>
+          <div class="footer-container">
+            <strong>Total earn or lose:</strong>
+            <img [src]="vm.tableData.fiatImagePath" [alt]="vm.tableData.fiat" class="table-coin-icon" />
+            <span [ngClass]="vm?.tableData?.totalEarnOrLoss?.startsWith('-') ? 'warn' : 'success'"> {{ vm.tableData.totalEarnOrLoss }}</span>
+          </div>
+        </ng-template>
+      </ngx-datatable-footer>
+    </ngx-datatable>
+  </div>
 </ng-container>
+
+<ng-template #coinNameTmpl let-row="row" let-value="value">
+  <img [src]="row.coinImagePath" [alt]="value" class="table-coin-icon" />
+  <span>
+    <strong>
+      {{ value }}
+    </strong>
+  </span>
+</ng-template>
+
+<ng-template #coinWithValueTmpl let-row="row" let-value="value">
+  <img [src]="row.coinImagePath" [alt]="row.coin" class="table-coin-icon" />
+  <span>
+    {{ value | number : '1.2-8' }}
+  </span>
+</ng-template>
+
+<ng-template #fiatWithValueTmpl let-row="row" let-value="value">
+  <img [src]="(vm$ | async)?.tableData?.fiatImagePath" [alt]="(vm$ | async)?.tableData?.fiat" class="table-coin-icon" />
+  <span>
+    {{ value | number : '1.2-2' }}
+  </span>
+</ng-template>
+
+<ng-template #fiatWithValueWithColorTmpl let-row="row" let-value="value">
+  <img [src]="(vm$ | async)?.tableData?.fiatImagePath" [alt]="(vm$ | async)?.tableData?.fiat" class="table-coin-icon" />
+  <span [ngClass]="value?.startsWith('-') ? 'warn' : 'success'">
+    {{ value | number : '1.2-2' }}
+  </span>
+</ng-template>

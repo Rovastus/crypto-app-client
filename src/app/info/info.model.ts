@@ -2,7 +2,7 @@ export interface WalletsTableDataI {
   rows: WalletTableRowI[];
   fiat: string;
   fiatImagePath: string;
-  totalEarnOrloss: string;
+  totalEarnOrLoss: string;
 }
 
 export interface WalletTableRowI {

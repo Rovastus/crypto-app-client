@@ -53,6 +53,8 @@ export class TransactionsComponent {
     if (!transactions || !coins) {
       return {
         rows: [],
+        totalTradeGains: '-',
+        totalTradeExpenses: '-',
         totalEarnOrLose: '-',
         fiat: '',
         fiatImagePath: '',
@@ -64,6 +66,8 @@ export class TransactionsComponent {
 
     return {
       rows,
+      totalTradeGains: this.getTotalTradeGains(rows),
+      totalTradeExpenses: this.getTotalTradeExpenses(rows),
       totalEarnOrLose: this.getTotalEarnOrLose(rows),
       fiat: FiatEnum.Eur,
       fiatImagePath: fiatImagePath ?? '',
@@ -115,6 +119,36 @@ export class TransactionsComponent {
     });
 
     return gainInFiatTotal.minus(expensesInFiatTotal).toFixed(8);
+  }
+
+  private getTotalTradeGains(rows: TransactionTableRowI[]): string {
+    if (rows.length === 0) {
+      return '-';
+    }
+
+    let totalTradeGains = new Decimal(0);
+    rows.forEach((row) => {
+      if (row.tradeGain !== '-') {
+        totalTradeGains = totalTradeGains.plus(new Decimal(row.tradeGain));
+      }
+    });
+
+    return totalTradeGains.toFixed(8);
+  }
+
+  private getTotalTradeExpenses(rows: TransactionTableRowI[]): string {
+    if (rows.length === 0) {
+      return '-';
+    }
+
+    let totalTradeExpenses = new Decimal(0);
+    rows.forEach((row) => {
+      if (row.tradeExpenses !== '-') {
+        totalTradeExpenses = totalTradeExpenses.plus(new Decimal(row.tradeExpenses));
+      }
+    });
+
+    return totalTradeExpenses.toFixed(8);
   }
 
   private getTotalEarnOrLose(rows: TransactionTableRowI[]): string {
