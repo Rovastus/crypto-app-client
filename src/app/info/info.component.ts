@@ -1,15 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnInit, Signal, TemplateRef, ViewChild, WritableSignal, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, inject, signal } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
-import { asapScheduler } from 'rxjs';
 import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
 import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioI } from '../store/portfolio/portfolio.model';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
-import { WalletsApiActions } from '../store/wallets/wallets.action';
 import { WalletI } from '../store/wallets/wallets.model';
 import { WalletsSelectors } from '../store/wallets/wallets.selectors';
 import { WalletTableRowI, WalletsTableDataI } from './info.model';
@@ -30,21 +28,13 @@ export class InfoComponent extends AppNgxDatatable implements OnInit {
   cols: WritableSignal<AppTableColumn[]> = signal([]);
 
   portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
-  portfolioChangedEffect = effect(() => {
-    const portfolioId = this.portfolio()?.id;
-    if (portfolioId) {
-      asapScheduler.schedule(() => this.store.dispatch(WalletsApiActions.loadWallets({ portfolioId })));
-    }
-  });
 
-  private wallet: Signal<WalletI[]> = this.store.selectSignal(WalletsSelectors.selectWallets);
-
-  walletLoading = this.store.selectSignal(WalletsSelectors.selectWalletsLoading);
-
-  private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
+  loading = this.store.selectSignal(WalletsSelectors.selectWalletsLoading);
 
   tableData = computed(() => {
-    return this.mapWalletTableData(this.portfolio(), this.wallet(), this.coins());
+    const wallet = this.store.selectSignal(WalletsSelectors.selectWallets);
+    const coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
+    return this.mapWalletTableData(this.portfolio(), wallet(), coins());
   });
 
   ngOnInit(): void {

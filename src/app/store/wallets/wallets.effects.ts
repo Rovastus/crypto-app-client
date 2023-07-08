@@ -1,9 +1,11 @@
 import { Injectable, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
-import { catchError, map, mergeMap, takeUntil } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
 import { WalletsService } from 'src/app/service/wallets/wallets.service';
+import { PortfolioActions } from '../portfolio/portfolio.actions';
 import { WalletsActions, WalletsApiActions } from './wallets.action';
 
 @Injectable()
@@ -11,6 +13,17 @@ export class WalletsEffects {
   private readonly actions$ = inject(Actions);
   private readonly walletsService = inject(WalletsService);
   private readonly snackBarService = inject(SnackBarService);
+  private readonly router = inject(Router);
+
+  triggerLoadWallet$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(PortfolioActions.setCurrentPortfolio),
+      filter(() => this.router.url === '/info'),
+      map(({ portfolio }) => {
+        return WalletsApiActions.loadWallets({ portfolioId: portfolio.id });
+      }),
+    ),
+  );
 
   loadWallets$ = createEffect(() =>
     this.actions$.pipe(
