@@ -20,8 +20,8 @@
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Close</button>
-    <button mat-button type="submit" [disabled]="creationPortfolioLoading() || !portfolioForm.valid">
-      <mat-icon *ngIf="creationPortfolioLoading()">
+    <button mat-button type="submit" [disabled]="loading() || !portfolioForm.valid">
+      <mat-icon *ngIf="loading()">
         <mat-progress-spinner diameter="18" mode="indeterminate"> </mat-progress-spinner>
       </mat-icon>
       Create
