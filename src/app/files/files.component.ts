@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, WritableSignal, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { asapScheduler } from 'rxjs';
 import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
 import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { FilesApiActions } from '../store/files/files.actions';
@@ -20,15 +19,8 @@ export class FilesComponent extends AppNgxDatatable implements OnInit {
   private readonly store = inject(Store);
 
   portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
-  portfolioChangedEffect = effect(() => {
-    const portfolioId = this.portfolio()?.id;
-    if (portfolioId) {
-      asapScheduler.schedule(() => this.store.dispatch(FilesApiActions.loadFiles({ portfolioId: portfolioId })));
-    }
-  });
-
   files = this.store.selectSignal(FilesSelectors.selectFiles);
-  loadingIndicator = this.store.selectSignal(FilesSelectors.selectFileLoading);
+  loading = this.store.selectSignal(FilesSelectors.selectFileLoading);
 
   cols: WritableSignal<AppTableColumn[]> = signal([]);
 
@@ -38,6 +30,14 @@ export class FilesComponent extends AppNgxDatatable implements OnInit {
       ['Name', { prop: 'name' }],
     ]);
     this.cols.set(this.createColumns(columnsSettings, undefined));
+    this.loadFiles();
+  }
+
+  private loadFiles(): void {
+    const portfolioId = this.portfolio()?.id;
+    if (!portfolioId) return;
+
+    this.store.dispatch(FilesApiActions.loadFiles({ portfolioId }));
   }
 
   openDialog(): void {

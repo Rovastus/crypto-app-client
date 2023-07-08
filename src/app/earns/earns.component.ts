@@ -5,6 +5,7 @@ import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.compo
 import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
+import { EarnsApiActions } from '../store/earns/earns.action';
 import { EarnI } from '../store/earns/earns.model';
 import { EarnsSelectors } from '../store/earns/earns.selectors';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
@@ -40,6 +41,14 @@ export class EarnsComponent extends AppNgxDatatable implements OnInit {
       ['Amount', { cellTemplate: this.coinWithValueTmpl, prop: 'amount' }],
     ]);
     this.cols.set(this.createColumns(columnsSettings, undefined));
+    this.loadEarns();
+  }
+
+  private loadEarns(): void {
+    const portfolioId = this.portfolio()?.id;
+    if (!portfolioId) return;
+
+    this.store.dispatch(EarnsApiActions.loadEarns({ portfolioId }));
   }
 
   private mapEarnsTableData(earns: EarnI[] | undefined, coins: Dictionary<CoinInfoI>): EarnsTableDataI {

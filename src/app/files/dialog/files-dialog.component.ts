@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -18,20 +18,22 @@ export class FilesDialogComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly store = inject(Store);
 
+  private closeDialog = false;
+  private closeDialogWhenFileAddedEffect = effect(() => {
+    const files = this.store.selectSignal(FilesSelectors.selectFiles);
+    if (files() && this.closeDialog) {
+      this.dialogRef.close();
+    }
+    this.closeDialog = true;
+  });
+
+  loading = this.store.selectSignal(FilesSelectors.selectCreationFileLoading);
+
+  private portfolioId = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolioId);
   exportForm = this.formBuilder.nonNullable.group({
     nameField: ['', Validators.required],
     fileField: [null, Validators.required],
   });
-
-  private closeDialogWhenLoadingFinished = signal(false);
-  creationFileLoading = this.store.selectSignal(FilesSelectors.selectCreationFileLoading);
-  private closeDialogRefEffect = effect(() => {
-    if (!this.creationFileLoading() && this.closeDialogWhenLoadingFinished()) {
-      this.dialogRef.close();
-    }
-  });
-
-  private portfolioId = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolioId);
 
   createExport(): void {
     if (!this.exportForm.valid) {
@@ -53,7 +55,6 @@ export class FilesDialogComponent {
     const reader = new FileReader();
     reader.onload = () => {
       const jsonData = this.getCsvData(reader.result as string);
-      this.closeDialogWhenLoadingFinished.set(true);
       this.store.dispatch(FilesApiActions.createFile({ createFile: { portfolioId, name, jsonData } }));
     };
     reader.readAsBinaryString(file);

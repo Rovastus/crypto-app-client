@@ -8,6 +8,7 @@ import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
 import { PortfolioI } from '../store/portfolio/portfolio.model';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
+import { WalletsApiActions } from '../store/wallets/wallets.action';
 import { WalletI } from '../store/wallets/wallets.model';
 import { WalletsSelectors } from '../store/wallets/wallets.selectors';
 import { WalletTableRowI, WalletsTableDataI } from './info.model';
@@ -46,6 +47,14 @@ export class InfoComponent extends AppNgxDatatable implements OnInit {
       ['Earn or loss', { cellTemplate: this.fiatWithValueWithColorTmpl, prop: 'earnOrLoss' }],
     ]);
     this.cols.set(this.createColumns(columnsSettings, undefined));
+    this.loadWallets();
+  }
+
+  private loadWallets(): void {
+    const portfolioId = this.portfolio()?.id;
+    if (!portfolioId) return;
+
+    this.store.dispatch(WalletsApiActions.loadWallets({ portfolioId }));
   }
 
   private mapWalletTableData(portfolio: PortfolioI | undefined, wallets: WalletI[], coins: Dictionary<CoinInfoI>): WalletsTableDataI {
