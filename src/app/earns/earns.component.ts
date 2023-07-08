@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, inject, signal } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
-import { asapScheduler } from 'rxjs';
 import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
 import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
 import { CoinInfoI } from '../store/coins/coin-info.model';
 import { CoinInfoSelectors } from '../store/coins/coin-info.selectors';
-import { EarnsApiActions } from '../store/earns/earns.action';
 import { EarnI } from '../store/earns/earns.model';
 import { EarnsSelectors } from '../store/earns/earns.selectors';
 import { PortfolioSelectors } from '../store/portfolio/portfolio.selectors';
@@ -26,19 +24,14 @@ export class EarnsComponent extends AppNgxDatatable implements OnInit {
   cols: WritableSignal<AppTableColumn[]> = signal([]);
 
   portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
-  portfolioChangedEffect = effect(() => {
-    const portfolioId = this.portfolio()?.id;
-    if (portfolioId) {
-      asapScheduler.schedule(() => this.store.dispatch(EarnsApiActions.loadEarns({ portfolioId })));
-    }
-  });
+
+  loading = this.store.selectSignal(EarnsSelectors.selectEarnsLoading);
 
   private earns = this.store.selectSignal(EarnsSelectors.selectEarns);
   private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
   tableData = computed(() => {
     return this.mapEarnsTableData(this.earns(), this.coins());
   });
-  loadingIndicator = this.store.selectSignal(EarnsSelectors.selectEarnsLoading);
 
   ngOnInit(): void {
     const columnsSettings: AppTableColumnSettings = new Map([

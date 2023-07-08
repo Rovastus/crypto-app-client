@@ -31,10 +31,10 @@ export class InfoComponent extends AppNgxDatatable implements OnInit {
 
   loading = this.store.selectSignal(WalletsSelectors.selectWalletsLoading);
 
+  private wallet = this.store.selectSignal(WalletsSelectors.selectWallets);
+  private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
   tableData = computed(() => {
-    const wallet = this.store.selectSignal(WalletsSelectors.selectWallets);
-    const coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
-    return this.mapWalletTableData(this.portfolio(), wallet(), coins());
+    return this.mapWalletTableData(this.portfolio(), this.wallet(), this.coins());
   });
 
   ngOnInit(): void {

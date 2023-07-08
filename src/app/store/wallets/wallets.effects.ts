@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { EMPTY } from 'rxjs';
 import { catchError, filter, map, mergeMap, takeUntil } from 'rxjs/operators';
+import { INFO_ROUTER_PATH } from 'src/app/app-router.module';
 import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
 import { WalletsService } from 'src/app/service/wallets/wallets.service';
 import { PortfolioActions } from '../portfolio/portfolio.actions';
@@ -15,10 +16,10 @@ export class WalletsEffects {
   private readonly snackBarService = inject(SnackBarService);
   private readonly router = inject(Router);
 
-  triggerLoadWallet$ = createEffect(() =>
+  triggerLoadWallets$ = createEffect(() =>
     this.actions$.pipe(
       ofType(PortfolioActions.setCurrentPortfolio),
-      filter(() => this.router.url === '/info'),
+      filter(() => this.router.url === '/' + INFO_ROUTER_PATH),
       map(({ portfolio }) => {
         return WalletsApiActions.loadWallets({ portfolioId: portfolio.id });
       }),
