@@ -7,7 +7,7 @@ export const FilesActions = createActionGroup({
   events: {
     setFiles: props<{ portfolioId: number; files: FileI[] }>(),
     addFile: props<{ file: FileI }>(),
-    resetFiles: emptyProps(),
+    clearFiles: emptyProps(),
   },
 });
 

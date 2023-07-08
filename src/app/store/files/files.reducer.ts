@@ -28,7 +28,7 @@ export const fileDataReducer = createReducer(
     files.push(file);
     return { ...state, files: files };
   }),
-  on(FilesActions.resetFiles, (state) => {
+  on(FilesActions.clearFiles, (state) => {
     return { ...state, files: [], portfolioId: undefined };
   }),
   on(FilesLoadingActions.setFilesLoading, (state, { loading }) => {

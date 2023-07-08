@@ -6,6 +6,10 @@ import { catchError, finalize, map, mergeMap, takeUntil, tap } from 'rxjs/operat
 import { PortfolioService } from 'src/app/service/portfolio/portfolio.service';
 import { SnackBarService } from 'src/app/service/snack-bar/snack-bar.service';
 import { LOADING_FALSE, LOADING_TRUE } from '../constants';
+import { EarnsActions } from '../earns/earns.action';
+import { FilesActions } from '../files/files.actions';
+import { TransactionsActions } from '../transactions/transactions.action';
+import { WalletsActions } from '../wallets/wallets.action';
 import { PortfolioActions, PortfolioApiActions, PortfolioLoadingActions } from './portfolio.actions';
 
 @Injectable()
@@ -29,6 +33,20 @@ export class PortfolioEffects {
         );
       }),
     ),
+  );
+
+  clearData$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(PortfolioActions.setCurrentPortfolio),
+        tap(() => {
+          this.store.dispatch(WalletsActions.clearWallets());
+          this.store.dispatch(FilesActions.clearFiles());
+          this.store.dispatch(EarnsActions.clearEarns());
+          this.store.dispatch(TransactionsActions.clearTransactions());
+        }),
+      ),
+    { dispatch: false },
   );
 
   createPortfolio$ = createEffect(() =>
