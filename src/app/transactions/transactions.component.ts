@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, inject, signal } from '@angular/core';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
-import { asapScheduler } from 'rxjs';
 import { FiatEnum, TransactionTaxEventTypeEnum } from 'src/generated/graphql';
 import { AppNgxDatatable } from '../shared/ngx-datatable/app-ngx-datatable.component';
 import { AppTableColumn, AppTableColumnSettings } from '../shared/ngx-datatable/app-ngx-datatable.model';
@@ -30,20 +29,13 @@ export class TransactionsComponent extends AppNgxDatatable implements OnInit {
   cols: WritableSignal<AppTableColumn[]> = signal([]);
 
   portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
-  portfolioChangedEffect = effect(() => {
-    const portfolioId = this.portfolio()?.id;
-    if (portfolioId) {
-      asapScheduler.schedule(() => this.store.dispatch(TransactionsApiActions.loadTransactions({ portfolioId })));
-    }
-  });
-
   private transactions = this.store.selectSignal(TransactionsSelectors.selectTransactions);
   private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
-
   tableData = computed(() => {
     return this.mapTransactionsTableData(this.transactions(), this.coins());
   });
-  loadingIndicator = this.store.selectSignal(TransactionsSelectors.selectTransactionsLoading);
+
+  loading = this.store.selectSignal(TransactionsSelectors.selectTransactionsLoading);
 
   ngOnInit(): void {
     const columnsSettings: AppTableColumnSettings = new Map([
@@ -58,6 +50,14 @@ export class TransactionsComponent extends AppNgxDatatable implements OnInit {
       ['earnOrLose', { cellTemplate: this.fiatWithValueWithColorTmpl, prop: 'earnOrLose' }],
     ]);
     this.cols.set(this.createColumns(columnsSettings, undefined));
+    this.loadTransactions();
+  }
+
+  private loadTransactions(): void {
+    const portfolioId = this.portfolio()?.id;
+    if (!portfolioId) return;
+
+    this.store.dispatch(TransactionsApiActions.loadTransactions({ portfolioId }));
   }
 
   private mapTransactionsTableData(transactions: TransactionI[] | undefined, coins: Dictionary<CoinInfoI>): TransactionsTableDataI {
