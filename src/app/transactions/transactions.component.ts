@@ -66,9 +66,9 @@ export class TransactionsComponent extends AppNgxDatatable implements OnInit {
     this.loadTransactions();
   }
 
-  currentDateYear() {
+  currentDateYear(): Date {
     const year = new Date().getFullYear();
-    return new Date(year, 0, 1);
+    return new Date(year, 0, 1, 0, 0, 0, 0);
   }
 
   yearSelected($event: Date, picker: MatDatepicker<Date>) {
