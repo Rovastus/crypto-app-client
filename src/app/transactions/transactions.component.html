@@ -1,4 +1,11 @@
 <div *ngIf="portfolio()" class="app-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Year</mat-label>
+    <input matInput [matDatepicker]="picker" placeholder="Select a year" disabled />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker id="picker" #picker disabled="false" startView="multi-year" (yearSelected)="yearSelected($event, picker)"></mat-datepicker>
+  </mat-form-field>
+
   <ngx-datatable
     class="material"
     [rows]="tableData().rows"

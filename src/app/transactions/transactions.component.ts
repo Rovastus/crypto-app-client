@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, WritableSignal, computed, effect, inject, signal } from '@angular/core';
+
+import { MatDatepicker } from '@angular/material/datepicker';
 import { Dictionary } from '@ngrx/entity';
 import { Store } from '@ngrx/store';
 import Decimal from 'decimal.js';
@@ -28,6 +30,14 @@ export class TransactionsComponent extends AppNgxDatatable implements OnInit {
   @ViewChild('fiatWithValueWithColorTmpl', { static: true }) private fiatWithValueWithColorTmpl!: TemplateRef<unknown>;
   cols: WritableSignal<AppTableColumn[]> = signal([]);
 
+  private onPortfolioChangeResetYear = effect(() => {
+    this.portfolio();
+    this.date = this.currentDateYear();
+    if (this.picker) {
+      this.picker.select(this.date);
+    }
+  });
+
   portfolio = this.store.selectSignal(PortfolioSelectors.selectCurrentPortfolio);
   private transactions = this.store.selectSignal(TransactionsSelectors.selectTransactions);
   private coins = this.store.selectSignal(CoinInfoSelectors.selectCoinInfos);
@@ -36,6 +46,9 @@ export class TransactionsComponent extends AppNgxDatatable implements OnInit {
   });
 
   loading = this.store.selectSignal(TransactionsSelectors.selectTransactionsLoading);
+
+  @ViewChild('picker') picker!: MatDatepicker<Date>;
+  date: Date = this.currentDateYear();
 
   ngOnInit(): void {
     const columnsSettings: AppTableColumnSettings = new Map([
@@ -53,11 +66,26 @@ export class TransactionsComponent extends AppNgxDatatable implements OnInit {
     this.loadTransactions();
   }
 
+  currentDateYear() {
+    const year = new Date().getFullYear();
+    return new Date(year, 0, 1);
+  }
+
+  yearSelected($event: Date, picker: MatDatepicker<Date>) {
+    this.date = $event;
+    this.loadTransactions();
+
+    picker.select($event);
+    picker.close();
+  }
+
   private loadTransactions(): void {
     const portfolioId = this.portfolio()?.id;
     if (!portfolioId) return;
 
-    this.store.dispatch(TransactionsApiActions.loadTransactions({ portfolioId }));
+    const year = this.date.getFullYear();
+
+    this.store.dispatch(TransactionsApiActions.loadTransactions({ portfolioId, year }));
   }
 
   private mapTransactionsTableData(transactions: TransactionI[] | undefined, coins: Dictionary<CoinInfoI>): TransactionsTableDataI {

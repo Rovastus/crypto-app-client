@@ -152,6 +152,7 @@ export type QueryGetWalletsByPortfolioIdArgs = {
 
 export type QueryTransactionsByPortfolioIdArgs = {
   portfolioId: Scalars['BigInt']['input'];
+  year: Scalars['Int']['input'];
 };
 
 export enum TaxMethodEnum {
@@ -272,6 +273,7 @@ export type AllPortfoliosQuery = { __typename?: 'Query', allPortfolios: Array<{ 
 
 export type TransactionsByPortfolioIdQueryVariables = Exact<{
   portfolioId: Scalars['BigInt']['input'];
+  year: Scalars['Int']['input'];
 }>;
 
 
@@ -424,8 +426,8 @@ export const AllPortfoliosDocument = gql`
     }
   }
 export const TransactionsByPortfolioIdDocument = gql`
-    query transactionsByPortfolioId($portfolioId: BigInt!) {
-  transactionsByPortfolioId(portfolioId: $portfolioId) {
+    query transactionsByPortfolioId($portfolioId: BigInt!, $year: Int!) {
+  transactionsByPortfolioId(portfolioId: $portfolioId, year: $year) {
     id
     time
     buy

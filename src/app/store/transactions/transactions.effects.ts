@@ -24,7 +24,8 @@ export class TransactionsEffects {
       ofType(PortfolioActions.setCurrentPortfolio),
       filter(() => this.router.url === '/' + TRANSACTIONS_ROUTER_PATH),
       map(({ portfolio }) => {
-        return TransactionsApiActions.loadTransactions({ portfolioId: portfolio.id });
+        const year = new Date().getFullYear();
+        return TransactionsApiActions.loadTransactions({ portfolioId: portfolio.id, year });
       }),
     ),
   );
@@ -33,8 +34,8 @@ export class TransactionsEffects {
     this.actions$.pipe(
       ofType(TransactionsApiActions.loadTransactions),
       tap(() => this.store.dispatch(TransactionsLoadingActions.setTransactionsLoading(LOADING_TRUE))),
-      mergeMap(({ portfolioId }) => {
-        return this.transactionsService.getTransactionsByPortfolioId(portfolioId).pipe(
+      mergeMap(({ portfolioId, year }) => {
+        return this.transactionsService.getTransactionsByPortfolioId(portfolioId, year).pipe(
           finalize(() => this.store.dispatch(TransactionsLoadingActions.setTransactionsLoading(LOADING_FALSE))),
           takeUntil(this.actions$.pipe(ofType(TransactionsApiActions.loadTransactions))),
           catchError(() => {

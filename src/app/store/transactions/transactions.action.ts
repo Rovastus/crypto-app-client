@@ -20,6 +20,6 @@ export const TransactionsLoadingActions = createActionGroup({
 export const TransactionsApiActions = createActionGroup({
   source: 'Transactions',
   events: {
-    loadTransactions: props<{ portfolioId: number }>(),
+    loadTransactions: props<{ portfolioId: number; year: number }>(),
   },
 });
