@@ -10,12 +10,16 @@ import { CoinInfoResponse } from './coin-info.model';
   providedIn: 'root',
 })
 export class CoinInfoService {
-  private readonly coinUrl = `${environment.livecoinwatchApi}coins/single`;
+  private readonly coinUrl = `${environment.livecoinwatchApi}coins/map`;
   private readonly headers = { headers: { 'content-type': 'application/json', 'x-api-key': environment.livecoinwatchApiKey } };
+  private readonly coinsWithSameNameMap: Map<string, string> = new Map<string, string>([['ACA', '__ACA']]);
+  private readonly coinsWithSameNameReverseMap: Map<string, string> = new Map<string, string>([['__ACA', 'ACA']]);
 
   constructor(private http: HttpClient) {}
 
   fetchCoinInfo(coins: string[]): Observable<CoinInfoI[]> {
+    this.checkCoinsWithSameName(coins);
+
     if (environment.generateLivecoinwatcTestData) {
       return this.fetchTestCoinInfo(coins);
     } else {
@@ -36,11 +40,30 @@ export class CoinInfoService {
     return this.http.post<CoinInfoResponse[]>(this.coinUrl, body, this.headers).pipe(
       map((data) => {
         const coinInfos: CoinInfoI[] = [];
+
         data.forEach((coin) => {
+          const newCoinValue = this.coinsWithSameNameMap.get(coin.code);
+
+          if (newCoinValue) {
+            coin.code = newCoinValue;
+          }
+
           coinInfos.push({ coin: coin.code, priceInFiat: coin.rate, imagePath: `${environment.coinImageUrl}${coin.code.toLowerCase()}.webp` });
         });
         return coinInfos;
       }),
     );
+  }
+
+  private checkCoinsWithSameName(coins: string[]): string[] {
+    coins.forEach((coin) => {
+      const newCoinValue = this.coinsWithSameNameMap.get(coin);
+
+      if (newCoinValue) {
+        coin = newCoinValue;
+      }
+    });
+
+    return coins;
   }
 }
