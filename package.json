@@ -79,6 +79,6 @@
     "bracketSameLine": true
   },
   "engines": {
-    "node": "18.16.1"
+    "node": "22.11.0"
   }
 }
